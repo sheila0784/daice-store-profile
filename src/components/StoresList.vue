@@ -1,7 +1,7 @@
 <template>
   <div class="m-2 mt-4 mb-4">
-   <Toast />
-   <ConfirmDialog />
+    <Toast />
+    <ConfirmDialog />
     <Card class="w-full max-w-full shadow-2 border-gray-300 p-1 mx-auto">
       <template #title
         ><span class="text-3xl font-extrabold tracking-wide"> Dealers </span></template
@@ -10,10 +10,21 @@
       <template #content>
         <div class="flex flex-col gap-2 flex-row md:items-center">
           <div class="w-full md:flex-1">
-            <IconField>
-              <InputIcon class="pi pi-search" />
-              <InputText v-model="searchValue" placeholder="Search" @keyup.enter="fetchStores" />
-            </IconField>
+            <div class="w-full flex gap-2">
+              <IconField>
+                <InputIcon class="pi pi-search" />
+                <InputText v-model="searchValue" placeholder="Search" @keyup.enter="fetchStores" />
+              </IconField>
+              <Select
+                v-model="filterActive"
+                :options="statusOptions"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Select status"
+                class="min-w-30"
+                @change="fetchStores"
+              />
+            </div>
           </div>
 
           <div class="w-full md:w-auto md:ml-auto">
@@ -44,7 +55,7 @@
           @row-click="onRowClick"
         >
           <Column field="acctNo" header="Account No."></Column>
-          <Column field="name" header="Name"></Column>
+          <Column field="name" header="Name" sortable></Column>
           <Column field="address" header="Address"></Column>
           <Column field="barangay" header="Barangay"></Column>
           <Column field="city" header="City"></Column>
@@ -68,7 +79,13 @@
                   @click.stop="handleUpdate(slotProps.data)"
                 />
 
-                <Button icon="pi pi-trash" severity="danger" size="small" variant="text" @click="handleDelete(slotProps.data)"/>
+                <Button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  size="small"
+                  variant="text"
+                  @click="handleDelete(slotProps.data)"
+                />
               </div>
             </template>
           </Column>
@@ -211,7 +228,7 @@ import { useStoresList } from "../composables/useStoresList";
 import { useRouter } from "vue-router";
 
 import { useStoreStore } from "@/stores/storeStore";
-import { useStoresUpdate } from "../composables/useStoresUpdate"
+import { useStoresUpdate } from "../composables/useStoresUpdate";
 
 import Card from "primevue/card";
 import Divider from "primevue/divider";
@@ -222,6 +239,7 @@ import InputIcon from "primevue/inputicon";
 import IconField from "primevue/iconfield";
 import Message from "primevue/message";
 import Dialog from "primevue/dialog";
+import Select from "primevue/select";
 
 import Accordion from "primevue/accordion";
 import AccordionPanel from "primevue/accordionpanel";
@@ -251,7 +269,7 @@ const handleUpdate = (store) => {
 // const handleDelete = async (store) => {
 //   // 👇 store selected here
 //   console.log("delete record: ",store.id)
- 
+
 //   try {
 //     const result = await deleteStore(store.id);
 //     console.log("Deleted successfully:", result);
@@ -325,7 +343,6 @@ const handleDelete = (store) => {
   });
 };
 
-
 const googleMapsLink = computed(() => {
   if (!latitude.value || !longitude.value) return "#";
 
@@ -340,6 +357,7 @@ const {
   loading,
   selectedItem,
   searchValue,
+  filterActive,
   fetchStores,
   onRowClick,
   showDialog,
@@ -348,8 +366,13 @@ const {
   latitude,
 } = useStoresList();
 
+const statusOptions = [
+  { label: "Active", value: "true" },
+  { label: "Inactive", value: "false" },
+  { label: "All", value: null },
+];
+
 onMounted(() => {
   fetchStores();
 });
-
 </script>

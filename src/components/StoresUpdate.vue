@@ -35,15 +35,16 @@
           <small v-if="errors.name" class="flex text-red-500 items-center">{{ errors.name }}</small>
         </div>
 
-        <!-- v-model="store.acctNo" -->
+        <!-- v-model="store.acctNo" 
+             :invalid="!!errors.acctNo"
+            :maxlength="13"
+        -->
         <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
           <div class="font-medium p-2">Account No.:</div>
           <InputText
             ref="acctNoRef"
             v-model="acctNo"
             class="w-full"
-            :invalid="!!errors.acctNo"
-            :maxlength="13"
             @keydown.enter="focusNext('addressRef')"
           />
           <div />
@@ -212,11 +213,11 @@ const {
 const schema = yup.object({
   name: yup.string().required("Store name is required").min(3, "Minimum 3 characters"),
 
-  acctNo: yup
-    .string()
-    .required("Account No. is required")
-    .matches(/^\d+$/, "Account No. must be a number")
-    .length(13, "Account No. must be exactly 13 digits"),
+  // acctNo: yup
+  //     .string()
+  //     .required("Account No. is required")
+  //     .matches(/^\d+$/, "Account No. must be a number")
+  //     .length(13, "Account No. must be exactly 13 digits"),
 
   address: yup
     .string()
@@ -398,7 +399,6 @@ const onSave = handleSubmit(async () => {
     // });
 
     router.back();
-
   } catch (err) {
     console.error("Save failed:", err);
     toast.add({

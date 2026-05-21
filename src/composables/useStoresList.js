@@ -12,6 +12,7 @@ export function useStoresList() {
   const loading = ref(false);
   const selectedItem = ref(null);
   const searchValue = ref("");
+  const filterActive = ref("true");
 
   const showDialog = ref(false);
   const dialogData = ref(null);
@@ -23,24 +24,51 @@ export function useStoresList() {
     loading.value = true;
 
     const sv = searchValue.value?.trim() || "";
+    const isActive = filterActive.value;
 
-    const { data, error } = await supabase
+    // const { data, error } = await supabase
+    //   .from("stores_with_coords")
+    //   .select(
+    //     `
+    //     *,
+    //     profiles:stores_user_id_fkey (
+    //       display_name,
+    //       role,
+    //       contact
+    //     )
+    //   `,
+    //   )
+    //   .or(
+    //     `name.ilike.%${sv}%,province.ilike.%${sv}%,city.ilike.%${sv}%,barangay.ilike.%${sv}%,acctNo.ilike.%${sv}%`,
+    //   )
+    //   .eq("active", isActive)
+    //   .order("created_at", { ascending: false });
+
+    let query = supabase
       .from("stores_with_coords")
       .select(
         `
-        *,
-        profiles:stores_user_id_fkey (
-          display_name,
-          role,
-          contact
-        )
-      `,
+    *,
+    profiles:stores_user_id_fkey (
+      display_name,
+      role,
+      contact
+    )
+  `,
       )
       .or(
         `name.ilike.%${sv}%,province.ilike.%${sv}%,city.ilike.%${sv}%,barangay.ilike.%${sv}%,acctNo.ilike.%${sv}%`,
-      )
-      .order("created_at", { ascending: false });
-      
+      );
+
+    // ✅ Apply filter only when not null
+    if (isActive !== null) {
+      query = query.eq("active", isActive);
+    }
+
+    const { data, error } = await query.order("created_at", {
+      ascending: false,
+    });
+
     if (error) {
       console.error("Supabase error:", error);
     } else {
@@ -125,6 +153,7 @@ export function useStoresList() {
     loading,
     selectedItem,
     searchValue,
+    filterActive,
     fetchStores,
     onRowClick,
     showDialog,
