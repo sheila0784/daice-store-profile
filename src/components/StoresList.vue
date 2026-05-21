@@ -9,22 +9,24 @@
       <!-- <template #subtitle>Da ICE Dealers / Distributors</template> -->
       <template #content>
         <!-- <div class="flex flex-col gap-2 flex-row md:items-center"> -->
-          <div class="flex flex-col md:flex-row md:items-center gap-2">
+        <div class="flex flex-col md:flex-row md:items-center gap-2">
           <div class="w-full md:flex-1">
-            <div class="w-full flex gap-2">
+            <!-- <div class="w-full flex gap-2"> -->
+            <div class="w-full flex flex-col sm:flex-row flex-wrap gap-2">
               <IconField>
                 <InputIcon class="pi pi-search" />
                 <InputText v-model="searchValue" placeholder="Search" @keyup.enter="fetchStores" />
               </IconField>
-              <Select
-                v-model="filterActive"
-                :options="statusOptions"
-                optionLabel="label"
-                optionValue="value"
-                placeholder="Select status"
-                class="min-w-30"
-                @change="fetchStores"
-              />
+              <div>
+                <Select
+                  v-model="filterActive"
+                  :options="statusOptions"
+                  optionLabel="label"
+                  optionValue="value"
+                  placeholder="Select status"
+                  @change="fetchStores"
+                />
+              </div>
             </div>
           </div>
 
