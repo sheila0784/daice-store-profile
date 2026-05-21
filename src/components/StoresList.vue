@@ -8,7 +8,8 @@
       >
       <!-- <template #subtitle>Da ICE Dealers / Distributors</template> -->
       <template #content>
-        <div class="flex flex-col gap-2 flex-row md:items-center">
+        <!-- <div class="flex flex-col gap-2 flex-row md:items-center"> -->
+          <div class="flex flex-col md:flex-row md:items-center gap-2">
           <div class="w-full md:flex-1">
             <div class="w-full flex gap-2">
               <IconField>
@@ -34,7 +35,7 @@
               label="Create New"
               icon="pi pi-plus"
               :loading="loading"
-              class="w-full md:w-auto"
+              class="md:ml-auto"
               @click="handleUpdate"
             />
           </div>
