@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import StoresList from "../components/StoresList.vue";
 import StoresUpdate from "../components/StoresUpdate.vue";
+import StoresProfileUpdate from "../components/StoresProfileUpdate.vue"
 
 const routes = [
   {
@@ -14,6 +15,12 @@ const routes = [
     name: "StoresUpdate",
     component: StoresUpdate,
   },
+  {
+    path: "/StoresProfileUpdate",
+    name: "StoresProfileUpdate",
+    component: StoresProfileUpdate,
+  },
+
 ];
 
 

@@ -12,6 +12,7 @@ import ToastService from "primevue/toastservice";
 import Toast from "primevue/toast";
 import ConfirmationService from "primevue/confirmationservice";
 import ConfirmDialog from "primevue/confirmdialog";
+import Tooltip from "primevue/tooltip";
 
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
@@ -37,6 +38,7 @@ app.use(ToastService);
 app.component("Toast", Toast);
 app.use(ConfirmationService);
 app.component("ConfirmDialog", ConfirmDialog);
+app.directive("tooltip", Tooltip);
 
 // app.use(createPinia()) // Pinia for state management
 

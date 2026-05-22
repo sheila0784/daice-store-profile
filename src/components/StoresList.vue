@@ -74,11 +74,23 @@
           <Column style="width: 140px">
             <template #body="slotProps">
               <div class="flex gap-2">
+
+                <Button
+                  icon="pi pi-user-edit"
+                  severity="primary"
+                  size="small"
+                  variant="text"
+                  v-tooltip.bottom="'Edit Profile'"
+                  @click.stop="handleProfile(slotProps.data)"
+                  
+                />
+
                 <Button
                   icon="pi pi-pencil"
                   severity="info"
                   size="small"
                   variant="text"
+                  v-tooltip.bottom="'Edit Record'"
                   @click.stop="handleUpdate(slotProps.data)"
                 />
 
@@ -87,6 +99,7 @@
                   severity="danger"
                   size="small"
                   variant="text"
+                  v-tooltip.bottom="'Delete Record'"
                   @click="handleDelete(slotProps.data)"
                 />
               </div>
@@ -269,35 +282,13 @@ const handleUpdate = (store) => {
   router.push({ name: "StoresUpdate" });
 };
 
-// const handleDelete = async (store) => {
-//   // 👇 store selected here
-//   console.log("delete record: ",store.id)
+const handleProfile = (store) => {
+  // 👇 store selected here
+  storeStore.selectedStore = store;
 
-//   try {
-//     const result = await deleteStore(store.id);
-//     console.log("Deleted successfully:", result);
-
-//      toast.add({
-//       severity: "success",
-//       summary: "Deleted",
-//       detail: "Store deleted successfully",
-//       life: 3000,
-//     });
-
-//     await fetchStores();
-
-//   } catch (err) {
-//     console.error("Delete failed:", err);
-
-//      toast.add({
-//       severity: "error",
-//       summary: "Delete Failed",
-//       detail: err.message || "Something went wrong",
-//       life: 4000,
-//     });
-
-//   }
-// };
+  // 👇 then navigate
+  router.push({ name: "StoresProfileUpdate" });
+};
 
 const handleDelete = (store) => {
   confirm.require({
