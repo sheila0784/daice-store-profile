@@ -5,7 +5,7 @@
     <ConfirmDialog />
     <Card class="w-full max-w-full shadow-2 border-gray-300 mx-auto">
       <template #title
-        ><span class="text-3xl font-extrabold tracking-wide"> Dealers </span></template
+        ><span class="text-3xl font-extrabold tracking-wide"> Profiles </span></template
       >
       <!-- <template #subtitle>Da ICE Dealers / Distributors</template> -->
       <template #content>
@@ -16,17 +16,38 @@
             <div class="w-full flex flex-col sm:flex-row flex-wrap gap-2">
               <IconField>
                 <InputIcon class="pi pi-search" />
-                <InputText v-model="searchValue" placeholder="Search" @keyup.enter="fetchStores" />
+                <InputText
+                  v-model="searchValue"
+                  placeholder="Search"
+                  @keyup.enter="fetchStoresProfile"
+                />
               </IconField>
               <div>
                 <Select
-                  v-model="filterActive"
-                  :options="statusOptions"
+                  v-model="filterRole"
+                  :options="roleOptions"
                   optionLabel="label"
                   optionValue="value"
-                  placeholder="Select status"
-                  @change="fetchStores"
+                  placeholder="Select Role"
+                  @change="fetchStoresProfile"
                 />
+
+                <!-- <Select v-model="filterRole" :options="roleOptions" optionLabel="label" placeholder="Select Role" @change="fetchStoresProfile">
+                  <template #option="slotProps">
+                    <div class="flex items-center gap-2">
+                      <i :class="slotProps.option.icon"></i>
+                      <span>{{ slotProps.option.label }}</span>
+                    </div>
+                  </template>
+
+                  <template #value="slotProps">
+                    <div class="flex items-center gap-2" v-if="slotProps.value">
+                      <i :class="slotProps.value.icon"></i>
+                      <span>{{ slotProps.value.label }}</span>
+                    </div>
+                  </template>
+                </Select> -->
+
               </div>
             </div>
           </div>
@@ -45,7 +66,7 @@
         </div>
 
         <Divider />
-
+        <!-- @row-click="onRowClick" -->
         <DataTable
           :value="items"
           stripedRows
@@ -56,22 +77,44 @@
           selectionMode="single"
           v-model="selectedItem"
           dataKey="id"
-          @row-click="onRowClick"
         >
-          <Column field="acctNo" header="Account No."></Column>
-          <Column field="name" header="Name" sortable></Column>
-          <Column field="address" header="Address"></Column>
-          <Column field="barangay" header="Barangay"></Column>
-          <Column field="city" header="City"></Column>
-          <Column field="province" header="Province"></Column>
-          <Column field="active" header="Active">
-            <template #body="slotProps">
-              <i v-if="slotProps.data.active" class="pi pi-check-square text-gray-500"></i>
-              <i v-else class="pi pi-stop text-gray-500"></i>
+          <!-- <Column field="id" header="Id"></Column>
+          <Column field="store_id" header="Store Id"></Column> -->
+
+          <Column field="role" header="Role" sortable>
+            <template #body="{ data }">
+              <i v-if="data.role === 'dealer'" class="pi pi-briefcase text-blue-400"></i>
+
+              <span v-else>
+                <i class="pi pi-user text-gray-600"></i>
+              </span>
             </template>
           </Column>
 
-          <!-- Actions Column -->
+          <Column field="display_name" header="Profile Name" sortable></Column>
+          <Column field="contact" header="Contact No."></Column>
+          <Column field="status" header="Status">
+            <template #body="{ data }">
+              <i v-if="data.status === 'approved'" class="pi pi-thumbs-up text-green-600"></i>
+
+              <span v-else>
+                {{ data.status }}
+              </span>
+            </template>
+          </Column>
+          <Column field="name" header="Dealer" sortable>
+            <template #body="slotProps">
+              {{ slotProps.data.role === "dealer" ? "" : slotProps.data.name }}
+            </template>
+          </Column>
+
+          <Column field="updated_at" header="Updated On" sortable class="text-xs">
+            <template #body="slotProps">
+              {{ formatDate(slotProps.data.updated_at) }}
+            </template>
+          </Column>
+
+          <!-- Actions Column 
           <Column style="width: 140px">
             <template #body="slotProps">
               <div class="flex gap-2">
@@ -95,7 +138,7 @@
                 />
               </div>
             </template>
-          </Column>
+          </Column>-->
         </DataTable>
       </template>
 
@@ -108,7 +151,7 @@
       </template>
     </Card>
 
-    <Dialog v-model:visible="showDialog" modal :style="{ width: '25rem' }" class="m-4">
+    <!-- <Dialog v-model:visible="showDialog" modal :style="{ width: '25rem' }" class="m-4">
       <template #header>
         <span class="text-xl font-bold text-blue-500">{{ dialogData.name }}</span>
       </template>
@@ -225,19 +268,19 @@
           </AccordionPanel>
         </Accordion>
       </div>
-    </Dialog>
+    </Dialog> -->
   </div>
 </template>
 
 <script setup>
 import MenuBar from "../components/Menubar.vue";
 
-import { onMounted, computed } from "vue";
-import { useStoresList } from "../composables/useStoresList";
+import { onMounted } from "vue";
+import { useStoresProfileList } from "../composables/useStoresProfileList";
 import { useRouter } from "vue-router";
 
 import { useStoreStore } from "@/stores/storeStore";
-import { useStoresUpdate } from "../composables/useStoresUpdate";
+// import { useStoresProfileUpdate } from "../composables/useStoresProfileUpdate";
 
 import Card from "primevue/card";
 import Divider from "primevue/divider";
@@ -247,25 +290,29 @@ import InputText from "primevue/inputtext";
 import InputIcon from "primevue/inputicon";
 import IconField from "primevue/iconfield";
 import Message from "primevue/message";
-import Dialog from "primevue/dialog";
+
 import Select from "primevue/select";
 
-import Accordion from "primevue/accordion";
-import AccordionPanel from "primevue/accordionpanel";
-import AccordionHeader from "primevue/accordionheader";
-import AccordionContent from "primevue/accordioncontent";
-import { useToast } from "primevue/usetoast";
-import { useConfirm } from "primevue/useconfirm";
+
+import { formatDate } from "@/utils/date";
+
+// import Dialog from "primevue/dialog";
+// import Accordion from "primevue/accordion";
+// import AccordionPanel from "primevue/accordionpanel";
+// import AccordionHeader from "primevue/accordionheader";
+// import AccordionContent from "primevue/accordioncontent";
+// import { useToast } from "primevue/usetoast";
+// import { useConfirm } from "primevue/useconfirm";
 
 import Button from "primevue/button";
 
-const toast = useToast();
-const confirm = useConfirm();
+// const toast = useToast();
+// const confirm = useConfirm();
 
 const router = useRouter();
 const storeStore = useStoreStore();
 
-const { deleteStore } = useStoresUpdate();
+// const { deleteStore } = useStoresUpdate();
 
 const handleUpdate = (store) => {
   // 👇 store selected here
@@ -275,83 +322,85 @@ const handleUpdate = (store) => {
   router.push({ name: "StoresUpdate" });
 };
 
-const handleDelete = (store) => {
-  confirm.require({
-    message: `Delete ${store.name}?`,
-    header: "Confirm Delete",
-    icon: "pi pi-exclamation-triangle",
-    rejectLabel: "Cancel",
-    acceptLabel: "Delete",
-    rejectClass: "p-button-secondary p-button-text",
-    acceptClass: "p-button-danger",
+// const handleProfile = (store) => {
+//   // 👇 store selected here
+//   storeStore.selectedStore = store;
 
-    accept: async () => {
-      try {
-        const result = await deleteStore(store.id);
+//   // 👇 then navigate
+//   router.push({ name: "StoresProfileUpdate" });
+// };
 
-        console.log("Deleted successfully:", result);
+// const handleDelete = (store) => {
+//   confirm.require({
+//     message: `Delete ${store.name}?`,
+//     header: "Confirm Delete",
+//     icon: "pi pi-exclamation-triangle",
+//     rejectLabel: "Cancel",
+//     acceptLabel: "Delete",
+//     rejectClass: "p-button-secondary p-button-text",
+//     acceptClass: "p-button-danger",
 
-        toast.add({
-          severity: "success",
-          summary: "Deleted",
-          detail: "Store deleted successfully",
-          life: 3000,
-        });
+//     accept: async () => {
+//       try {
+//         const result = await deleteStoreProfile(store.id);
 
-        await fetchStores();
-      } catch (err) {
-        console.error("Delete failed:", err);
+//         console.log("Deleted successfully:", result);
 
-        toast.add({
-          severity: "error",
-          summary: "Delete Failed",
-          detail: err.message || "Something went wrong",
-          life: 4000,
-        });
-      }
-    },
+//         toast.add({
+//           severity: "success",
+//           summary: "Deleted",
+//           detail: "Store deleted successfully",
+//           life: 3000,
+//         });
 
-    reject: () => {
-      toast.add({
-        severity: "info",
-        summary: "Cancelled",
-        detail: "Delete cancelled",
-        life: 2000,
-      });
-    },
-  });
-};
+//         await fetchStoresProfile();
+//       } catch (err) {
+//         console.error("Delete failed:", err);
 
-const googleMapsLink = computed(() => {
-  if (!latitude.value || !longitude.value) return "#";
+//         toast.add({
+//           severity: "error",
+//           summary: "Delete Failed",
+//           detail: err.message || "Something went wrong",
+//           life: 4000,
+//         });
+//       }
+//     },
 
-  return `https://www.google.com/maps?q=${latitude.value},${longitude.value}`;
-});
+//     reject: () => {
+//       toast.add({
+//         severity: "info",
+//         summary: "Cancelled",
+//         detail: "Delete cancelled",
+//         life: 2000,
+//       });
+//     },
+//   });
+// };
 
 const {
   rows,
   rowsPerPageOptions,
   items,
-  schedules,
+
   loading,
   selectedItem,
   searchValue,
-  filterActive,
-  fetchStores,
-  onRowClick,
-  showDialog,
-  dialogData,
-  longitude,
-  latitude,
-} = useStoresList();
+  filterRole,
+  fetchStoresProfile,
+  // onRowClick,
+  // showDialog,
+  // dialogData,
+} = useStoresProfileList();
 
-const statusOptions = [
-  { label: "Active", value: "true" },
-  { label: "Inactive", value: "false" },
+const roleOptions = [
+  { label: "Dealer", value: "dealer" },
+  { label: "Customer", value: "customer" },
   { label: "All", value: null },
 ];
 
+
+
 onMounted(() => {
-  fetchStores();
+  fetchStoresProfile();
 });
 </script>
