@@ -20,12 +20,22 @@ export function useStoresProfileList() {
 
     const sv = searchValue.value?.trim() || "";
     const role = filterRole.value?.trim() || null;
-    
-    console.log("Fetching profiles with searchValue:", sv, "and filterRole:", role);
+
+    // console.log("Fetching profiles with searchValue:", sv, "and filterRole:", role);
 
     // let query = supabase.from("profiles").select(`*`);
 
-    let query = supabase.from("profiles").select(`
+    //     let query = supabase.from("profiles").select(`
+    //   *,
+    //   store:stores!profiles_store_id_fkey(
+    //     id,
+    //     acctNo,
+    //     name,
+    //     address, barangay, city, province, active
+    //   )
+    // `);
+
+    let query = supabase.from("profiles_with_email").select(`
   *,
   store:stores!profiles_store_id_fkey(
     id,
@@ -35,46 +45,19 @@ export function useStoresProfileList() {
   )
 `);
 
-    // (role = X OR role IS NULL)
     if (role) {
       query = query.or(`role.eq.${role},role.is.null`);
     }
 
     // AND display_name LIKE '%sv%'
     if (sv) {
-      query = query.ilike("display_name", `%${sv}%`);
+      // query = query.ilike("display_name", `%${sv}%`);
+      query = query.or(`display_name.ilike.%${sv}%,email.ilike.%${sv}%,contact.ilike.%${sv}%`);
     }
 
     const { data, error } = await query.order("updated_at", {
       ascending: false,
     });
-
-    // if (error) {
-    //   console.error("Supabase error:", error);
-    // } else {
-    //   items.value = data.map((item) => ({
-    //     ...item,
-    //     display_name: item.profiles?.display_name,
-    //     contact: item.profiles?.contact,
-    //     role: item.profiles?.role,
-    //     status: item.profiles?.status,
-    //     name: item.store?.name,
-    //   }));
-    // }
-
-    // console.log("Fetched profiles:", data);
-
-    // if (error) {
-    //   console.error("Supabase error:", error);
-    // } else {
-    //   items.value = data.map((item) => ({
-    //     ...item,
-    //     display_name: item.display_name,
-    //     contact: item.contact,
-    //     role: item.role,
-    //     status: item.status,
-    //   }));
-    // }
 
     if (error) {
       console.error("Supabase error:", error);
@@ -89,6 +72,8 @@ export function useStoresProfileList() {
         contact: item.contact,
         role: item.role,
         status: item.status,
+        avatar_url: item.avatar_url,
+        email: item.email,
 
         // joined store
         name: item.store?.name,
@@ -104,6 +89,24 @@ export function useStoresProfileList() {
     loading.value = false;
   };
 
+  const onRowClick = (event) => {
+    console.log("Row clicked:", event.data);
+    if (selectedItem.value?.id === event.data.id) {
+      selectedItem.value = null;
+      dialogData.value = null;
+      showDialog.value = false;
+      console.log("Deselected profile:", event.data);
+    } else {
+      selectedItem.value = event.data;
+      dialogData.value = event.data;
+      showDialog.value = true;
+      console.log("Selected profile:", selectedItem.value, showDialog.value);
+    }
+    //fetchStoreSched(event.data.id);
+
+    //storeStore.selectedStore = { ...event.data };
+  };
+
   return {
     rows,
     rowsPerPageOptions,
@@ -113,7 +116,7 @@ export function useStoresProfileList() {
     searchValue,
     filterRole,
     fetchStoresProfile,
-
+    onRowClick,
     showDialog,
     dialogData,
   };
