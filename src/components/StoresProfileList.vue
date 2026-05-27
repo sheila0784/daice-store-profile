@@ -90,9 +90,15 @@
             </template>
           </Column>
 
-          <Column field="updated_at" header="Updated On" sortable class="text-xs">
+          <Column field="created_at" header="Account Creation" sortable class="text-xs">
             <template #body="slotProps">
-              {{ formatDate(slotProps.data.updated_at) }}
+              {{ formatDate(slotProps.data.created_at) }}
+            </template>
+          </Column>
+
+           <Column field="last_sign_in_at" header="Last Sign-in" sortable class="text-xs">
+            <template #body="slotProps">
+              {{ formatDate(slotProps.data.last_sign_in_at) }}
             </template>
           </Column>
 
@@ -183,8 +189,12 @@
         </p>
 
         <p>
-          <span class="text-sm font-semibold text-gray-500">Updated On:</span>
-          <span class="text-xs ml-2">{{ formatDate(dialogData.updated_at) }}</span>
+          <span class="text-sm font-semibold text-gray-500">Account Created:</span>
+          <span class="text-xs ml-2">{{ formatDate(dialogData.created_at) }}</span>
+        </p>
+         <p>
+          <span class="text-sm font-semibold text-gray-500">Last Sign-in:</span>
+          <span class="text-xs ml-2">{{ formatDate(dialogData.last_sign_in_at) }}</span>
         </p>
       </div>
     </Dialog>

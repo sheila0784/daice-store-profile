@@ -66,6 +66,8 @@ export function useStoresProfileList() {
         id: item.id,
         store_id: item.store_id,
         updated_at: item.updated_at,
+        created_at: item.created_at,
+        last_sign_in_at: item.last_sign_in_at,
 
         // profile fields
         display_name: item.display_name,
