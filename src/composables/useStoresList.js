@@ -26,30 +26,13 @@ export function useStoresList() {
     const sv = searchValue.value?.trim() || "";
     const isActive = filterActive.value;
 
-    // const { data, error } = await supabase
-    //   .from("stores_with_coords")
-    //   .select(
-    //     `
-    //     *,
-    //     profiles:stores_user_id_fkey (
-    //       display_name,
-    //       role,
-    //       contact
-    //     )
-    //   `,
-    //   )
-    //   .or(
-    //     `name.ilike.%${sv}%,province.ilike.%${sv}%,city.ilike.%${sv}%,barangay.ilike.%${sv}%,acctNo.ilike.%${sv}%`,
-    //   )
-    //   .eq("active", isActive)
-    //   .order("created_at", { ascending: false });
-
     let query = supabase
       .from("stores_with_coords")
       .select(
         `
     *,
     profiles:stores_user_id_fkey (
+      id,
       display_name,
       role,
       contact
@@ -74,6 +57,7 @@ export function useStoresList() {
     } else {
       items.value = data.map((item) => ({
         ...item,
+        profile_id: item.profiles?.id,
         display_name: item.profiles?.display_name,
         contact: item.profiles?.contact,
         role: item.profiles?.role,

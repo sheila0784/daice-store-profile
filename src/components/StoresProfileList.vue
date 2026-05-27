@@ -96,7 +96,7 @@
             </template>
           </Column>
 
-          Actions Column
+          <!-- Actions Column -->
           <Column style="width: 140px">
             <template #body="slotProps">
               <div class="flex gap-2">

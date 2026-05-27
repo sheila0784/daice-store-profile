@@ -115,6 +115,11 @@
       <Divider />
 
       <div v-if="dialogData" class="space-y-2">
+         <p>
+          <span class="text-sm font-semibold text-gray-500">Dealer Id:</span>
+          <span class="text-md ml-2">{{ dialogData.id }}</span>
+        </p>
+
         <p>
           <span class="text-sm font-semibold text-gray-500">Account No.:</span>
           <span class="text-md ml-2">{{ dialogData.acctNo }}</span>
@@ -213,6 +218,10 @@
               >Profile</AccordionHeader
             >
             <AccordionContent>
+              <p>
+                <span class="text-sm font-semibold text-gray-500">Profile Id:</span>
+                <span class="text-sm ml-2">{{ dialogData.profile_id }}</span>
+              </p>
               <p>
                 <span class="text-sm font-semibold text-gray-500">Name:</span>
                 <span class="text-xl ml-2">{{ dialogData.display_name }}</span>

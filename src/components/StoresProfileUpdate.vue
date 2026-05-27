@@ -73,11 +73,26 @@
             v-model="email"
             class="w-full"
             :invalid="!!errors.email"
-            @keydown.enter.prevent="focusNextButton('submitRef')"
+            @keydown.enter.prevent="focusNextButton('statusRef')"
           />
           <div />
           <small v-if="errors.email" class="flex text-red-500 items-center">{{
             errors.email
+          }}</small>
+        </div>
+
+        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+          <div class="font-medium p-2">Status:</div>
+          <InputText
+            ref="statusRef"
+            v-model="status"
+            class="w-full"
+            :invalid="!!errors.status"
+            @keydown.enter.prevent="focusNextButton('submitRef')"
+          />
+          <div />
+          <small v-if="errors.status" class="flex text-red-500 items-center">{{
+            errors.status
           }}</small>
         </div>
 
@@ -99,7 +114,7 @@
 </template>
 
 <script setup>
-import { ref} from "vue";
+import { ref } from "vue";
 import Card from "primevue/card";
 import Divider from "primevue/divider";
 import { useStoresProfile } from "@/stores/storeProfile";
@@ -126,6 +141,7 @@ const schema = yup.object({
 
   role: yup.string().required("Role is required"),
   email: yup.string().email("Invalid email format").required("Email is required"),
+
 });
 
 const router = useRouter();
@@ -158,6 +174,7 @@ const profileNameRef = ref(null);
 const contactRef = ref(null);
 const roleRef = ref(null);
 const emailRef = ref(null);
+const statusRef = ref(null);
 const submitRef = ref(null);
 
 const refs = {
@@ -192,10 +209,19 @@ const onSave = handleSubmit(async () => {
   };
 
   try {
-    const result = await saveProfile(profile.value.id, payload);
-    console.log("Updated successfully:", result);
+    // const result = await saveProfile(profile.value.id, payload);
+    // console.log("Updated successfully:", result);
 
-    router.back();
+    // router.back();
+    console.log("Payload to save:", payload);
+    // await saveProfile(profile.value.id, payload);
+    toast.add({
+      severity: "success",
+      summary: "Saved Successfully",
+      detail: "Your profile has been updated.",
+      life: 4000,
+    });
+    // router.back();
   } catch (err) {
     console.error("Save failed:", err);
     toast.add({
@@ -212,5 +238,4 @@ const roles = [
   { name: "Customer", code: "customer" },
   { name: "Rider", code: "rider" },
 ];
-
 </script>

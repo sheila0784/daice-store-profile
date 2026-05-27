@@ -4,12 +4,15 @@
       <template #title>
         <div class="text-2xl font-bold text-center">Da ICE Login</div>
       </template>
+      <template #subtitle>
+        <div class="text-center text-gray-500 mb-4">Mobile App Administration Portal</div>
+      </template>
 
       <template #content>
         <div class="flex flex-col gap-3">
           <div>
             <label class="block mb-2">Email</label>
-            <InputText v-model="email" class="w-full" placeholder="Enter email" />
+            <InputText v-model="email" class="w-full" />
           </div>
 
           <div>
