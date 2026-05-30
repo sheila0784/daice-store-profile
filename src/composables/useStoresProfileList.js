@@ -21,20 +21,6 @@ export function useStoresProfileList() {
     const sv = searchValue.value?.trim() || "";
     const role = filterRole.value?.trim() || null;
 
-    // console.log("Fetching profiles with searchValue:", sv, "and filterRole:", role);
-
-    // let query = supabase.from("profiles").select(`*`);
-
-    //     let query = supabase.from("profiles").select(`
-    //   *,
-    //   store:stores!profiles_store_id_fkey(
-    //     id,
-    //     acctNo,
-    //     name,
-    //     address, barangay, city, province, active
-    //   )
-    // `);
-
     let query = supabase.from("profiles_with_email").select(`
   *,
   store:stores!profiles_store_id_fkey(
@@ -68,6 +54,8 @@ export function useStoresProfileList() {
         updated_at: item.updated_at,
         created_at: item.created_at,
         last_sign_in_at: item.last_sign_in_at,
+        last_order_placed: item.last_order_placed,
+        last_delivery_at: item.last_delivery_at,
 
         // profile fields
         display_name: item.display_name,

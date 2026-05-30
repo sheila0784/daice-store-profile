@@ -59,6 +59,12 @@
           dataKey="id"
           @row-click="onRowClick"
         >
+          <!-- Row Count Column -->
+          <Column header="#" style="width: 60px">
+            <template #body="slotProps">
+              {{ slotProps.index + 1 }}
+            </template>
+          </Column>
           <!-- <Column field="id" header="Id"></Column>
           <Column field="store_id" header="Store Id"></Column> -->
 
@@ -96,11 +102,23 @@
             </template>
           </Column>
 
-           <Column field="last_sign_in_at" header="Last Sign-in" sortable class="text-xs">
+          <Column field="last_sign_in_at" header="Last Sign-in" sortable class="text-xs">
             <template #body="slotProps">
               {{ formatDate(slotProps.data.last_sign_in_at) }}
             </template>
           </Column>
+
+          <Column field="last_order_placed" header="Last Order Placed" sortable class="text-xs">
+            <template #body="slotProps">
+              {{ formatDate(slotProps.data.last_order_placed) }}
+            </template>
+          </Column>
+
+          <!-- <Column field="last_delivery_at" header="Last Order Record" sortable class="text-xs">
+            <template #body="slotProps">
+              {{ formatDate(slotProps.data.last_delivery_at) }}
+            </template>
+          </Column> -->
 
           <!-- Actions Column -->
           <Column style="width: 140px">
@@ -114,7 +132,17 @@
                   v-tooltip.bottom="'Edit Record'"
                   @click.stop="handleUpdate(slotProps.data)"
                 />
-
+                <Button
+                  v-if="
+                    slotProps.data.last_sign_in_at === null || slotProps.data.last_sign_in_at === ''
+                  "
+                  icon="pi pi-trash"
+                  severity="danger"
+                  size="small"
+                  variant="text"
+                  v-tooltip.bottom="'Delete Record'"
+                  @click.stop="handleDelete(slotProps.data)"
+                />
               </div>
             </template>
           </Column>
@@ -192,10 +220,21 @@
           <span class="text-sm font-semibold text-gray-500">Account Created:</span>
           <span class="text-xs ml-2">{{ formatDate(dialogData.created_at) }}</span>
         </p>
-         <p>
+        <p>
           <span class="text-sm font-semibold text-gray-500">Last Sign-in:</span>
           <span class="text-xs ml-2">{{ formatDate(dialogData.last_sign_in_at) }}</span>
         </p>
+
+         <p>
+          <span class="text-sm font-semibold text-gray-500">Last Order Placed:</span>
+          <span class="text-xs ml-2">{{ formatDate(dialogData.last_order_placed) }}</span>
+        </p>
+
+         <!-- <p>
+          <span class="text-sm font-semibold text-gray-500">Last Order Record:</span>
+          <span class="text-xs ml-2">{{ formatDate(dialogData.last_delivery_at) }}</span>
+        </p> -->
+        
       </div>
     </Dialog>
   </div>
@@ -206,6 +245,8 @@ import MenuBar from "../components/Menubar.vue";
 
 import { onMounted, ref } from "vue";
 import { useStoresProfileList } from "../composables/useStoresProfileList";
+import { useStoresProfileUpdate } from "../composables/useStoresProfileUpdate";
+
 import { useRouter } from "vue-router";
 import { useStoresProfile } from "@/stores/storeProfile";
 
@@ -221,6 +262,9 @@ import InputIcon from "primevue/inputicon";
 import IconField from "primevue/iconfield";
 import Message from "primevue/message";
 
+import { useConfirm } from "primevue/useconfirm";
+import { useToast } from "primevue/usetoast";
+
 import Select from "primevue/select";
 
 import { formatDate } from "@/utils/date";
@@ -232,6 +276,8 @@ const router = useRouter();
 const imageLoading = ref(true);
 
 const storesProfile = useStoresProfile();
+const confirm = useConfirm();
+const Toast = useToast();
 
 const handleUpdate = (store) => {
   // 👇 store selected here
@@ -241,67 +287,59 @@ const handleUpdate = (store) => {
   router.push({ name: "StoresProfileUpdate" });
 };
 
+const handleDelete = (profile) => {
+  console.log("Attempting to delete profile:", profile);
 
-// const handleProfile = (store) => {
-//   // 👇 store selected here
-//   storeStore.selectedStore = store;
+  confirm.require({
+    message: `Delete ${profile.email}?`,
+    header: "Confirm Delete",
+    icon: "pi pi-exclamation-triangle",
+    rejectLabel: "Cancel",
+    acceptLabel: "Delete",
+    rejectClass: "p-button-secondary p-button-text",
+    acceptClass: "p-button-danger",
 
-//   // 👇 then navigate
-//   router.push({ name: "StoresProfileUpdate" });
-// };
+    accept: async () => {
+      try {
+        const result = await deleteProfile(profile.id);
 
-// const handleDelete = (store) => {
-//   confirm.require({
-//     message: `Delete ${store.name}?`,
-//     header: "Confirm Delete",
-//     icon: "pi pi-exclamation-triangle",
-//     rejectLabel: "Cancel",
-//     acceptLabel: "Delete",
-//     rejectClass: "p-button-secondary p-button-text",
-//     acceptClass: "p-button-danger",
+        console.log("Deleted successfully:", result);
 
-//     accept: async () => {
-//       try {
-//         const result = await deleteStoreProfile(store.id);
+        Toast.add({
+          severity: "success",
+          summary: "Deleted",
+          detail: "Profile deleted successfully",
+          life: 3000,
+        });
 
-//         console.log("Deleted successfully:", result);
+        // await fetchStoresProfile();
+      } catch (err) {
+        console.error("Delete failed:", err);
 
-//         toast.add({
-//           severity: "success",
-//           summary: "Deleted",
-//           detail: "Store deleted successfully",
-//           life: 3000,
-//         });
+        Toast.add({
+          severity: "error",
+          summary: "Delete Failed",
+          detail: err.message || "Something went wrong",
+          life: 4000,
+        });
+      }
+    },
 
-//         await fetchStoresProfile();
-//       } catch (err) {
-//         console.error("Delete failed:", err);
-
-//         toast.add({
-//           severity: "error",
-//           summary: "Delete Failed",
-//           detail: err.message || "Something went wrong",
-//           life: 4000,
-//         });
-//       }
-//     },
-
-//     reject: () => {
-//       toast.add({
-//         severity: "info",
-//         summary: "Cancelled",
-//         detail: "Delete cancelled",
-//         life: 2000,
-//       });
-//     },
-//   });
-// };
+    reject: () => {
+      Toast.add({
+        severity: "info",
+        summary: "Cancelled",
+        detail: "Delete cancelled",
+        life: 2000,
+      });
+    },
+  });
+};
 
 const {
   rows,
   rowsPerPageOptions,
   items,
-
   loading,
   selectedItem,
   searchValue,
@@ -311,6 +349,8 @@ const {
   showDialog,
   dialogData,
 } = useStoresProfileList();
+
+const { deleteProfile } = useStoresProfileUpdate();
 
 const roleOptions = [
   { label: "Dealer", value: "dealer" },

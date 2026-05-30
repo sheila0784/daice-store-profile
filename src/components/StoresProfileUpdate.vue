@@ -73,11 +73,41 @@
             v-model="email"
             class="w-full"
             :invalid="!!errors.email"
-            @keydown.enter.prevent="focusNextButton('statusRef')"
+            @keydown.enter.prevent="focusNext('passwordRef')"
           />
           <div />
           <small v-if="errors.email" class="flex text-red-500 items-center">{{
             errors.email
+          }}</small>
+        </div>
+
+        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+          <div class="font-medium p-2">Password:</div>
+          <InputText
+            ref="passwordRef"
+            v-model="password"
+            class="w-full"
+            :invalid="!!errors.password"
+            @keydown.enter.prevent="focusNext('confirmPasswordRef')"
+          />
+          <div />
+          <small v-if="errors.password" class="flex text-red-500 items-center">{{
+            errors.password
+          }}</small>
+        </div>
+
+         <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+          <div class="font-medium p-2">Confirm Password:</div>
+          <InputText
+            ref="confirmpasswordRef"
+            v-model="confirmPassword"
+            class="w-full"
+            :invalid="!!errors.confirmPassword"
+            @keydown.enter.prevent="focusNextButton('statusRef')"
+          />
+          <div />
+          <small v-if="errors.confirmPassword" class="flex text-red-500 items-center">{{
+            errors.confirmPassword
           }}</small>
         </div>
 
@@ -141,7 +171,8 @@ const schema = yup.object({
 
   role: yup.string().required("Role is required"),
   email: yup.string().email("Invalid email format").required("Email is required"),
-
+  password: yup.string().min(6, "Minimum 6 characters").required("Password is required"),
+  confirmPassword: yup.string().min(6, "Minimum 6 characters").required("Password is required").oneOf([yup.ref("password"), null], "Passwords must match")
 });
 
 const router = useRouter();
@@ -158,6 +189,7 @@ const { defineField, errors, handleSubmit } = useForm({
     contact: profile.value?.contact,
     store_id: profile.value?.store_id,
     email: profile.value?.email,
+    password: profile.value?.password,
     status: profile.value?.status,
   },
 });
@@ -168,12 +200,14 @@ const [avatar_url] = defineField("avatar_url");
 const [contact] = defineField("contact");
 const [store_id] = defineField("store_id");
 const [email] = defineField("email");
+const [password] = defineField("password");
 const [status] = defineField("status");
 
 const profileNameRef = ref(null);
 const contactRef = ref(null);
 const roleRef = ref(null);
 const emailRef = ref(null);
+const passwordRef = ref(null);
 const statusRef = ref(null);
 const submitRef = ref(null);
 
@@ -182,6 +216,8 @@ const refs = {
   contactRef,
   roleRef,
   emailRef,
+  passwordRef,
+  statusRef,
   submitRef,
 };
 const { focusNext, focusNextSel, focusNextButton } = useFocusNavigation(refs);
@@ -194,6 +230,7 @@ const onSave = handleSubmit(async () => {
     contact: contact.value,
     store_id: store_id.value,
     email: email.value,
+    password: password.value,
     status: status.value,
   });
 
@@ -205,6 +242,7 @@ const onSave = handleSubmit(async () => {
     contact: contact.value,
     store_id: store_id.value,
     email: email.value,
+    password: password.value,
     status: status.value,
   };
 
