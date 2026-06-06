@@ -99,7 +99,7 @@
          <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
           <div class="font-medium p-2">Confirm Password:</div>
           <InputText
-            ref="confirmpasswordRef"
+            ref="confirmPasswordRef"
             v-model="confirmPassword"
             class="w-full"
             :invalid="!!errors.confirmPassword"
@@ -144,7 +144,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import Card from "primevue/card";
 import Divider from "primevue/divider";
 import { useStoresProfile } from "@/stores/storeProfile";
@@ -172,35 +172,44 @@ const schema = yup.object({
   role: yup.string().required("Role is required"),
   email: yup.string().email("Invalid email format").required("Email is required"),
   password: yup.string().min(6, "Minimum 6 characters").required("Password is required"),
-  confirmPassword: yup.string().min(6, "Minimum 6 characters").required("Password is required").oneOf([yup.ref("password"), null], "Passwords must match")
+  confirmPassword: yup
+  .string()
+  .required("Confirm password is required")
+  .oneOf([yup.ref("password")], "Passwords must match"),
+
 });
 
 const router = useRouter();
 const storesProfile = useStoresProfile();
 const { storesProfile: profile } = storeToRefs(storesProfile);
 
-const { defineField, errors, handleSubmit } = useForm({
+const { defineField, errors, handleSubmit, resetForm } = useForm({
   validationSchema: schema,
-  enableReinitialize: true,
-  initialValues: {
-    display_name: profile.value?.display_name,
-    role: profile.value?.role,
-    avatar_url: profile.value?.avatar_url,
-    contact: profile.value?.contact,
-    store_id: profile.value?.store_id,
-    email: profile.value?.email,
-    password: profile.value?.password,
-    status: profile.value?.status,
-  },
 });
+
+// const { defineField, errors, handleSubmit } = useForm({
+//   validationSchema: schema,
+//   enableReinitialize: true,
+//   initialValues: {
+//     display_name: profile.value?.display_name,
+//     role: profile.value?.role,
+//     avatar_url: profile.value?.avatar_url,
+//     contact: profile.value?.contact,
+//     store_id: profile.value?.store_id,
+//     email: profile.value?.email,
+//     password: profile.value?.password,
+//     status: profile.value?.status,
+//   },
+// });
 
 const [display_name] = defineField("display_name");
 const [role] = defineField("role");
-const [avatar_url] = defineField("avatar_url");
+// const [avatar_url] = defineField("avatar_url");
 const [contact] = defineField("contact");
-const [store_id] = defineField("store_id");
+// const [store_id] = defineField("store_id");
 const [email] = defineField("email");
 const [password] = defineField("password");
+const [confirmPassword] = defineField("confirmPassword");
 const [status] = defineField("status");
 
 const profileNameRef = ref(null);
@@ -208,6 +217,7 @@ const contactRef = ref(null);
 const roleRef = ref(null);
 const emailRef = ref(null);
 const passwordRef = ref(null);
+const confirmpasswordRef = ref(null);
 const statusRef = ref(null);
 const submitRef = ref(null);
 
@@ -217,56 +227,38 @@ const refs = {
   roleRef,
   emailRef,
   passwordRef,
+  confirmpasswordRef,
   statusRef,
   submitRef,
 };
 const { focusNext, focusNextSel, focusNextButton } = useFocusNavigation(refs);
 
-const onSave = handleSubmit(async () => {
-  console.log("Form values:", {
-    display_name: display_name.value,
-    role: role.value,
-    avatar_url: avatar_url.value,
-    contact: contact.value,
-    store_id: store_id.value,
-    email: email.value,
-    password: password.value,
-    status: status.value,
-  });
-
-  const payload = {
-    id: profile.value.id,
-    display_name: display_name.value,
-    role: role.value,
-    avatar_url: avatar_url.value,
-    contact: contact.value,
-    store_id: store_id.value,
-    email: email.value,
-    password: password.value,
-    status: status.value,
-  };
-
+const onSave = handleSubmit(async (values) => {
   try {
-    // const result = await saveProfile(profile.value.id, payload);
-    // console.log("Updated successfully:", result);
+    await saveProfile({
+      id: profile.value?.id ?? null,
 
-    // router.back();
-    console.log("Payload to save:", payload);
-    // await saveProfile(profile.value.id, payload);
+      display_name: values.display_name,
+      contact: values.contact,
+      role: values.role,
+      status: values.status,
+
+      email: values.email,
+      password: values.password,
+    });
+
     toast.add({
       severity: "success",
-      summary: "Saved Successfully",
-      detail: "Your profile has been updated.",
-      life: 4000,
+      summary: "Saved",
+      detail: "User saved successfully",
+      life: 3000,
     });
-    // router.back();
   } catch (err) {
-    console.error("Save failed:", err);
     toast.add({
       severity: "error",
-      summary: "Saved Failed",
-      detail: err.message || "Something went wrong",
-      life: 4000,
+      summary: "Error",
+      detail: err.message,
+      life: 3000,
     });
   }
 });
@@ -276,4 +268,26 @@ const roles = [
   { name: "Customer", code: "customer" },
   { name: "Rider", code: "rider" },
 ];
+
+watch(
+  profile,
+  (value) => {
+    if (!value) return;
+
+    resetForm({
+      values: {
+        display_name: value.display_name,
+        role: value.role,
+        avatar_url: value.avatar_url,
+        contact: value.contact,
+        store_id: value.store_id,
+        email: value.email,
+        password: value.password,
+        status: value.status,
+      },
+    });
+  },
+  { immediate: true }
+);
+
 </script>
