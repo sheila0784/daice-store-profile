@@ -9,25 +9,15 @@ const corsHeaders = {
 };
 
 Deno.serve(async (req) => {
-  // ✅ CORS preflight
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    // =========================
-    // 1. Read + validate payload
-    // =========================
     const payload = await req.json();
 
-    if (!payload.id) throw new Error("Missing user id");
-    if (!payload.email) throw new Error("Missing email");
+    console.log("📦 Payload:", payload);
 
-    console.log("📦 Payload received:", payload);
-
-    // =========================
-    // 2. Check secrets
-    // =========================
     const url = Deno.env.get("SUPABASE_URL");
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
@@ -37,49 +27,79 @@ Deno.serve(async (req) => {
 
     const admin = createClient(url, serviceKey);
 
-    // =========================
-    // 3. Update Auth user
-    // =========================
-    const { data: authData, error: authError } =
-      await admin.auth.admin.updateUserById(payload.id, {
+    let authData;
+    let authError;
+    let userId = payload.id;
+
+    // ======================================================
+    // 1. CREATE USER (if no id)
+    // ======================================================
+    if (!payload.id) {
+      console.log("🆕 Creating new user...");
+
+      const result = await admin.auth.admin.createUser({
+        email: payload.email,
+        password: payload.password ?? "TempPass123!",
+        email_confirm: true,
+      });
+
+      authData = result.data;
+      authError = result.error;
+
+      if (authError) throw authError;
+
+      userId = authData.user.id;
+
+      console.log("✅ Created user:", userId);
+    }
+
+    // ======================================================
+    // 2. UPDATE USER (if id exists)
+    // ======================================================
+    else {
+      console.log("✏️ Updating existing user...");
+
+      const result = await admin.auth.admin.updateUserById(userId, {
         email: payload.email,
       });
 
-    if (authError) {
-      console.error("❌ Auth update failed:", authError);
-      throw authError;
+      authData = result.data;
+      authError = result.error;
+
+      if (authError) throw authError;
+
+      console.log("✅ Updated auth user:", userId);
     }
 
-    console.log("✅ Auth updated:", authData.user?.id);
-
-    // =========================
-    // 4. Update profile table
-    // =========================
+    // ======================================================
+    // 3. UPSERT PROFILE (works for both create & update)
+    // ======================================================
     const { data: profileData, error: profileError } = await admin
       .from("profiles")
-      .update({
+      .upsert({
+        id: userId,
         display_name: payload.display_name,
         contact: payload.contact,
         role: payload.role,
         status: payload.status,
         updated_at: new Date().toISOString(),
       })
-      .eq("id", payload.id)
       .select();
 
     if (profileError) {
-      console.error("❌ Profile update failed:", profileError);
+      console.error("❌ Profile error:", profileError);
       throw profileError;
     }
 
-    console.log("✅ Profile updated");
+    console.log("✅ Profile saved");
 
-    // =========================
-    // 5. Return success
-    // =========================
+    // ======================================================
+    // 4. RESPONSE
+    // ======================================================
     return new Response(
       JSON.stringify({
         success: true,
+        user_id: userId,
         auth: authData.user,
         profile: profileData,
       }),
@@ -92,7 +112,7 @@ Deno.serve(async (req) => {
       }
     );
   } catch (err) {
-    console.error("💥 FUNCTION ERROR:", err);
+    console.error("💥 ERROR:", err);
 
     return new Response(
       JSON.stringify({
@@ -101,10 +121,7 @@ Deno.serve(async (req) => {
       }),
       {
         status: 400,
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json",
-        },
+        headers: corsHeaders,
       }
     );
   }
