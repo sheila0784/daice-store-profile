@@ -58,7 +58,7 @@
     </div>
 
     <div class="flex items-center flex-wrap justify-center w-full text-sm">
-      <Datatable :value="salesData" class="w-full border-1 border-gray-300" :rows="rows" :rowsPerPageOptions="rowsPerPageOptions" paginator>
+      <Datatable :value="salesData" class="w-full border-1 border-gray-300" :rows="rows" :rowsPerPageOptions="rowsPerPageOptions" paginator stripedRows>
         <Column
           field="order_date"
           header="Date"
