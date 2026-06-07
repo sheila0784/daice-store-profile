@@ -261,6 +261,7 @@ import InputText from "primevue/inputtext";
 import InputIcon from "primevue/inputicon";
 import IconField from "primevue/iconfield";
 import Message from "primevue/message";
+import Toast from "primevue/toast";
 
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
@@ -277,7 +278,7 @@ const imageLoading = ref(true);
 
 const storesProfile = useStoresProfile();
 const confirm = useConfirm();
-const Toast = useToast();
+const toast = useToast();
 
 const handleUpdate = (store) => {
   // 👇 store selected here
@@ -301,22 +302,22 @@ const handleDelete = (profile) => {
 
     accept: async () => {
       try {
-        const result = await deleteProfile(profile.id);
+        // const result = await deleteProfile(profile.id);
 
-        console.log("Deleted successfully:", result);
+        await deleteProfile(profile.id);
 
-        Toast.add({
+        toast.add({
           severity: "success",
           summary: "Deleted",
           detail: "Profile deleted successfully",
           life: 3000,
         });
 
-        // await fetchStoresProfile();
+        await fetchStoresProfile();
       } catch (err) {
         console.error("Delete failed:", err);
 
-        Toast.add({
+        toast.add({
           severity: "error",
           summary: "Delete Failed",
           detail: err.message || "Something went wrong",
@@ -326,7 +327,7 @@ const handleDelete = (profile) => {
     },
 
     reject: () => {
-      Toast.add({
+      toast.add({
         severity: "info",
         summary: "Cancelled",
         detail: "Delete cancelled",

@@ -103,28 +103,31 @@
             v-model="confirmPassword"
             class="w-full"
             :invalid="!!errors.confirmPassword"
-            @keydown.enter.prevent="focusNextButton('statusRef')"
+            @keydown.enter.prevent="focusNextSel('statusRef')"
           />
           <div />
           <small v-if="errors.confirmPassword" class="flex text-red-500 items-center">{{
             errors.confirmPassword
           }}</small>
         </div>
+     
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+         <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
           <div class="font-medium p-2">Status:</div>
-          <InputText
+           <Select
             ref="statusRef"
             v-model="status"
+            :options="statusOptions"
+            optionLabel="name"
+            optionValue="code"
             class="w-full"
-            :invalid="!!errors.status"
-            @keydown.enter.prevent="focusNextButton('submitRef')"
           />
           <div />
           <small v-if="errors.status" class="flex text-red-500 items-center">{{
             errors.status
           }}</small>
         </div>
+
 
         <div class="flex py-1 rounded relative gap-2 justify-end" role="alert">
           <Button
@@ -152,6 +155,7 @@ import { storeToRefs } from "pinia";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import Select from "primevue/select";
+import Toast from "primevue/toast";
 import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
 
@@ -187,20 +191,6 @@ const { defineField, errors, handleSubmit, resetForm } = useForm({
   validationSchema: schema,
 });
 
-// const { defineField, errors, handleSubmit } = useForm({
-//   validationSchema: schema,
-//   enableReinitialize: true,
-//   initialValues: {
-//     display_name: profile.value?.display_name,
-//     role: profile.value?.role,
-//     avatar_url: profile.value?.avatar_url,
-//     contact: profile.value?.contact,
-//     store_id: profile.value?.store_id,
-//     email: profile.value?.email,
-//     password: profile.value?.password,
-//     status: profile.value?.status,
-//   },
-// });
 
 const [display_name] = defineField("display_name");
 const [role] = defineField("role");
@@ -217,7 +207,7 @@ const contactRef = ref(null);
 const roleRef = ref(null);
 const emailRef = ref(null);
 const passwordRef = ref(null);
-const confirmpasswordRef = ref(null);
+const confirmPasswordRef = ref(null);
 const statusRef = ref(null);
 const submitRef = ref(null);
 
@@ -227,11 +217,11 @@ const refs = {
   roleRef,
   emailRef,
   passwordRef,
-  confirmpasswordRef,
+  confirmPasswordRef,
   statusRef,
   submitRef,
 };
-const { focusNext, focusNextSel, focusNextButton } = useFocusNavigation(refs);
+const { focusNext, focusNextSel } = useFocusNavigation(refs);  //focusNextButton
 
 const onSave = handleSubmit(async (values) => {
   try {
@@ -253,6 +243,8 @@ const onSave = handleSubmit(async (values) => {
       detail: "User saved successfully",
       life: 3000,
     });
+    router.back();
+    
   } catch (err) {
     toast.add({
       severity: "error",
@@ -267,6 +259,12 @@ const roles = [
   { name: "Dealer", code: "dealer" },
   { name: "Customer", code: "customer" },
   { name: "Rider", code: "rider" },
+];
+
+const statusOptions = [
+  { name: "Approved", code: "approved" },
+  { name: "Pending", code: "pending" },
+  { name: "Blocked", code: "blocked" },
 ];
 
 watch(
