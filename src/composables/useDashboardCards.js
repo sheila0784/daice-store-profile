@@ -9,8 +9,6 @@ export function useDashboardCards(dateRange) {
 
   const loading = ref(false);
 
-  // console.log("Date range in composable:", dateRange.value);
-
   const fetchDashboardCards = async () => {
     loading.value = true;
 
@@ -21,8 +19,7 @@ export function useDashboardCards(dateRange) {
       start = dateRange.value[0];
       end = dateRange.value[1];
     }
-
-    // console.log("Fetching sales data with date range: ", { start, end });
+  
 
     const { data, error } = await supabase.rpc("get_sales_summary", {
       start_date: start,
@@ -35,10 +32,49 @@ export function useDashboardCards(dateRange) {
     }
 
     salesData.value = data;
-    console.log("Fetched sales data:", salesData.value);
-    console.log("Date range in composable:", dateRange.value);
+    // console.log("Fetched sales data:", salesData.value);
+    // console.log("Date range in composable:", dateRange.value);
 
     loading.value = false;
+  };
+
+  const dealerCount = ref(0);
+  const customerCount = ref(0);
+  const riderCount = ref(0);
+
+  const fetchCounts = async () => {
+    const [
+      { count: dealers, error: dealerError },
+      { count: customers, error: customerError },
+      { count: riders, error: riderError },
+
+    ] = await Promise.all([
+      supabase.from("stores").select("*", { count: "exact", head: true }).eq("active", true),
+
+      supabase.from("profiles").select("*", { count: "exact", head: true }).eq("role", "customer"),
+
+      supabase.from("profiles").select("*", { count: "exact", head: true }).eq("role", "rider"),
+
+    ]);
+
+    // console.log("Fetched dealer count:", dealers);
+    // console.log("Fetched customer count:", customers);
+    // console.log("Fetched rider count:", riders);  
+
+    if (dealerError || customerError || riderError) {
+      console.error(dealerError || customerError || riderError);
+      return;
+    }
+
+    dealerCount.value = dealers ?? 0;
+    customerCount.value = customers ?? 0;
+    riderCount.value = riders ?? 0;
+
+    return {
+      dealers: dealerCount,
+      customers: customerCount,
+      riders: riderCount,
+    };
   };
 
   return {
@@ -47,5 +83,9 @@ export function useDashboardCards(dateRange) {
     loading,
     fetchDashboardCards,
     salesData,
+    fetchCounts,
+    dealerCount,
+    customerCount,
+    riderCount
   };
 }
