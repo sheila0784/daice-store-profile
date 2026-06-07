@@ -17,9 +17,18 @@ export function useDashboardCards(dateRange) {
 
     if (dateRange.value?.[0] && dateRange.value?.[1]) {
       start = dateRange.value[0];
+      // start.setHours(0, 0, 0, 0);
+      start.setHours(23, 59, 59, 999);
+
       end = dateRange.value[1];
+      end.setHours(23, 59, 59, 999);
+
+      start = start.toISOString();
+      end = end.toISOString();
     }
   
+    console.log("Fetching sales data with date range:", { start, end });
+
 
     const { data, error } = await supabase.rpc("get_sales_summary", {
       start_date: start,
@@ -32,7 +41,7 @@ export function useDashboardCards(dateRange) {
     }
 
     salesData.value = data;
-    // console.log("Fetched sales data:", salesData.value);
+    console.log("Fetched sales data:", salesData.value);
     // console.log("Date range in composable:", dateRange.value);
 
     loading.value = false;
