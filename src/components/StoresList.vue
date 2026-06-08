@@ -58,7 +58,13 @@
           dataKey="id"
           @row-click="onRowClick"
         >
-          <Column field="acctNo" header="Account No."></Column>
+          <!-- <Column field="acctNo" header="Account No."></Column> -->
+          <Column header="#" style="width: 60px">
+            <template #body="slotProps">
+              {{ slotProps.index + 1 }}
+            </template>
+          </Column>
+
           <Column field="name" header="Name" sortable></Column>
           <Column field="address" header="Address"></Column>
           <Column field="barangay" header="Barangay"></Column>
@@ -75,7 +81,6 @@
           <Column style="width: 140px">
             <template #body="slotProps">
               <div class="flex gap-2">
-
                 <Button
                   icon="pi pi-pencil"
                   severity="info"
@@ -115,7 +120,7 @@
       <Divider />
 
       <div v-if="dialogData" class="space-y-2">
-         <p>
+        <p>
           <span class="text-sm font-semibold text-gray-500">Dealer Id:</span>
           <span class="text-md ml-2">{{ dialogData.id }}</span>
         </p>

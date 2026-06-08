@@ -6,6 +6,7 @@ export function useDashboardCards(dateRange) {
   const rowsPerPageOptions = ref([10, 20, 50, 100, 200]);
 
   const salesData = ref([]);
+  const selRowDate = ref(null);
 
   const loading = ref(false);
 
@@ -26,9 +27,8 @@ export function useDashboardCards(dateRange) {
       start = start.toISOString();
       end = end.toISOString();
     }
-  
-    console.log("Fetching sales data with date range:", { start, end });
 
+    console.log("Fetching sales data with date range:", { start, end });
 
     const { data, error } = await supabase.rpc("get_sales_summary", {
       start_date: start,
@@ -56,19 +56,17 @@ export function useDashboardCards(dateRange) {
       { count: dealers, error: dealerError },
       { count: customers, error: customerError },
       { count: riders, error: riderError },
-
     ] = await Promise.all([
       supabase.from("stores").select("*", { count: "exact", head: true }).eq("active", true),
 
       supabase.from("profiles").select("*", { count: "exact", head: true }).eq("role", "customer"),
 
       supabase.from("profiles").select("*", { count: "exact", head: true }).eq("role", "rider"),
-
     ]);
 
     // console.log("Fetched dealer count:", dealers);
     // console.log("Fetched customer count:", customers);
-    // console.log("Fetched rider count:", riders);  
+    // console.log("Fetched rider count:", riders);
 
     if (dealerError || customerError || riderError) {
       console.error(dealerError || customerError || riderError);
@@ -86,6 +84,54 @@ export function useDashboardCards(dateRange) {
     };
   };
 
+  const salesPerDay = ref([]);
+  const showDiaSalesPerDay = ref(false);
+
+  const fetchSalesPerDay = async () => {
+    loading.value = true;
+
+    // if (selRowDate.value) {
+    //   const selectedDate = new Date(selRowDate.value);
+    //   selectedDate.setHours(0, 0, 0, 0);
+    //   const start = selectedDate.toISOString();
+    // }
+
+    console.log("Fetching sales data for :", selRowDate.value);
+
+    const { data, error } = await supabase
+      .from("orders")
+      .select(
+        `
+    recipient,
+    total_amount,
+    created_at
+  `,
+      )
+      .eq("status", "Delivered")
+      .gte("created_at", selRowDate.value.split("T")[0] + "T00:00:00.000Z")
+      .lt("created_at", selRowDate.value.split("T")[0] + "T23:59:59.999Z");
+
+    console.log("Supabase query result:", { data, error });
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    const formattedData = data.map((row) => ({
+      dealer: row.stores?.name,
+      order_date: row.created_at.split("T")[0],
+      recipient: row.recipient,
+      total_amount: row.total_amount,
+    }));
+
+    salesPerDay.value = formattedData;
+    console.log("Fetched sales data:", salesPerDay.value);
+    showDiaSalesPerDay.value = true;
+
+    loading.value = false;
+  };
+
   return {
     rows,
     rowsPerPageOptions,
@@ -95,6 +141,10 @@ export function useDashboardCards(dateRange) {
     fetchCounts,
     dealerCount,
     customerCount,
-    riderCount
+    riderCount,
+    salesPerDay,
+    fetchSalesPerDay,
+    selRowDate,
+    showDiaSalesPerDay,
   };
 }
