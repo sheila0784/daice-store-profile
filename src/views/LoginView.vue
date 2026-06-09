@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-center items-center min-h-screen">
-   <Card class="shadow-4">
+  <div class="flex justify-center items-center min-h-screen p-8">
+   <Card class="shadow-2 p-4">
       <template #title>
         <div class="text-2xl font-bold text-center">Da ICE Login</div>
       </template>
@@ -9,7 +9,7 @@
       </template>
 
       <template #content>
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-3 m-4">
           <div>
             <label class="block mb-2">Email</label>
             <InputText v-model="email" class="w-full" />
@@ -20,7 +20,7 @@
             <Password v-model="password" class="w-full" :feedback="false" toggleMask />
           </div>
 
-          <Button label="Login" icon="pi pi-sign-in" :loading="loading" @click="login" />
+          <Button label="Login" icon="pi pi-sign-in" :loading="loading" @click="login" class="w-full mb-4"/>
 
           <Message v-if="errorMessage" severity="error">
             {{ errorMessage }}

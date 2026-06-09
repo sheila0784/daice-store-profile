@@ -33,6 +33,27 @@ const items = [
     icon: "pi pi-user-edit",
     command: () => router.push("/storesprofilelist"),
   },
+   {
+    label: "Settings",
+    icon: "pi pi-cog",
+    items: [
+      {
+        label: "Announcements",
+        icon: "pi pi-megaphone",
+        command: () => router.push("/appannouncements"),
+      },
+      {
+        label: "App Version",
+        icon: "pi pi-tag",
+        command: () => router.push("/app-version"),
+      },
+      {
+        label: "Maintenance",
+        icon: "pi pi-wrench",
+        command: () => router.push("/app-maintenance"),
+      },
+    ],
+  },
 ];
 
 const logout = async () => {

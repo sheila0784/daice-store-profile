@@ -90,14 +90,6 @@ export function useDashboardCards(dateRange) {
   const fetchSalesPerDay = async () => {
     loading.value = true;
 
-    // if (selRowDate.value) {
-    //   const selectedDate = new Date(selRowDate.value);
-    //   selectedDate.setHours(0, 0, 0, 0);
-    //   const start = selectedDate.toISOString();
-    // }
-
-    console.log("Fetching sales data for :", selRowDate.value);
-
     const { data, error } = await supabase
       .from("orders")
       .select(
@@ -111,7 +103,7 @@ export function useDashboardCards(dateRange) {
       .gte("created_at", selRowDate.value.split("T")[0] + "T00:00:00.000Z")
       .lt("created_at", selRowDate.value.split("T")[0] + "T23:59:59.999Z");
 
-    console.log("Supabase query result:", { data, error });
+    // console.log("Supabase query result:", { data, error });
 
     if (error) {
       console.error(error);
@@ -126,7 +118,7 @@ export function useDashboardCards(dateRange) {
     }));
 
     salesPerDay.value = formattedData;
-    console.log("Fetched sales data:", salesPerDay.value);
+    // console.log("Fetched sales data:", salesPerDay.value);
     showDiaSalesPerDay.value = true;
 
     loading.value = false;

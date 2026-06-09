@@ -57,20 +57,21 @@
           v-model="selectedItem"
           dataKey="id"
           @row-click="onRowClick"
+          class="w-full text-xs border-0 border-gray-300"
         >
           <!-- <Column field="acctNo" header="Account No."></Column> -->
-          <Column header="#" style="width: 60px">
+          <Column header="#" style="width: 60px" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
             <template #body="slotProps">
               {{ slotProps.index + 1 }}
             </template>
           </Column>
 
-          <Column field="name" header="Name" sortable></Column>
-          <Column field="address" header="Address"></Column>
-          <Column field="barangay" header="Barangay"></Column>
-          <Column field="city" header="City"></Column>
-          <Column field="province" header="Province"></Column>
-          <Column field="active" header="Active">
+          <Column field="name" header="Name" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
+          <Column field="address" header="Address" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
+          <Column field="barangay" header="Barangay" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
+          <Column field="city" header="City" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
+          <Column field="province" header="Province" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
+          <Column field="active" header="Active" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
             <template #body="slotProps">
               <i v-if="slotProps.data.active" class="pi pi-check-square text-gray-500"></i>
               <i v-else class="pi pi-stop text-gray-500"></i>
@@ -78,7 +79,7 @@
           </Column>
 
           <!-- Actions Column -->
-          <Column style="width: 140px">
+          <Column style="width: 140px" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
             <template #body="slotProps">
               <div class="flex gap-2">
                 <Button

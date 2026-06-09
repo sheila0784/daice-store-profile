@@ -4,6 +4,8 @@ import StoresList from "../components/StoresList.vue";
 import StoresUpdate from "../components/StoresUpdate.vue";
 import StoresProfileList from "../components/StoresProfileList.vue";
 import StoresProfileUpdate from "../components/StoresProfileUpdate.vue"
+import AppAnnouncements from "../components/AppAnnouncements.vue";
+
 import LoginView from '@/views/LoginView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 
@@ -49,6 +51,12 @@ const routes = [
     path: "/StoresProfileUpdate",
     name: "StoresProfileUpdate",
     component: StoresProfileUpdate,
+  },
+
+   {
+    path: "/AppAnnouncements",
+    name: "AppAnnouncements",
+    component: AppAnnouncements,
   },
 
 ];

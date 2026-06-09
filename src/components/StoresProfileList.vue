@@ -58,9 +58,10 @@
           v-model="selectedItem"
           dataKey="id"
           @row-click="onRowClick"
+          class="w-full text-xs border-0 border-gray-300"
         >
           <!-- Row Count Column -->
-          <Column header="#" style="width: 60px">
+          <Column header="#" style="width: 60px" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
             <template #body="slotProps">
               {{ slotProps.index + 1 }}
             </template>
@@ -68,7 +69,7 @@
           <!-- <Column field="id" header="Id"></Column>
           <Column field="store_id" header="Store Id"></Column> -->
 
-          <Column field="role" header="Role" sortable>
+          <Column field="role" header="Role" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
             <template #body="{ data }">
               <i v-if="data.role === 'dealer'" class="pi pi-briefcase text-blue-400"></i>
               <i v-else-if="data.role === 'rider'" class="pi pi-car text-green-400"></i>
@@ -78,10 +79,10 @@
             </template>
           </Column>
 
-          <Column field="display_name" header="Profile Name" sortable></Column>
-          <Column field="email" header="Email" sortable></Column>
-          <Column field="contact" header="Contact No."></Column>
-          <Column field="status" header="Status">
+          <Column field="display_name" header="Profile Name" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
+          <Column field="email" header="Email" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
+          <Column field="contact" header="Contact No." headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
+          <Column field="status" header="Status" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
             <template #body="{ data }">
               <i v-if="data.status === 'approved'" class="pi pi-thumbs-up text-green-600"></i>
 
@@ -90,25 +91,25 @@
               </span>
             </template>
           </Column>
-          <Column field="name" header="Dealer" sortable>
+          <Column field="name" header="Dealer" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
             <template #body="slotProps">
               {{ slotProps.data.role === "dealer" ? "" : slotProps.data.name }}
             </template>
           </Column>
 
-          <Column field="created_at" header="Account Creation" sortable class="text-xs">
+          <Column field="created_at" header="Account Creation" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
             <template #body="slotProps">
               {{ formatDate(slotProps.data.created_at) }}
             </template>
           </Column>
 
-          <Column field="last_sign_in_at" header="Last Sign-in" sortable class="text-xs">
+          <Column field="last_sign_in_at" header="Last Sign-in" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
             <template #body="slotProps">
               {{ formatDate(slotProps.data.last_sign_in_at) }}
             </template>
           </Column>
 
-          <Column field="last_order_placed" header="Last Order Placed" sortable class="text-xs">
+          <Column field="last_order_placed" header="Last Order Placed" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
             <template #body="slotProps">
               {{ formatDate(slotProps.data.last_order_placed) }}
             </template>
@@ -121,7 +122,7 @@
           </Column> -->
 
           <!-- Actions Column -->
-          <Column style="width: 140px">
+          <Column style="width: 140px" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
             <template #body="slotProps">
               <div class="flex gap-2">
                 <Button
@@ -247,7 +248,7 @@ import { onMounted, ref } from "vue";
 import { useStoresProfileList } from "../composables/useStoresProfileList";
 import { useStoresProfileUpdate } from "../composables/useStoresProfileUpdate";
 
-import { useRouter } from "vue-router";
+import { useRouter , useRoute } from "vue-router";
 import { useStoresProfile } from "@/stores/storeProfile";
 
 // import { useStoreStore } from "@/stores/storeStore";
@@ -274,6 +275,8 @@ import Dialog from "primevue/dialog";
 import Button from "primevue/button";
 
 const router = useRouter();
+const route = useRoute();
+
 const imageLoading = ref(true);
 
 const storesProfile = useStoresProfile();
@@ -368,7 +371,16 @@ const roleOptions = [
 //   });
 // };
 
-onMounted(() => {
-  fetchStoresProfile();
+// onMounted(() => {
+//   fetchStoresProfile();
+// });
+
+onMounted(async () => {
+  if (route.query.role) {
+    filterRole.value = route.query.role;
+  }
+
+  await fetchStoresProfile();
 });
+
 </script>
