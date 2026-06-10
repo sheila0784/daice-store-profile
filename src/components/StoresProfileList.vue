@@ -74,7 +74,7 @@
               <i v-if="data.role === 'dealer'" class="pi pi-briefcase text-blue-400"></i>
               <i v-else-if="data.role === 'rider'" class="pi pi-car text-green-400"></i>
               <span v-else>
-                <i class="pi pi-user text-gray-600"></i>
+                <i class="pi pi-user text-yellow-400"></i>
               </span>
             </template>
           </Column>
@@ -251,9 +251,6 @@ import { useStoresProfileUpdate } from "../composables/useStoresProfileUpdate";
 import { useRouter , useRoute } from "vue-router";
 import { useStoresProfile } from "@/stores/storeProfile";
 
-// import { useStoreStore } from "@/stores/storeStore";
-// import { useStoresProfileUpdate } from "../composables/useStoresProfileUpdate";
-
 import Card from "primevue/card";
 import Divider from "primevue/divider";
 import DataTable from "primevue/datatable";
@@ -362,18 +359,6 @@ const roleOptions = [
   { label: "Rider", value: "rider" },
   { label: "All", value: null },
 ];
-
-// const handleCreate = () => {
-//   storesProfile.setProfile({});
-
-//   router.push({
-//     name: "StoresProfileUpdate",
-//   });
-// };
-
-// onMounted(() => {
-//   fetchStoresProfile();
-// });
 
 onMounted(async () => {
   if (route.query.role) {

@@ -17,9 +17,10 @@ export function useFocusNavigation(refs) {
 
     if (!component) return;
 
+    // 'input, button, [tabindex="0"]'
     if (component.$el) {
       const focusable = component.$el.querySelector(
-        'input, button, [tabindex="0"]'
+        'input, button, textarea, [role="checkbox"]'
       );
 
       if (focusable) {
