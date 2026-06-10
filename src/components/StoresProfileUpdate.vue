@@ -81,7 +81,7 @@
           }}</small>
         </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+        <div v-if="!profile.id" class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
           <div class="font-medium p-2">Password:</div>
           <InputText
             ref="passwordRef"
@@ -96,7 +96,7 @@
           }}</small>
         </div>
 
-         <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+         <div v-if="!profile.id" class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
           <div class="font-medium p-2">Confirm Password:</div>
           <InputText
             ref="confirmPasswordRef"
@@ -175,11 +175,29 @@ const schema = yup.object({
 
   role: yup.string().required("Role is required"),
   email: yup.string().email("Invalid email format").required("Email is required"),
-  password: yup.string().min(6, "Minimum 6 characters").required("Password is required"),
-  confirmPassword: yup
-  .string()
-  .required("Confirm password is required")
-  .oneOf([yup.ref("password")], "Passwords must match"),
+  // password: yup.string().min(6, "Minimum 6 characters").required("Password is required"),
+  // confirmPassword: yup
+  // .string()
+  // .required("Confirm password is required")
+  // .oneOf([yup.ref("password")], "Passwords must match"),
+
+   password: yup.string().when([], {
+    is: () => !profile.value?.id,   // 👈 create mode only
+    then: (schema) =>
+      schema.required("Password is required").min(6, "Minimum 6 characters"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+
+  confirmPassword: yup.string().when([], {
+    is: () => !profile.value?.id,
+    then: (schema) =>
+      schema
+        .required("Confirm password is required")
+        .oneOf([yup.ref("password")], "Passwords must match"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+
+  status: yup.string().required("Status is required"),
 
 });
 
