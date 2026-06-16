@@ -77,6 +77,8 @@
         paginator
         stripedRows
         selectionMode="single"
+        sortField="order_date"
+        :sortOrder="-1"
         @row-click="onRowClick"
       >
         <Column
@@ -234,21 +236,19 @@ const handleCustomerClick = () => {
   router.push({
     path: "/storesprofilelist",
     query: {
-      role: "customer"
-    }
+      role: "customer",
+    },
   });
-
 };
 
 const handleRiderClick = () => {
   // router.push("/storesprofilelist");
-   router.push({
+  router.push({
     path: "/storesprofilelist",
     query: {
-      role: "rider"
-    }
+      role: "rider",
+    },
   });
-
 };
 
 watch(dateRange, (newVal) => {

@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center items-center min-h-screen p-8">
-   <Card class="shadow-2 p-4">
+   <Card class="shadow-2 p-1">
       <template #title>
         <div class="text-2xl font-bold text-center">Da ICE Login</div>
       </template>

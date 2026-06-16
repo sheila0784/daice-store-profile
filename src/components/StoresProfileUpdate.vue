@@ -81,9 +81,10 @@
           }}</small>
         </div>
 
-        <div v-if="!profile.id" class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 pb-1 items-center">
           <div class="font-medium p-2">Password:</div>
           <InputText
+          type="password"
             ref="passwordRef"
             v-model="password"
             class="w-full"
@@ -91,14 +92,13 @@
             @keydown.enter.prevent="focusNext('confirmPasswordRef')"
           />
           <div />
-          <small v-if="errors.password" class="flex text-red-500 items-center">{{
-            errors.password
-          }}</small>
+          <small class="flex text-red-500 items-center">{{ errors.password }}</small>
         </div>
 
-         <div v-if="!profile.id" class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 pt-0 pb-0 items-center">
           <div class="font-medium p-2">Confirm Password:</div>
           <InputText
+          type="password"
             ref="confirmPasswordRef"
             v-model="confirmPassword"
             class="w-full"
@@ -110,11 +110,28 @@
             errors.confirmPassword
           }}</small>
         </div>
-     
 
-         <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+
+
+         <div class="flex  rounded relative justify-end text-xs mb-4" role="alert">
+          <Button
+            
+            label="Change Password"
+            severity="primary"
+            variant="text"
+             class="p-0 pr-2 border-none bg-transparent shadow-none underline text-blue-500 hover:text-blue-700 text-xs"
+       @click="showPasswordFields = !showPasswordFields"
+            
+          />
+        </div>
+
+
+
+
+        
+        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
           <div class="font-medium p-2">Status:</div>
-           <Select
+          <Select
             ref="statusRef"
             v-model="status"
             :options="statusOptions"
@@ -128,7 +145,6 @@
           }}</small>
         </div>
 
-
         <div class="flex py-1 rounded relative gap-2 justify-end" role="alert">
           <Button
             ref="submitRef"
@@ -141,6 +157,8 @@
             @click="onSave"
           />
         </div>
+
+      
       </template>
     </Card>
   </div>
@@ -181,15 +199,35 @@ const schema = yup.object({
   // .required("Confirm password is required")
   // .oneOf([yup.ref("password")], "Passwords must match"),
 
-   password: yup.string().when([], {
-    is: () => !profile.value?.id,   // 👈 create mode only
-    then: (schema) =>
-      schema.required("Password is required").min(6, "Minimum 6 characters"),
-    otherwise: (schema) => schema.notRequired(),
+  //  password: yup.string().when([], {
+  //   is: () => !profile.value?.id,   // 👈 create mode only
+  //   then: (schema) =>
+  //     schema.required("Password is required").min(6, "Minimum 6 characters"),
+  //   otherwise: (schema) => schema.notRequired(),
+  // }),
+
+  // confirmPassword: yup.string().when([], {
+  //   is: () => !profile.value?.id,
+  //   then: (schema) =>
+  //     schema
+  //       .required("Confirm password is required")
+  //       .oneOf([yup.ref("password")], "Passwords must match"),
+  //   otherwise: (schema) => schema.notRequired(),
+  // }),
+
+  password: yup.string().when([], {
+    is: () => !profile.value?.id,
+    then: (schema) => schema.required("Password is required").min(6, "Minimum 6 characters"),
+    otherwise: (schema) =>
+      schema.test(
+        "password-length",
+        "Minimum 6 characters",
+        (value) => !value || value.length >= 6,
+      ),
   }),
 
-  confirmPassword: yup.string().when([], {
-    is: () => !profile.value?.id,
+  confirmPassword: yup.string().when("password", {
+    is: (password) => !!password,
     then: (schema) =>
       schema
         .required("Confirm password is required")
@@ -198,7 +236,6 @@ const schema = yup.object({
   }),
 
   status: yup.string().required("Status is required"),
-
 });
 
 const router = useRouter();
@@ -208,7 +245,6 @@ const { storesProfile: profile } = storeToRefs(storesProfile);
 const { defineField, errors, handleSubmit, resetForm } = useForm({
   validationSchema: schema,
 });
-
 
 const [display_name] = defineField("display_name");
 const [role] = defineField("role");
@@ -239,20 +275,33 @@ const refs = {
   statusRef,
   submitRef,
 };
-const { focusNext, focusNextSel } = useFocusNavigation(refs);  //focusNextButton
+const { focusNext, focusNextSel } = useFocusNavigation(refs); //focusNextButton
 
 const onSave = handleSubmit(async (values) => {
   try {
+    // await saveProfile({
+    //   id: profile.value?.id ?? null,
+
+    //   display_name: values.display_name,
+    //   contact: values.contact,
+    //   role: values.role,
+    //   status: values.status,
+
+    //   email: values.email,
+    //   password: values.password,
+    // });
+
     await saveProfile({
       id: profile.value?.id ?? null,
-
       display_name: values.display_name,
       contact: values.contact,
       role: values.role,
       status: values.status,
-
       email: values.email,
-      password: values.password,
+
+      ...(values.password && {
+        password: values.password,
+      }),
     });
 
     toast.add({
@@ -262,7 +311,6 @@ const onSave = handleSubmit(async (values) => {
       life: 3000,
     });
     router.back();
-    
   } catch (err) {
     toast.add({
       severity: "error",
@@ -303,7 +351,6 @@ watch(
       },
     });
   },
-  { immediate: true }
+  { immediate: true },
 );
-
 </script>
