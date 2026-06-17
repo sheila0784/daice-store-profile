@@ -90,20 +90,34 @@ export function useDashboardCards(dateRange) {
   const fetchSalesPerDay = async () => {
     loading.value = true;
 
+    //   const { data, error } = await supabase
+    //     .from("orders")
+    //     .select(
+    //       `
+    //   recipient,
+    //   total_amount,
+    //   created_at
+    // `,
+    //     )
+    //     .eq("status", "Delivered")
+    //     .gte("created_at", selRowDate.value.split("T")[0] + "T00:00:00.000Z")
+    //     .lt("created_at", selRowDate.value.split("T")[0] + "T23:59:59.999Z");
+
     const { data, error } = await supabase
-      .from("orders")
+      .from("order_items_summary")
       .select(
         `
     recipient,
     total_amount,
-    created_at
+    created_at, 
+    product_quantity
   `,
       )
       .eq("status", "Delivered")
       .gte("created_at", selRowDate.value.split("T")[0] + "T00:00:00.000Z")
       .lt("created_at", selRowDate.value.split("T")[0] + "T23:59:59.999Z");
 
-    // console.log("Supabase query result:", { data, error });
+    console.log("Supabase query result:", { data, error });
 
     if (error) {
       console.error(error);
@@ -115,6 +129,7 @@ export function useDashboardCards(dateRange) {
       order_date: row.created_at.split("T")[0],
       recipient: row.recipient,
       total_amount: row.total_amount,
+      product_quantity: row.product_quantity
     }));
 
     salesPerDay.value = formattedData;

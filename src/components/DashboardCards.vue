@@ -94,6 +94,11 @@
           header="Served Customers"
           headerClass="bg-yellow-50"
         ></Column>
+
+        
+<!-- insert here the product_quantity -->
+
+
         <Column
           field="total_amount"
           headerClass="text-right bg-yellow-50"
@@ -140,7 +145,7 @@
               <p>
                 Sales Date: <span class="text-gray-800 text-bold text-lg">{{ selRowDate }}</span>
               </p>
-
+            
               <p>
                 Total Sales:
                 <span class="text-gray-800 text-bold text-lg"
@@ -167,6 +172,12 @@
             <Column
               field="recipient"
               header="Customer"
+              headerClass="bg-yellow-50 text-xs"
+              bodyClass="text-xs"
+            ></Column>
+             <Column
+              field="product_quantity"
+              header="Product"
               headerClass="bg-yellow-50 text-xs"
               bodyClass="text-xs"
             ></Column>
@@ -208,6 +219,7 @@ const dateRange = ref(null);
 const dateDisplay = ref("");
 const selRowDealer = ref("");
 const selRowTotal = ref(0);
+const selRowProds = ref("");
 
 const today = new Date();
 // const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -217,6 +229,7 @@ const onRowClick = (event) => {
   selRowDate.value = event.data.order_date;
   selRowDealer.value = event.data.dealer;
   selRowTotal.value = event.data.total_amount;
+  selRowProds.value = event.data.product_quantity;
 
   console.log("Row clicked:", selRowDate.value, selRowDealer.value, selRowTotal.value);
 
