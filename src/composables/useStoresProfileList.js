@@ -22,14 +22,14 @@ export function useStoresProfileList() {
     const role = filterRole.value?.trim() || null;
 
     let query = supabase.from("profiles_with_email").select(`
-  *,
-  store:stores!profiles_store_id_fkey(
-    id,
-    acctNo,
-    name,
-    address, barangay, city, province, active
-  )
-`);
+      *,
+      store:stores!profiles_store_id_fkey(
+        id,
+        acctNo,
+        name,
+        address, barangay, city, province, active
+      )
+    `);
 
     if (role) {
       query = query.or(`role.eq.${role},role.is.null`);
@@ -56,7 +56,7 @@ export function useStoresProfileList() {
         last_sign_in_at: item.last_sign_in_at,
         last_order_placed: item.last_order_placed,
         last_delivery_at: item.last_delivery_at,
-
+       
         // profile fields
         display_name: item.display_name,
         contact: item.contact,
@@ -73,6 +73,16 @@ export function useStoresProfileList() {
         city: item.store?.city,
         province: item.store?.province,
         active: item.store?.active,
+
+        // joined shipping_addresses
+        // recipient: item.recipient,
+        // shipping_address: item.shipping_address,
+        // shipping_barangay: item.shipping_barangay,
+        // shipping_city: item.shipping_city,
+        // shipping_province: item.shipping_province,
+        shipping_details: item.shipping_details
+        
+        
       }));
     }
 

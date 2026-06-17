@@ -107,6 +107,23 @@
         </Column>
       </Datatable>
 
+      <div v-if="!salesData.length" class="flex gap-4 mt-1">
+        <Message severity="secondary" variant="simple" size="small"
+          >No records found. Try searching again.</Message
+        >
+      </div>
+      <div v-else class="flex gap-4 mt-1 w-full">
+        <Button
+          variant="text"
+          severity="secondary"
+          label="Download CSV File"
+          icon="pi pi-download"
+          :loading="loading"
+          class="text-xs text-blue-600"
+          @click="handleExport"
+        />
+      </div>
+
       <Dialog
         v-model:visible="showDiaSalesPerDay"
         :modal="true"
@@ -181,6 +198,9 @@ import Datatable from "primevue/datatable";
 import Column from "primevue/column";
 import Dialog from "primevue/dialog";
 import { useRouter } from "vue-router";
+import Message from "primevue/message";
+import Button from "primevue/button";
+import { exportCsv } from "@/utils/exportCsv";
 
 const router = useRouter();
 
@@ -250,6 +270,24 @@ const handleRiderClick = () => {
     },
   });
 };
+
+const handleExport = () => {
+  exportCsv({
+    filename: `sales_${new Date().toISOString().slice(0, 10)}.csv`,
+    headers: [
+      { label: "Date", key: "order_date" },
+      { label: "Dealer", key: "dealer" },
+      { label: "Served Customers", key: "no_of_served_customers" },
+      { label: "Total Sales", key: "total_amount" },
+    ],
+    data: salesData.value.map((item) => ({
+      ...item
+     
+    })),
+  });
+
+};
+
 
 watch(dateRange, (newVal) => {
   dateRange.value = newVal;

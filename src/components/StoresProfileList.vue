@@ -60,16 +60,35 @@
           @row-click="onRowClick"
           class="w-full text-xs border-0 border-gray-300"
         >
+          <!-- <Column
+            field="id"
+            header="Id"
+            headerClass="bg-yellow-50 text-xs"
+            bodyClass="text-xs"
+          ></Column> -->
+
           <!-- Row Count Column -->
-          <Column header="#" style="width: 60px" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
+          <Column
+            header="#"
+            style="width: 60px"
+            headerClass="bg-yellow-50 text-xs"
+            bodyClass="text-xs"
+          >
             <template #body="slotProps">
               {{ slotProps.index + 1 }}
             </template>
           </Column>
+
           <!-- <Column field="id" header="Id"></Column>
           <Column field="store_id" header="Store Id"></Column> -->
 
-          <Column field="role" header="Role" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
+          <Column
+            field="role"
+            header="Role"
+            sortable
+            headerClass="bg-yellow-50 text-xs"
+            bodyClass="text-xs"
+          >
             <template #body="{ data }">
               <i v-if="data.role === 'dealer'" class="pi pi-briefcase text-blue-400"></i>
               <i v-else-if="data.role === 'rider'" class="pi pi-car text-green-400"></i>
@@ -79,10 +98,43 @@
             </template>
           </Column>
 
-          <Column field="display_name" header="Profile Name" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
-          <Column field="email" header="Email" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
-          <Column field="contact" header="Contact No." headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
-          <Column field="status" header="Status" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
+          <Column
+            field="display_name"
+            header="Profile Name"
+            sortable
+            headerClass="bg-yellow-50 text-xs"
+            bodyClass="text-xs"
+          >
+          </Column>
+
+          <Column
+            field="email"
+            header="Email"
+            sortable
+            headerClass="bg-yellow-50 text-xs"
+            bodyClass="text-xs"
+          ></Column>
+
+          <Column
+            field="contact"
+            header="Contact No."
+            headerClass="bg-yellow-50 text-xs"
+            bodyClass="text-xs"
+          ></Column>
+
+          <Column
+            field="shipping_details"
+            header="Shipping Details"
+            headerClass="bg-yellow-50 text-xs"
+            bodyClass="text-xs whitespace-pre-line"
+          ></Column>
+
+          <Column
+            field="status"
+            header="Status"
+            headerClass="bg-yellow-50 text-xs"
+            bodyClass="text-xs"
+          >
             <template #body="{ data }">
               <i v-if="data.status === 'approved'" class="pi pi-thumbs-up text-green-600"></i>
 
@@ -91,25 +143,49 @@
               </span>
             </template>
           </Column>
-          <Column field="name" header="Dealer" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
+          <Column
+            field="name"
+            header="Dealer"
+            sortable
+            headerClass="bg-yellow-50 text-xs"
+            bodyClass="text-xs"
+          >
             <template #body="slotProps">
               {{ slotProps.data.role === "dealer" ? "" : slotProps.data.name }}
             </template>
           </Column>
 
-          <Column field="created_at" header="Account Creation" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
+          <Column
+            field="created_at"
+            header="Account Creation"
+            sortable
+            headerClass="bg-yellow-50 text-xs"
+            bodyClass="text-xs"
+          >
             <template #body="slotProps">
               {{ formatDate(slotProps.data.created_at) }}
             </template>
           </Column>
 
-          <Column field="last_sign_in_at" header="Last Sign-in" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
+          <Column
+            field="last_sign_in_at"
+            header="Last Sign-in"
+            sortable
+            headerClass="bg-yellow-50 text-xs"
+            bodyClass="text-xs"
+          >
             <template #body="slotProps">
               {{ formatDate(slotProps.data.last_sign_in_at) }}
             </template>
           </Column>
 
-          <Column field="last_order_placed" header="Last Order Placed" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
+          <Column
+            field="last_order_placed"
+            header="Last Order Placed"
+            sortable
+            headerClass="bg-yellow-50 text-xs"
+            bodyClass="text-xs"
+          >
             <template #body="slotProps">
               {{ formatDate(slotProps.data.last_order_placed) }}
             </template>
@@ -155,6 +231,17 @@
           <Message severity="secondary" variant="simple" size="small"
             >No records found. Try searching again.</Message
           >
+        </div>
+        <div v-else>
+          <Button
+            variant="text"
+            severity="secondary"
+            label="Download CSV File"
+            icon="pi pi-download"
+            :loading="loading"
+            class="md:ml-auto text-xs text-blue-600"
+            @click="handleExport"
+          />
         </div>
       </template>
     </Card>
@@ -226,16 +313,10 @@
           <span class="text-xs ml-2">{{ formatDate(dialogData.last_sign_in_at) }}</span>
         </p>
 
-         <p>
+        <p>
           <span class="text-sm font-semibold text-gray-500">Last Order Placed:</span>
           <span class="text-xs ml-2">{{ formatDate(dialogData.last_order_placed) }}</span>
         </p>
-
-         <!-- <p>
-          <span class="text-sm font-semibold text-gray-500">Last Order Record:</span>
-          <span class="text-xs ml-2">{{ formatDate(dialogData.last_delivery_at) }}</span>
-        </p> -->
-        
       </div>
     </Dialog>
   </div>
@@ -248,7 +329,7 @@ import { onMounted, ref } from "vue";
 import { useStoresProfileList } from "../composables/useStoresProfileList";
 import { useStoresProfileUpdate } from "../composables/useStoresProfileUpdate";
 
-import { useRouter , useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useStoresProfile } from "@/stores/storeProfile";
 
 import Card from "primevue/card";
@@ -271,6 +352,8 @@ import { formatDate } from "@/utils/date";
 import Dialog from "primevue/dialog";
 import Button from "primevue/button";
 
+import { exportCsv } from "@/utils/exportCsv";
+
 const router = useRouter();
 const route = useRoute();
 
@@ -287,6 +370,99 @@ const handleUpdate = (store) => {
   // 👇 then navigate
   router.push({ name: "StoresProfileUpdate" });
 };
+
+// const handleExport = () => {
+//   console.log("export csv file");
+
+//   const headers = [
+//     "Role",
+//     "Profile Name",
+//     "Email",
+//     "Contact No.",
+//     "Shipping Details",
+//     "Status",
+//     "Dealer",
+//     "Account Creation",
+//     "Last Sign-in",
+//     "Last Order Placed",
+//   ];
+
+//   const rows = items.value.map((item) => [
+//     item.role,
+//     item.display_name,
+//     item.email,
+//     item.contact,
+//     // item.shipping_details?.replace(/\n/g, " | "),
+//     item.shipping_details,
+//     item.status,
+//     item.name,
+//     formatDate(item.created_at),
+//     formatDate(item.last_sign_in_at),
+//     formatDate(item.last_order_placed),
+//   ]);
+
+//   const csvContent = [headers, ...rows]
+//     .map((row) => row.map((value) => `"${String(value ?? "").replace(/"/g, '""')}"`).join(","))
+//     // .join("\n");
+//     .join("\r\n");
+
+//   const blob = new Blob([csvContent], {
+//     type: "text/csv;charset=utf-8;",
+//   });
+
+//   const url = URL.createObjectURL(blob);
+
+//   const link = document.createElement("a");
+//   link.href = url;
+//   link.download = `profiles_${new Date().toISOString().slice(0, 10)}.csv`;
+
+//   document.body.appendChild(link);
+//   link.click();
+
+//   document.body.removeChild(link);
+//   URL.revokeObjectURL(url);
+
+//   toast.add({
+//     severity: "success",
+//     summary: "Export Complete",
+//     detail: "CSV file downloaded successfully",
+//     life: 3000,
+//   });
+
+// };
+
+
+const handleExport = () => {
+  exportCsv({
+    filename: `profiles_${new Date().toISOString().slice(0, 10)}.csv`,
+    headers: [
+      { label: "Role", key: "role" },
+      { label: "Profile Name", key: "display_name" },
+      { label: "Email", key: "email" },
+      { label: "Contact No.", key: "contact" },
+      { label: "Shipping Details", key: "shipping_details" },
+      { label: "Status", key: "status" },
+      { label: "Dealer", key: "name" },
+      { label: "Account Creation", key: "created_at_formatted" },
+      { label: "Last Sign-in", key: "last_sign_in_at_formatted" },
+      { label: "Last Order Placed", key: "last_order_placed_formatted" },
+    ],
+    data: items.value.map((item) => ({
+      ...item,
+      created_at_formatted: formatDate(item.created_at),
+      last_sign_in_at_formatted: formatDate(item.last_sign_in_at),
+      last_order_placed_formatted: formatDate(item.last_order_placed),
+    })),
+  });
+
+  // toast.add({
+  //   severity: "success",
+  //   summary: "Export Complete",
+  //   detail: "CSV file downloaded successfully",
+  //   life: 3000,
+  // });
+};
+
 
 const handleDelete = (profile) => {
   console.log("Attempting to delete profile:", profile);
@@ -367,5 +543,4 @@ onMounted(async () => {
 
   await fetchStoresProfile();
 });
-
 </script>

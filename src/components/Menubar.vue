@@ -2,7 +2,7 @@
   <div>
     <Menubar :model="items" class="mb-1  shadow-none !rounded-none border-0">
       <template #end>
-        <Button label="Logout" severity="danger" icon="pi pi-sign-out" @click="logout" variant="text"/>
+        <Button label="Logout" severity="danger" icon="pi pi-sign-out" @click="logout" variant="text" class="text-sm"/>
       </template>
     </Menubar>
   </div>
