@@ -95,7 +95,7 @@
           headerClass="bg-yellow-50"
         ></Column>
 
-        
+
 <!-- insert here the product_quantity -->
 
 
@@ -217,7 +217,6 @@ const router = useRouter();
 
 const dateRange = ref(null);
 const dateDisplay = ref("");
-const selRowDealer = ref("");
 const selRowTotal = ref(0);
 const selRowProds = ref("");
 
@@ -249,6 +248,7 @@ const {
   showDiaSalesPerDay,
   salesPerDay,
   selRowDate,
+  selRowDealer
 } = useDashboardCards(dateRange);
 
 const formatNumber = (value) => {

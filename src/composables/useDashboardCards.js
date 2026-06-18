@@ -7,6 +7,7 @@ export function useDashboardCards(dateRange) {
 
   const salesData = ref([]);
   const selRowDate = ref(null);
+  const selRowDealer  = ref(null);
 
   const loading = ref(false);
 
@@ -114,6 +115,7 @@ export function useDashboardCards(dateRange) {
   `,
       )
       .eq("status", "Delivered")
+      .eq("dealer", selRowDealer.value)
       .gte("created_at", selRowDate.value.split("T")[0] + "T00:00:00.000Z")
       .lt("created_at", selRowDate.value.split("T")[0] + "T23:59:59.999Z");
 
@@ -152,6 +154,7 @@ export function useDashboardCards(dateRange) {
     salesPerDay,
     fetchSalesPerDay,
     selRowDate,
+    selRowDealer,
     showDiaSalesPerDay,
   };
 }
