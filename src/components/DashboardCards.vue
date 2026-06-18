@@ -95,9 +95,8 @@
           headerClass="bg-yellow-50"
         ></Column>
 
-
-<!-- insert here the product_quantity -->
-
+        <!-- insert here the product_quantity -->
+        <Column field="product_quantity" header="Products" headerClass="bg-yellow-50"></Column>
 
         <Column
           field="total_amount"
@@ -145,7 +144,7 @@
               <p>
                 Sales Date: <span class="text-gray-800 text-bold text-lg">{{ selRowDate }}</span>
               </p>
-            
+
               <p>
                 Total Sales:
                 <span class="text-gray-800 text-bold text-lg"
@@ -175,7 +174,7 @@
               headerClass="bg-yellow-50 text-xs"
               bodyClass="text-xs"
             ></Column>
-             <Column
+            <Column
               field="product_quantity"
               header="Product"
               headerClass="bg-yellow-50 text-xs"
@@ -249,7 +248,7 @@ const {
   salesPerDay,
   selRowDate,
   selRowDealer,
-  loading
+  loading,
 } = useDashboardCards(dateRange);
 
 const formatNumber = (value) => {
@@ -292,16 +291,14 @@ const handleExport = () => {
       { label: "Date", key: "order_date" },
       { label: "Dealer", key: "dealer" },
       { label: "Served Customers", key: "no_of_served_customers" },
+      { label: "Products", key: "product_quantity"},
       { label: "Total Sales", key: "total_amount" },
     ],
     data: salesData.value.map((item) => ({
-      ...item
-     
+      ...item,
     })),
   });
-
 };
-
 
 watch(dateRange, (newVal) => {
   dateRange.value = newVal;
