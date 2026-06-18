@@ -81,10 +81,10 @@
           }}</small>
         </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 pb-1 items-center">
+        <div v-if="!profile.id" class="grid grid-cols-[110px_1fr] gap-2 p-2 pb-1 items-center">
           <div class="font-medium p-2">Password:</div>
           <InputText
-          type="password"
+            type="password"
             ref="passwordRef"
             v-model="password"
             class="w-full"
@@ -95,10 +95,10 @@
           <small class="flex text-red-500 items-center">{{ errors.password }}</small>
         </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 pt-0 pb-0 items-center">
+        <div v-if="!profile.id" class="grid grid-cols-[110px_1fr] gap-2 p-2 pt-0 pb-0 items-center">
           <div class="font-medium p-2">Confirm Password:</div>
           <InputText
-          type="password"
+            type="password"
             ref="confirmPasswordRef"
             v-model="confirmPassword"
             class="w-full"
@@ -111,24 +111,16 @@
           }}</small>
         </div>
 
-
-
-         <div class="flex  rounded relative justify-end text-xs mb-4" role="alert">
+        <div v-if="profile.id" class="flex rounded relative justify-end text-xs mb-4" role="alert">
           <Button
-            
             label="Change Password"
             severity="primary"
             variant="text"
-             class="p-0 pr-2 border-none bg-transparent shadow-none underline text-blue-500 hover:text-blue-700 text-xs"
-       @click="showPasswordFields = !showPasswordFields"
-            
+            class="p-0 pr-2 border-none bg-transparent shadow-none underline text-blue-500 hover:text-blue-700 text-xs"
+            @click="showPasswordFields = !showPasswordFields"
           />
         </div>
 
-
-
-
-        
         <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
           <div class="font-medium p-2">Status:</div>
           <Select
@@ -157,8 +149,6 @@
             @click="onSave"
           />
         </div>
-
-      
       </template>
     </Card>
   </div>
@@ -264,6 +254,7 @@ const passwordRef = ref(null);
 const confirmPasswordRef = ref(null);
 const statusRef = ref(null);
 const submitRef = ref(null);
+const showPasswordFields = ref(false);
 
 const refs = {
   profileNameRef,
