@@ -248,7 +248,8 @@ const {
   showDiaSalesPerDay,
   salesPerDay,
   selRowDate,
-  selRowDealer
+  selRowDealer,
+  loading
 } = useDashboardCards(dateRange);
 
 const formatNumber = (value) => {
