@@ -143,7 +143,8 @@
               </span>
             </template>
           </Column>
-          <Column
+
+          <!-- <Column
             field="name"
             header="Dealer"
             sortable
@@ -153,7 +154,7 @@
             <template #body="slotProps">
               {{ slotProps.data.role === "dealer" ? "" : slotProps.data.name }}
             </template>
-          </Column>
+          </Column> -->
 
           <Column
             field="created_at"
@@ -442,7 +443,7 @@ const handleExport = () => {
       { label: "Contact No.", key: "contact" },
       { label: "Shipping Details", key: "shipping_details" },
       { label: "Status", key: "status" },
-      { label: "Dealer", key: "name" },
+      // { label: "Dealer", key: "name" },
       { label: "Account Creation", key: "created_at_formatted" },
       { label: "Last Sign-in", key: "last_sign_in_at_formatted" },
       { label: "Last Order Placed", key: "last_order_placed_formatted" },
