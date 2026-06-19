@@ -81,7 +81,10 @@
           }}</small>
         </div>
 
-        <div v-if="!profile.id" class="grid grid-cols-[110px_1fr] gap-2 p-2 pb-1 items-center">
+        <div
+          v-if="!profile.id || showPasswordFields"
+          class="grid grid-cols-[110px_1fr] gap-2 p-2 pb-1 items-center"
+        >
           <div class="font-medium p-2">Password:</div>
           <InputText
             type="password"
@@ -95,7 +98,10 @@
           <small class="flex text-red-500 items-center">{{ errors.password }}</small>
         </div>
 
-        <div v-if="!profile.id" class="grid grid-cols-[110px_1fr] gap-2 p-2 pt-0 pb-0 items-center">
+        <div
+          v-if="!profile.id || showPasswordFields"
+          class="grid grid-cols-[110px_1fr] gap-2 p-2 pt-0 pb-0 items-center"
+        >
           <div class="font-medium p-2">Confirm Password:</div>
           <InputText
             type="password"
@@ -103,7 +109,7 @@
             v-model="confirmPassword"
             class="w-full"
             :invalid="!!errors.confirmPassword"
-            @keydown.enter.prevent="focusNextSel('statusRef')"
+            @keydown.enter.prevent="focusNextSel('storeNameRef')"
           />
           <div />
           <small v-if="errors.confirmPassword" class="flex text-red-500 items-center">{{
@@ -111,14 +117,32 @@
           }}</small>
         </div>
 
+        <!-- @click="showPasswordFields = !showPasswordFields" -->
         <div v-if="profile.id" class="flex rounded relative justify-end text-xs mb-4" role="alert">
           <Button
-            label="Change Password"
+            :label="showPasswordFields ? 'Cancel' : 'Set New Password'"
             severity="primary"
             variant="text"
             class="p-0 pr-2 border-none bg-transparent shadow-none underline text-blue-500 hover:text-blue-700 text-xs"
-            @click="showPasswordFields = !showPasswordFields"
+            @click="togglePasswordFields"
           />
+        </div>
+
+        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+          <div class="font-medium p-2">Store:</div>
+          <Select
+            ref="storeNameRef"
+            v-model="storeName"
+            :options="storeList"
+            optionLabel="label"
+            optionValue="value"
+            class="w-full"
+            @keydown.enter.prevent="focusNextSel('statusRef')"
+          />
+          <div />
+          <small v-if="errors.storeName" class="flex text-red-500 items-center">{{
+            errors.storeName
+          }}</small>
         </div>
 
         <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
@@ -155,7 +179,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { onMounted, ref, watch, nextTick } from "vue";
 import Card from "primevue/card";
 import Divider from "primevue/divider";
 import { useStoresProfile } from "@/stores/storeProfile";
@@ -172,7 +196,7 @@ import * as yup from "yup";
 
 import { useFocusNavigation } from "@/composables/useFocusNavigation";
 import { useStoresProfileUpdate } from "@/composables/useStoresProfileUpdate";
-const { saveProfile, loading } = useStoresProfileUpdate();
+const { saveProfile, loading, fetchStores, storeList } = useStoresProfileUpdate();
 
 const toast = useToast();
 
@@ -183,30 +207,9 @@ const schema = yup.object({
 
   role: yup.string().required("Role is required"),
   email: yup.string().email("Invalid email format").required("Email is required"),
-  // password: yup.string().min(6, "Minimum 6 characters").required("Password is required"),
-  // confirmPassword: yup
-  // .string()
-  // .required("Confirm password is required")
-  // .oneOf([yup.ref("password")], "Passwords must match"),
-
-  //  password: yup.string().when([], {
-  //   is: () => !profile.value?.id,   // 👈 create mode only
-  //   then: (schema) =>
-  //     schema.required("Password is required").min(6, "Minimum 6 characters"),
-  //   otherwise: (schema) => schema.notRequired(),
-  // }),
-
-  // confirmPassword: yup.string().when([], {
-  //   is: () => !profile.value?.id,
-  //   then: (schema) =>
-  //     schema
-  //       .required("Confirm password is required")
-  //       .oneOf([yup.ref("password")], "Passwords must match"),
-  //   otherwise: (schema) => schema.notRequired(),
-  // }),
-
+  
   password: yup.string().when([], {
-    is: () => !profile.value?.id,
+    is: () => !profile.value?.id || showPasswordFields.value,
     then: (schema) => schema.required("Password is required").min(6, "Minimum 6 characters"),
     otherwise: (schema) =>
       schema.test(
@@ -225,6 +228,7 @@ const schema = yup.object({
     otherwise: (schema) => schema.notRequired(),
   }),
 
+  storeName: yup.string().required("Store is required"),
   status: yup.string().required("Status is required"),
 });
 
@@ -232,7 +236,7 @@ const router = useRouter();
 const storesProfile = useStoresProfile();
 const { storesProfile: profile } = storeToRefs(storesProfile);
 
-const { defineField, errors, handleSubmit, resetForm } = useForm({
+const { defineField, errors, handleSubmit, resetForm , setFieldValue} = useForm({
   validationSchema: schema,
 });
 
@@ -244,6 +248,7 @@ const [contact] = defineField("contact");
 const [email] = defineField("email");
 const [password] = defineField("password");
 const [confirmPassword] = defineField("confirmPassword");
+const [storeName] = defineField("storeName");
 const [status] = defineField("status");
 
 const profileNameRef = ref(null);
@@ -252,9 +257,23 @@ const roleRef = ref(null);
 const emailRef = ref(null);
 const passwordRef = ref(null);
 const confirmPasswordRef = ref(null);
+const storeNameRef = ref(null);
 const statusRef = ref(null);
 const submitRef = ref(null);
+
 const showPasswordFields = ref(false);
+// const passwordButtonLabel = computed(() =>
+//   showPasswordFields.value ? "Cancel" : "Set New Password",
+// );
+
+const togglePasswordFields = () => {
+  if (showPasswordFields.value) {
+    password.value = '' // clear password when cancelling
+    confirmPassword.value = ''
+  }
+
+  showPasswordFields.value = !showPasswordFields.value
+}
 
 const refs = {
   profileNameRef,
@@ -263,30 +282,24 @@ const refs = {
   emailRef,
   passwordRef,
   confirmPasswordRef,
+  storeNameRef,
   statusRef,
   submitRef,
 };
 const { focusNext, focusNextSel } = useFocusNavigation(refs); //focusNextButton
 
 const onSave = handleSubmit(async (values) => {
+  console.log("clicked submit", values);
+
   try {
-    // await saveProfile({
-    //   id: profile.value?.id ?? null,
-
-    //   display_name: values.display_name,
-    //   contact: values.contact,
-    //   role: values.role,
-    //   status: values.status,
-
-    //   email: values.email,
-    //   password: values.password,
-    // });
-
     await saveProfile({
       id: profile.value?.id ?? null,
       display_name: values.display_name,
       contact: values.contact,
       role: values.role,
+
+      storeName: values.storeName,
+
       status: values.status,
       email: values.email,
 
@@ -329,19 +342,37 @@ watch(
   (value) => {
     if (!value) return;
 
+    console.log("here ---- ", value.storeName);
     resetForm({
       values: {
         display_name: value.display_name,
         role: value.role,
         avatar_url: value.avatar_url,
         contact: value.contact,
-        store_id: value.store_id,
+        // store_id: value.storeName,
         email: value.email,
         password: value.password,
+        storeName: value.storeName ?? value.name,
         status: value.status,
       },
     });
   },
   { immediate: true },
 );
+
+// onMounted(async () => {
+//   await fetchStores();
+// });
+
+onMounted(async () => {
+  await fetchStores();
+  await nextTick();
+
+  const selectedStore = storeList.value.find(
+    (x) => x.label === profile.value?.name
+  );
+
+  setFieldValue("storeName", selectedStore?.value ?? null);
+});
+
 </script>

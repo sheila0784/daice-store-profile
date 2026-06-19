@@ -144,7 +144,7 @@
             </template>
           </Column>
 
-          <!-- <Column
+          <Column
             field="name"
             header="Dealer"
             sortable
@@ -154,7 +154,7 @@
             <template #body="slotProps">
               {{ slotProps.data.role === "dealer" ? "" : slotProps.data.name }}
             </template>
-          </Column> -->
+          </Column>
 
           <Column
             field="created_at"
@@ -365,6 +365,9 @@ const confirm = useConfirm();
 const toast = useToast();
 
 const handleUpdate = (store) => {
+
+  console.log("pass value to update page: ", store)
+  
   // 👇 store selected here
   storesProfile.setProfile(store);
 

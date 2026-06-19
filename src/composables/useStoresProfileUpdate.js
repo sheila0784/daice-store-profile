@@ -5,6 +5,7 @@ export function useStoresProfileUpdate() {
   const loading = ref(false);
   const error = ref(null);
   const success = ref(false);
+  const storeList = ref([]);
 
   const deleteProfile = async (id) => {
     loading.value = true;
@@ -59,11 +60,50 @@ export function useStoresProfileUpdate() {
     }
   };
 
+  const fetchStores = async () => {
+    loading.value = true;
+
+    let query = supabase
+      .from("stores")
+      .select(
+        `
+    id,name, user_id
+   
+  `,
+      )
+      .eq("active", true);
+      // .is("user_id", null);
+   
+
+    const { data, error } = await query.order("name", {
+      ascending: true,
+    });
+
+    if (error) {
+      console.error("Supabase error:", error);
+      storeList.value = [];
+      loading.value = false;
+      return;
+    }
+
+    storeList.value = (data || []).map((store) => ({
+      label: store.name,
+      value: store.id,
+    }));
+
+    console.log("data", data);
+    console.log("error", error);
+
+    loading.value = false;
+  };
+
   return {
     saveProfile,
     deleteProfile,
     loading,
     error,
     success,
+    fetchStores,
+    storeList,
   };
 }
