@@ -144,7 +144,7 @@
             </template>
           </Column>
 
-          <Column
+          <!-- <Column
             field="name"
             header="Dealer"
             sortable
@@ -154,7 +154,7 @@
             <template #body="slotProps">
               {{ slotProps.data.role === "dealer" ? "" : slotProps.data.name }}
             </template>
-          </Column>
+          </Column> -->
 
           <Column
             field="created_at"
@@ -181,6 +181,7 @@
           </Column>
 
           <Column
+            v-if="filterRole === 'customer' || filterRole === null"
             field="last_order_placed"
             header="Last Order Placed"
             sortable
@@ -300,10 +301,10 @@
           </span>
         </p>
 
-        <p v-if="dialogData.name">
+        <!-- <p v-if="dialogData.name">
           <span class="text-sm font-semibold text-gray-500">Dealer:</span>
           <span class="text-xl ml-2">{{ dialogData.name }}</span>
-        </p>
+        </p> -->
 
         <p>
           <span class="text-sm font-semibold text-gray-500">Account Created:</span>
@@ -314,7 +315,7 @@
           <span class="text-xs ml-2">{{ formatDate(dialogData.last_sign_in_at) }}</span>
         </p>
 
-        <p>
+        <p v-if="dialogData.role==='customer' && dialogData.last_order_placed">
           <span class="text-sm font-semibold text-gray-500">Last Order Placed:</span>
           <span class="text-xs ml-2">{{ formatDate(dialogData.last_order_placed) }}</span>
         </p>
@@ -367,7 +368,7 @@ const toast = useToast();
 const handleUpdate = (store) => {
 
   console.log("pass value to update page: ", store)
-  
+
   // 👇 store selected here
   storesProfile.setProfile(store);
 
@@ -541,10 +542,12 @@ const roleOptions = [
 ];
 
 onMounted(async () => {
+  console.log("on mounted here")
   if (route.query.role) {
     filterRole.value = route.query.role;
   }
 
+  console.log("next")
   await fetchStoresProfile();
 });
 </script>

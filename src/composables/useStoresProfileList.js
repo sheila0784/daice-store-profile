@@ -21,15 +21,26 @@ export function useStoresProfileList() {
     const sv = searchValue.value?.trim() || "";
     const role = filterRole.value?.trim() || null;
 
-    let query = supabase.from("profiles_with_email").select(`
+    // let query = supabase.from("profiles_with_email").select(`
+    //   *,
+    //   store:stores!profiles_id_fkey(
+    //     id,
+    //     acctNo,
+    //     name,
+    //     address, barangay, city, province, active
+    //   )
+    // `);
+
+     let query = supabase.from("profiles_with_email").select(`
       *,
-      store:stores!profiles_store_id_fkey(
+      store:stores!stores_user_id_fkey(
         id,
         acctNo,
         name,
         address, barangay, city, province, active
       )
     `);
+
 
     if (role) {
       query = query.or(`role.eq.${role},role.is.null`);
