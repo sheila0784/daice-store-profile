@@ -21,25 +21,27 @@ export function useStoresProfileList() {
     const sv = searchValue.value?.trim() || "";
     const role = filterRole.value?.trim() || null;
 
-    // let query = supabase.from("profiles_with_email").select(`
+    //  let query = supabase.from("profiles_with_email").select(`
     //   *,
-    //   store:stores!profiles_id_fkey(
-    //     id,
+    //   store:stores!stores_user_id_fkey(
+    //     store_id:id,
     //     acctNo,
     //     name,
     //     address, barangay, city, province, active
     //   )
     // `);
 
-     let query = supabase.from("profiles_with_email").select(`
-      *,
-      store:stores!stores_user_id_fkey(
-        id,
-        acctNo,
-        name,
-        address, barangay, city, province, active
-      )
-    `);
+    //    let query = supabase.from("profiles_with_email").select(`
+    //   *,
+    //   store:stores!stores_user_id_fkey(
+    //     store_id:id,
+    //     acctNo,
+    //     name,
+    //     address, barangay, city, province, active
+    //   )
+    // `);
+
+    let query = supabase.from("profiles_with_email").select(`*`);
 
 
     if (role) {
@@ -61,13 +63,13 @@ export function useStoresProfileList() {
     } else {
       items.value = data.map((item) => ({
         id: item.id,
-        store_id: item.store_id,
+        // store_id: item.store_id,
         updated_at: item.updated_at,
         created_at: item.created_at,
         last_sign_in_at: item.last_sign_in_at,
         last_order_placed: item.last_order_placed,
         last_delivery_at: item.last_delivery_at,
-       
+
         // profile fields
         display_name: item.display_name,
         contact: item.contact,
@@ -76,14 +78,26 @@ export function useStoresProfileList() {
         avatar_url: item.avatar_url,
         email: item.email,
 
-        // joined store
-        name: item.store?.name,
-        acctNo: item.store?.acctNo,
-        address: item.store?.address,
-        barangay: item.store?.barangay,
-        city: item.store?.city,
-        province: item.store?.province,
-        active: item.store?.active,
+        // // joined store
+        // store_id: item.store?.store_id,
+        // name: item.store?.name,
+        // acctNo: item.store?.acctNo,
+        // address: item.store?.address,
+        // barangay: item.store?.barangay,
+        // city: item.store?.city,
+        // province: item.store?.province,
+        // active: item.store?.active,
+
+          // joined store
+        store_id: item.store_id,
+        store: item.store,
+        //name: item.name,
+        acctNo: item.acctNo,
+        address: item.address,
+        barangay: item.barangay,
+        city: item.city,
+        province: item.province,
+        active: item.active,
 
         // joined shipping_addresses
         // recipient: item.recipient,
@@ -91,12 +105,10 @@ export function useStoresProfileList() {
         // shipping_barangay: item.shipping_barangay,
         // shipping_city: item.shipping_city,
         // shipping_province: item.shipping_province,
-        shipping_details: item.shipping_details
-        
-        
+        shipping_details: item.shipping_details,
       }));
     }
-
+    console.log("item value: ", items);
     loading.value = false;
   };
 

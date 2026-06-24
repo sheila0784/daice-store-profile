@@ -132,7 +132,7 @@
           <div class="font-medium p-2">Store:</div>
           <Select
             ref="storeNameRef"
-            v-model="storeName"
+            v-model="store_id"
             :options="storeList"
             optionLabel="label"
             optionValue="value"
@@ -140,9 +140,13 @@
             @keydown.enter.prevent="focusNextSel('statusRef')"
           />
           <div />
-          <small v-if="errors.storeName" class="flex text-red-500 items-center">{{
+          <!-- <small v-if="errors.storeName" class="flex text-red-500 items-center">{{
             errors.storeName
-          }}</small>
+          }}</small> -->
+
+          <small v-if="errors.store_id" class="flex text-red-500 items-center">
+            {{ errors.store_id }}
+          </small>
         </div>
 
         <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
@@ -179,7 +183,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch, nextTick } from "vue";
+import { onMounted, ref, watch } from "vue";
 import Card from "primevue/card";
 import Divider from "primevue/divider";
 import { useStoresProfile } from "@/stores/storeProfile";
@@ -207,7 +211,7 @@ const schema = yup.object({
 
   role: yup.string().required("Role is required"),
   email: yup.string().email("Invalid email format").required("Email is required"),
-  
+
   password: yup.string().when([], {
     is: () => !profile.value?.id || showPasswordFields.value,
     then: (schema) => schema.required("Password is required").min(6, "Minimum 6 characters"),
@@ -228,7 +232,9 @@ const schema = yup.object({
     otherwise: (schema) => schema.notRequired(),
   }),
 
-  storeName: yup.string().required("Store is required"),
+  // storeName: yup.string().required("Store is required"),
+  store_id: yup.string().required("Store is required"),
+
   status: yup.string().required("Status is required"),
 });
 
@@ -236,7 +242,7 @@ const router = useRouter();
 const storesProfile = useStoresProfile();
 const { storesProfile: profile } = storeToRefs(storesProfile);
 
-const { defineField, errors, handleSubmit, resetForm , setFieldValue} = useForm({
+const { defineField, errors, handleSubmit, resetForm } = useForm({
   validationSchema: schema,
 });
 
@@ -248,7 +254,10 @@ const [contact] = defineField("contact");
 const [email] = defineField("email");
 const [password] = defineField("password");
 const [confirmPassword] = defineField("confirmPassword");
-const [storeName] = defineField("storeName");
+
+// const [storeName] = defineField("storeName");
+const [store_id] = defineField("store_id");
+
 const [status] = defineField("status");
 
 const profileNameRef = ref(null);
@@ -268,12 +277,12 @@ const showPasswordFields = ref(false);
 
 const togglePasswordFields = () => {
   if (showPasswordFields.value) {
-    password.value = '' // clear password when cancelling
-    confirmPassword.value = ''
+    password.value = ""; // clear password when cancelling
+    confirmPassword.value = "";
   }
 
-  showPasswordFields.value = !showPasswordFields.value
-}
+  showPasswordFields.value = !showPasswordFields.value;
+};
 
 const refs = {
   profileNameRef,
@@ -298,7 +307,8 @@ const onSave = handleSubmit(async (values) => {
       contact: values.contact,
       role: values.role,
 
-      storeName: values.storeName,
+      // storeName: values.storeName,
+      store_id: values.store_id,
 
       status: values.status,
       email: values.email,
@@ -352,7 +362,8 @@ watch(
         // store_id: value.storeName,
         email: value.email,
         password: value.password,
-        storeName: value.storeName ?? value.name,
+        // storeName: value.storeName ?? value.name,
+        store_id: value.store_id ?? value.store?.id ?? null,
         status: value.status,
       },
     });
@@ -366,13 +377,13 @@ watch(
 
 onMounted(async () => {
   await fetchStores();
-  await nextTick();
 
-  const selectedStore = storeList.value.find(
-    (x) => x.label === profile.value?.name
-  );
+//   await nextTick();
 
-  setFieldValue("storeName", selectedStore?.value ?? null);
+//   const selectedStore = storeList.value.find((x) => x.label === profile.value?.name);
+
+//   setFieldValue("storeName", selectedStore?.value ?? null);
+// 
 });
 
 </script>

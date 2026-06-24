@@ -144,17 +144,29 @@
             </template>
           </Column>
 
-          <!-- <Column
-            field="name"
-            header="Dealer"
+          <Column
+            field="store_id"
+            header="Store Id"
             sortable
             headerClass="bg-yellow-50 text-xs"
             bodyClass="text-xs"
           >
             <template #body="slotProps">
-              {{ slotProps.data.role === "dealer" ? "" : slotProps.data.name }}
+              {{ slotProps.data.store_id }}
             </template>
-          </Column> -->
+          </Column>
+
+          <Column
+            field="store"
+            header="Store"
+            sortable
+            headerClass="bg-yellow-50 text-xs"
+            bodyClass="text-xs"
+          >
+            <template #body="slotProps">
+              {{ slotProps.data.store }}
+            </template>
+          </Column>
 
           <Column
             field="created_at"
@@ -315,7 +327,7 @@
           <span class="text-xs ml-2">{{ formatDate(dialogData.last_sign_in_at) }}</span>
         </p>
 
-        <p v-if="dialogData.role==='customer' && dialogData.last_order_placed">
+        <p v-if="dialogData.role === 'customer' && dialogData.last_order_placed">
           <span class="text-sm font-semibold text-gray-500">Last Order Placed:</span>
           <span class="text-xs ml-2">{{ formatDate(dialogData.last_order_placed) }}</span>
         </p>
@@ -366,8 +378,7 @@ const confirm = useConfirm();
 const toast = useToast();
 
 const handleUpdate = (store) => {
-
-  console.log("pass value to update page: ", store)
+  console.log("pass value to update page: ", store);
 
   // 👇 store selected here
   storesProfile.setProfile(store);
@@ -375,67 +386,6 @@ const handleUpdate = (store) => {
   // 👇 then navigate
   router.push({ name: "StoresProfileUpdate" });
 };
-
-// const handleExport = () => {
-//   console.log("export csv file");
-
-//   const headers = [
-//     "Role",
-//     "Profile Name",
-//     "Email",
-//     "Contact No.",
-//     "Shipping Details",
-//     "Status",
-//     "Dealer",
-//     "Account Creation",
-//     "Last Sign-in",
-//     "Last Order Placed",
-//   ];
-
-//   const rows = items.value.map((item) => [
-//     item.role,
-//     item.display_name,
-//     item.email,
-//     item.contact,
-//     // item.shipping_details?.replace(/\n/g, " | "),
-//     item.shipping_details,
-//     item.status,
-//     item.name,
-//     formatDate(item.created_at),
-//     formatDate(item.last_sign_in_at),
-//     formatDate(item.last_order_placed),
-//   ]);
-
-//   const csvContent = [headers, ...rows]
-//     .map((row) => row.map((value) => `"${String(value ?? "").replace(/"/g, '""')}"`).join(","))
-//     // .join("\n");
-//     .join("\r\n");
-
-//   const blob = new Blob([csvContent], {
-//     type: "text/csv;charset=utf-8;",
-//   });
-
-//   const url = URL.createObjectURL(blob);
-
-//   const link = document.createElement("a");
-//   link.href = url;
-//   link.download = `profiles_${new Date().toISOString().slice(0, 10)}.csv`;
-
-//   document.body.appendChild(link);
-//   link.click();
-
-//   document.body.removeChild(link);
-//   URL.revokeObjectURL(url);
-
-//   toast.add({
-//     severity: "success",
-//     summary: "Export Complete",
-//     detail: "CSV file downloaded successfully",
-//     life: 3000,
-//   });
-
-// };
-
 
 const handleExport = () => {
   exportCsv({
@@ -447,7 +397,7 @@ const handleExport = () => {
       { label: "Contact No.", key: "contact" },
       { label: "Shipping Details", key: "shipping_details" },
       { label: "Status", key: "status" },
-      // { label: "Dealer", key: "name" },
+      { label: "Store", key: "store" },
       { label: "Account Creation", key: "created_at_formatted" },
       { label: "Last Sign-in", key: "last_sign_in_at_formatted" },
       { label: "Last Order Placed", key: "last_order_placed_formatted" },
@@ -460,14 +410,7 @@ const handleExport = () => {
     })),
   });
 
-  // toast.add({
-  //   severity: "success",
-  //   summary: "Export Complete",
-  //   detail: "CSV file downloaded successfully",
-  //   life: 3000,
-  // });
 };
-
 
 const handleDelete = (profile) => {
   console.log("Attempting to delete profile:", profile);
@@ -542,12 +485,12 @@ const roleOptions = [
 ];
 
 onMounted(async () => {
-  console.log("on mounted here")
+  console.log("on mounted here");
   if (route.query.role) {
     filterRole.value = route.query.role;
   }
 
-  console.log("next")
+  console.log("next");
   await fetchStoresProfile();
 });
 </script>
