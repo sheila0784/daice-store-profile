@@ -1,6 +1,9 @@
 import { ref } from "vue";
 import { supabase } from "../supabase";
 
+import { storeToRefs } from "pinia";
+import { useProfileFilterStore } from "@/stores/profileFilter";
+
 export function useStoresProfileList() {
   const rows = ref(10);
   const rowsPerPageOptions = ref([10, 20, 50, 100, 200]);
@@ -9,8 +12,11 @@ export function useStoresProfileList() {
 
   const loading = ref(false);
   const selectedItem = ref(null);
-  const searchValue = ref("");
-  const filterRole = ref("");
+  // const searchValue = ref("");
+  // const filterRole = ref("");
+
+  const filterStore = useProfileFilterStore();
+  const { searchValue, filterRole } = storeToRefs(filterStore);
 
   const showDialog = ref(false);
   const dialogData = ref(null);
@@ -19,7 +25,8 @@ export function useStoresProfileList() {
     loading.value = true;
 
     const sv = searchValue.value?.trim() || "";
-    const role = filterRole.value?.trim() || null;
+    // const role = filterRole.value?.trim() || null;
+    const role = typeof filterRole.value === "string" ? filterRole.value.trim() : null;
 
     //  let query = supabase.from("profiles_with_email").select(`
     //   *,
@@ -42,7 +49,6 @@ export function useStoresProfileList() {
     // `);
 
     let query = supabase.from("profiles_with_email").select(`*`);
-
 
     if (role) {
       query = query.or(`role.eq.${role},role.is.null`);
@@ -88,7 +94,7 @@ export function useStoresProfileList() {
         // province: item.store?.province,
         // active: item.store?.active,
 
-          // joined store
+        // joined store
         store_id: item.store_id,
         store: item.store,
         //name: item.name,

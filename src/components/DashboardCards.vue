@@ -270,6 +270,7 @@ const handleCustomerClick = () => {
     path: "/storesprofilelist",
     query: {
       role: "customer",
+   
     },
   });
 };
@@ -280,6 +281,7 @@ const handleRiderClick = () => {
     path: "/storesprofilelist",
     query: {
       role: "rider",
+
     },
   });
 };

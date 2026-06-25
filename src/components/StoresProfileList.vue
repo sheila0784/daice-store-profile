@@ -144,7 +144,7 @@
             </template>
           </Column>
 
-          <Column
+          <!-- <Column
             field="store_id"
             header="Store Id"
             sortable
@@ -154,7 +154,7 @@
             <template #body="slotProps">
               {{ slotProps.data.store_id }}
             </template>
-          </Column>
+          </Column> -->
 
           <Column
             field="store"
@@ -385,6 +385,14 @@ const handleUpdate = (store) => {
 
   // 👇 then navigate
   router.push({ name: "StoresProfileUpdate" });
+
+  // router.push({
+  //   name: "StoresProfileUpdate",
+  //   query: {
+  //     role: filterRole.value,
+  //     search: searchValue.value,
+  //   },
+  // });
 };
 
 const handleExport = () => {
@@ -409,7 +417,6 @@ const handleExport = () => {
       last_order_placed_formatted: formatDate(item.last_order_placed),
     })),
   });
-
 };
 
 const handleDelete = (profile) => {
@@ -485,12 +492,13 @@ const roleOptions = [
 ];
 
 onMounted(async () => {
-  console.log("on mounted here");
   if (route.query.role) {
     filterRole.value = route.query.role;
   }
+ 
+  // searchValue.value = route.query.search || "";
+  // filterRole.value = route.query.role || null;
 
-  console.log("next");
   await fetchStoresProfile();
 });
 </script>
