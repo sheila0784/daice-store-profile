@@ -6,6 +6,8 @@ import StoresProfileList from "../components/StoresProfileList.vue";
 import StoresProfileUpdate from "../components/StoresProfileUpdate.vue"
 import AppAnnouncements from "../components/AppAnnouncements.vue";
 import AppAnnouncementsUpdate from "../components/AppAnnouncementsUpdate.vue";
+import AppVersion from "../components/AppVersion.vue"
+import AppMaintenance from "../components/AppMaintenance.vue"
 
 import LoginView from '@/views/LoginView.vue'
 import DashboardView from '@/views/DashboardView.vue'
@@ -65,6 +67,16 @@ const routes = [
     component: AppAnnouncementsUpdate,
   },
 
+   {
+    path: "/AppVersion",
+    name: "AppVersion",
+    component: AppVersion,
+  },
+  {
+    path: "/AppMaintenance",
+    name: "AppMaintenance",
+    component: AppMaintenance,
+  },
 ];
 
 

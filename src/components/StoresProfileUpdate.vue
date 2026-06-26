@@ -50,7 +50,7 @@
           />
         </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
           <div class="text-sm p-2">Profile Name:</div>
           <InputText
             autofocus
@@ -66,7 +66,7 @@
           }}</small>
         </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
           <div class="text-sm p-2">Contact No.:</div>
           <InputText
             ref="contactRef"
@@ -81,7 +81,7 @@
           }}</small>
         </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
           <div class="text-sm p-2">Role:</div>
           <Select
             ref="roleRef"
@@ -95,7 +95,7 @@
           <small v-if="errors.role" class="flex text-red-500 items-center">{{ errors.role }}</small>
         </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
           <div class="text-sm p-2">Email:</div>
           <InputText
             ref="emailRef"
@@ -147,7 +147,7 @@
         </div>
 
         <!-- @click="showPasswordFields = !showPasswordFields" -->
-        <div v-if="profile.id" class="flex rounded relative justify-end text-xs mb-4" role="alert">
+        <div v-if="profile.id" class="flex rounded relative justify-end text-xs mb-2" role="alert">
           <Button
             :label="showPasswordFields ? 'Cancel' : 'Set New Password'"
             severity="primary"
@@ -157,7 +157,7 @@
           />
         </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
           <div class="text-sm p-2">Store:</div>
           <Select
             ref="storeNameRef"
@@ -178,7 +178,7 @@
           </small>
         </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
           <div class="text-sm p-2">Status:</div>
           <Select
             ref="statusRef"

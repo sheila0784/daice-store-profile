@@ -60,10 +60,29 @@
         </DataTable>
       </template>
 
-      <p class="text-gray-600">
+      <template #footer>
+        <div v-if="!announcements.length" class="flex gap-4 mt-1">
+          <Message severity="secondary" variant="simple" size="small"
+            >No records found. Try searching again.</Message
+          >
+        </div>
+        <div v-else>
+          <Button
+            variant="text"
+            severity="secondary"
+            label="Download CSV File"
+            icon="pi pi-download"
+            :loading="loading"
+            class="md:ml-auto text-xs text-blue-600"
+            @click="handleExport"
+          />
+        </div>
+      </template>
+
+      <!-- <p class="text-gray-600">
         This is the Announcements page. You can add important updates or messages here for your
         users.
-      </p>
+      </p> -->
     </Card>
   </div>
 </template>
@@ -82,8 +101,11 @@ import Column from "primevue/column";
 import InputText from "primevue/inputtext";
 import InputIcon from "primevue/inputicon";
 import IconField from "primevue/iconfield";
+import Message from "primevue/message";
 
+import { exportCsv } from "@/utils/exportCsv";
 import { useAppAnnouncements } from "../composables/useAppAnnouncements";
+import { formatDate } from "@/utils/date";
 
 const columnDefaults = {
   headerClass: "bg-blue-400 text-xs text-gray-100",
@@ -100,6 +122,23 @@ const handleUpdate = (announcement) => {
 
   // 👇 then navigate
   router.push({ name: "AppAnnouncementsUpdate" });
+};
+
+const handleExport = () => {
+  exportCsv({
+    filename: `announcements_${new Date().toISOString().slice(0, 10)}.csv`,
+    headers: [
+      { label: "Title", key: "title" },
+      { label: "Content", key: "body" },
+      { label: "Target Roles", key: "target_roles" },
+      { label: "Created At", key: "created_at_formatted" },
+    
+    ],
+    data: announcements.value.map((item) => ({
+      ...item,
+      created_at_formatted: formatDate(item.created_at),
+    })),
+  });
 };
 
 onMounted(() => {

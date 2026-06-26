@@ -45,12 +45,12 @@ const items = [
       {
         label: "App Version",
         icon: "pi pi-tag",
-        command: () => router.push("/app-version"),
+        command: () => router.push("/appversion"),
       },
       {
         label: "Maintenance",
         icon: "pi pi-wrench",
-        command: () => router.push("/app-maintenance"),
+        command: () => router.push("/appmaintenance"),
       },
     ],
   },

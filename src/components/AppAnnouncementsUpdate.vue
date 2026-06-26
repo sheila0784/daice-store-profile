@@ -17,7 +17,7 @@
         </div> -->
 
         <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="font-medium p-2">Title:</div>
+          <div class="text-sm p-2">Title:</div>
           <InputText
             autofocus
             ref="titleRef"
@@ -31,8 +31,8 @@
           }}</small>
         </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="font-medium p-2">Body:</div>
+        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
+          <div class="text-sm p-2">Body:</div>
           <Textarea ref="bodyRef" v-model="body" rows="5" autoResize class="w-full" />
 
           <div />
@@ -40,7 +40,7 @@
         </div>
 
         <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="font-medium p-2">Target Role:</div>
+          <div class="text-sm p-2">Target Role:</div>
           <div class="flex flex-col md:flex-row gap-4">
             <div class="flex items-center gap-2">
               <Checkbox
