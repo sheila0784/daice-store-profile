@@ -38,7 +38,7 @@
               label="Create New"
               icon="pi pi-plus"
               :loading="loading"
-              class="md:ml-auto"
+              class="md:ml-auto text-xs"
               @click="handleUpdate"
             />
           </div>
@@ -60,18 +60,18 @@
           class="w-full text-xs border-0 border-gray-300"
         >
           <!-- <Column field="acctNo" header="Account No."></Column> -->
-          <Column header="#" style="width: 60px" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
+          <Column header="#" style="width: 60px" v-bind="columnDefaults">
             <template #body="slotProps">
               {{ slotProps.index + 1 }}
             </template>
           </Column>
 
-          <Column field="name" header="Name" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
-          <Column field="address" header="Address" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
-          <Column field="barangay" header="Barangay" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
-          <Column field="city" header="City" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
-          <Column field="province" header="Province" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
-          <Column field="active" header="Active" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
+          <Column field="name" header="Name" sortable v-bind="columnDefaults"></Column>
+          <Column field="address" header="Address" v-bind="columnDefaults"></Column>
+          <Column field="barangay" header="Barangay" v-bind="columnDefaults"></Column>
+          <Column field="city" header="City" v-bind="columnDefaults"></Column>
+          <Column field="province" header="Province" v-bind="columnDefaults"></Column>
+          <Column field="active" header="Active" v-bind="columnDefaults">
             <template #body="slotProps">
               <i v-if="slotProps.data.active" class="pi pi-check-square text-gray-500"></i>
               <i v-else class="pi pi-stop text-gray-500"></i>
@@ -79,7 +79,7 @@
           </Column>
 
           <!-- Actions Column -->
-          <Column style="width: 140px" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
+          <Column style="width: 140px" v-bind="columnDefaults">
             <template #body="slotProps">
               <div class="flex gap-2">
                 <Button
@@ -273,6 +273,11 @@ import { useToast } from "primevue/usetoast";
 import { useConfirm } from "primevue/useconfirm";
 
 import Button from "primevue/button";
+
+const columnDefaults = {
+  headerClass: "bg-blue-400 text-xs text-gray-100",
+  bodyClass: "text-xs whitespace-pre-line",
+};
 
 const toast = useToast();
 const confirm = useConfirm();

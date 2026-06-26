@@ -13,11 +13,7 @@
             <div class="w-full flex flex-col sm:flex-row flex-wrap gap-2">
               <IconField>
                 <InputIcon class="pi pi-search" />
-                <InputText
-                  v-model="searchValue"
-                  placeholder="Search"
-                  @keyup.enter="fetchStoresProfile"
-                />
+                <InputText v-model="searchValue" placeholder="Search" @keyup.enter="onSearch" />
               </IconField>
               <div>
                 <Select
@@ -26,7 +22,7 @@
                   optionLabel="label"
                   optionValue="value"
                   placeholder="Select Role"
-                  @change="fetchStoresProfile"
+                  @change="onRoleChanged"
                 />
               </div>
             </div>
@@ -39,7 +35,7 @@
               label="Create New"
               icon="pi pi-plus"
               :loading="loading"
-              class="md:ml-auto"
+              class="md:ml-auto text-xs"
               @click="handleUpdate"
             />
           </div>
@@ -68,12 +64,7 @@
           ></Column> -->
 
           <!-- Row Count Column -->
-          <Column
-            header="#"
-            style="width: 60px"
-            headerClass="bg-yellow-50 text-xs"
-            bodyClass="text-xs"
-          >
+          <Column header="#" style="width: 60px" v-bind="columnDefaults">
             <template #body="slotProps">
               {{ slotProps.index + 1 }}
             </template>
@@ -82,13 +73,7 @@
           <!-- <Column field="id" header="Id"></Column>
           <Column field="store_id" header="Store Id"></Column> -->
 
-          <Column
-            field="role"
-            header="Role"
-            sortable
-            headerClass="bg-yellow-50 text-xs"
-            bodyClass="text-xs"
-          >
+          <Column field="role" header="Role" sortable v-bind="columnDefaults">
             <template #body="{ data }">
               <i v-if="data.role === 'dealer'" class="pi pi-briefcase text-blue-400"></i>
               <i v-else-if="data.role === 'rider'" class="pi pi-car text-green-400"></i>
@@ -98,43 +83,20 @@
             </template>
           </Column>
 
-          <Column
-            field="display_name"
-            header="Profile Name"
-            sortable
-            headerClass="bg-yellow-50 text-xs"
-            bodyClass="text-xs"
-          >
+          <Column field="display_name" header="Profile Name" sortable v-bind="columnDefaults">
           </Column>
 
-          <Column
-            field="email"
-            header="Email"
-            sortable
-            headerClass="bg-yellow-50 text-xs"
-            bodyClass="text-xs"
-          ></Column>
+          <Column field="email" header="Email" sortable v-bind="columnDefaults"></Column>
 
-          <Column
-            field="contact"
-            header="Contact No."
-            headerClass="bg-yellow-50 text-xs"
-            bodyClass="text-xs"
-          ></Column>
+          <Column field="contact" header="Contact No." v-bind="columnDefaults"></Column>
 
           <Column
             field="shipping_details"
             header="Shipping Details"
-            headerClass="bg-yellow-50 text-xs"
-            bodyClass="text-xs whitespace-pre-line"
+            v-bind="columnDefaults"
           ></Column>
 
-          <Column
-            field="status"
-            header="Status"
-            headerClass="bg-yellow-50 text-xs"
-            bodyClass="text-xs"
-          >
+          <Column field="status" header="Status" v-bind="columnDefaults">
             <template #body="{ data }">
               <i v-if="data.status === 'approved'" class="pi pi-thumbs-up text-green-600"></i>
 
@@ -156,37 +118,19 @@
             </template>
           </Column> -->
 
-          <Column
-            field="store"
-            header="Store"
-            sortable
-            headerClass="bg-yellow-50 text-xs"
-            bodyClass="text-xs"
-          >
+          <Column field="store" header="Store" sortable v-bind="columnDefaults">
             <template #body="slotProps">
               {{ slotProps.data.store }}
             </template>
           </Column>
 
-          <Column
-            field="created_at"
-            header="Account Creation"
-            sortable
-            headerClass="bg-yellow-50 text-xs"
-            bodyClass="text-xs"
-          >
+          <Column field="created_at" header="Account Creation" sortable v-bind="columnDefaults">
             <template #body="slotProps">
               {{ formatDate(slotProps.data.created_at) }}
             </template>
           </Column>
 
-          <Column
-            field="last_sign_in_at"
-            header="Last Sign-in"
-            sortable
-            headerClass="bg-yellow-50 text-xs"
-            bodyClass="text-xs"
-          >
+          <Column field="last_sign_in_at" header="Last Sign-in" sortable v-bind="columnDefaults">
             <template #body="slotProps">
               {{ formatDate(slotProps.data.last_sign_in_at) }}
             </template>
@@ -197,8 +141,7 @@
             field="last_order_placed"
             header="Last Order Placed"
             sortable
-            headerClass="bg-yellow-50 text-xs"
-            bodyClass="text-xs"
+            v-bind="columnDefaults"
           >
             <template #body="slotProps">
               {{ formatDate(slotProps.data.last_order_placed) }}
@@ -212,7 +155,7 @@
           </Column> -->
 
           <!-- Actions Column -->
-          <Column style="width: 140px" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
+          <Column style="width: 140px" v-bind="columnDefaults">
             <template #body="slotProps">
               <div class="flex gap-2">
                 <Button
@@ -368,6 +311,11 @@ import Button from "primevue/button";
 
 import { exportCsv } from "@/utils/exportCsv";
 
+const columnDefaults = {
+  headerClass: "bg-blue-400 text-xs text-gray-100",
+  bodyClass: "text-xs whitespace-pre-line",
+};
+
 const router = useRouter();
 const route = useRoute();
 
@@ -491,13 +439,36 @@ const roleOptions = [
   { label: "All", value: null },
 ];
 
+const onRoleChanged = async () => {
+  router.replace({
+    query: {
+      ...route.query,
+      role: filterRole.value,
+    },
+  });
+
+  await fetchStoresProfile();
+};
+
+const onSearch = async () => {
+  router.replace({
+    query: {
+      ...route.query,
+      search: searchValue.value || undefined,
+    },
+  });
+
+  await fetchStoresProfile();
+};
+
+// onMounted(async () => {
+//   filterRole.value = route.query.role === undefined ? null : route.query.role;
+//   await fetchStoresProfile();
+// });
+
 onMounted(async () => {
-  if (route.query.role) {
-    filterRole.value = route.query.role;
-  }
- 
-  // searchValue.value = route.query.search || "";
-  // filterRole.value = route.query.role || null;
+  filterRole.value = route.query.role ?? null;
+  searchValue.value = route.query.search ?? "";
 
   await fetchStoresProfile();
 });

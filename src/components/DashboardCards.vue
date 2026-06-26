@@ -1,7 +1,6 @@
 <template>
   <div class="flex flex-col gap-6 mt-1 justify-center items-center">
-    <!-- CARDS (BOTTOM) -->
-    <div class="flex gap-2 flex-wrap mt-4">
+    <!-- <div class="flex gap-2 flex-wrap mt-4">
       <Card
         class="shadow-2 border-gray-300 w-[180px] md:w-[192px] h-[130px] md:h-[144px] bg-blue-100 cursor-pointer hover:scale-105 hover:shadow-xl transition-all duration-200 ease-in-out"
         @click="handleDealerClick"
@@ -43,35 +42,72 @@
         </template>
 
         <template #content>
-          <!-- <i v-if="data.role === 'dealer'" class="pi pi-briefcase text-blue-400"></i> -->
-
           <span class="flex text-3xl font-bold justify-center"> {{ riderCount }} </span>
+        </template>
+      </Card>
+    </div> -->
+
+    <div class="flex gap-2 flex-wrap mt-4 justify-center">
+      <Card
+        v-for="card in dashboardCards"
+        :key="card.title"
+        :class="[
+          'shadow-2 border-gray-300 w-[180px] md:w-[192px] h-[130px] md:h-[144px] cursor-pointer hover:scale-105 hover:shadow-xl transition-all duration-200 ease-in-out',
+          card.bgClass,
+        ]"
+        @click="card.click"
+      >
+        <template #title>
+          <span class="flex text-xl font-extrabold justify-center text-blue-900">
+            <i :class="[card.icon, card.iconClass, 'text-2xl mr-2']"></i>
+            {{ card.title }}
+          </span>
+        </template>
+
+        <template #content>
+          <span class="flex text-3xl font-bold justify-center text-gray-600">
+            {{ card.count }}
+          </span>
         </template>
       </Card>
     </div>
 
-    <!-- DATE RANGE (TOP) -->
-    <div class="flex gap-2 items-center flex-wrap justify-center">
+    <!-- <div class="flex items-center flex-wrap justify-center">
       <DatePicker
         v-model="dateRange"
         selectionMode="range"
         showIcon
         placeholder="Select date range"
+        inputClass="text-sm py-1"
+        dateFormat="M d, yy"
       />
-    </div>
+    </div> -->
 
-    <div class="flex items-center flex-wrap">
-      <div class="text-md text-gray-600 text-center flex justify-left w-full">
-        <span v-if="dateRange?.[0] && dateRange?.[1]" class="font-bold">
+    <!-- <div class="flex items-center flex-wrap justify-center w-full text-sm rounded-lg"> -->
+    <div class="overflow-hidden">
+      <!-- <div class="flex mb-2 mt-2 justify-center">
+        <span v-if="dateRange?.[0] && dateRange?.[1]" class="font-bold text-blue-500">
           {{ formatDateLabel(dateRange) }}
         </span>
-      </div>
-    </div>
+      </div> -->
 
-    <div class="flex items-center flex-wrap justify-center w-full text-sm">
+      <!-- class="w-full max-w-lg" -->
+      <div class="flex mb-3 mt-2 justify-center">
+        <DatePicker
+          v-model="dateRange"
+          selectionMode="range"
+          showIcon
+          placeholder="Select date range"
+          inputClass="text-sm py-2 font-bold text-blue-400"
+          dateFormat="M d, yy"
+          
+          class="w-[320px]"
+        />
+      </div>
+
       <Datatable
         :value="salesData"
-        class="w-full border-1 border-gray-300"
+        class="w-full border-1 border-blue-200"
         :rows="rows"
         :rowsPerPageOptions="rowsPerPageOptions"
         paginator
@@ -86,23 +122,23 @@
           header="Date"
           :body="(data) => new Date(data.date).toLocaleDateString()"
           sortable
-          headerClass="bg-yellow-50"
+          v-bind="columnDefaults"
         ></Column>
-        <Column field="dealer" header="Dealer" headerClass="bg-yellow-50"></Column>
+        <Column field="dealer" header="Dealer" v-bind="columnDefaults"></Column>
         <Column
           field="no_of_served_customers"
           header="Served Customers"
-          headerClass="bg-yellow-50"
+          v-bind="columnDefaults"
         ></Column>
 
         <!-- insert here the product_quantity -->
-        <Column field="product_quantity" header="Products" headerClass="bg-yellow-50"></Column>
+        <Column field="product_quantity" header="Products" v-bind="columnDefaults"></Column>
 
         <Column
           field="total_amount"
-          headerClass="text-right bg-yellow-50"
           header="Total Sales"
-          bodyClass="text-right"
+          v-bind="columnDefaults"
+          bodyClass="text-right text-sm"
           sortable
         >
           <template #body="{ data }">
@@ -212,6 +248,11 @@ import Message from "primevue/message";
 import Button from "primevue/button";
 import { exportCsv } from "@/utils/exportCsv";
 
+const columnDefaults = {
+  headerClass: "bg-blue-400 text-xs text-gray-100",
+  bodyClass: "text-xs whitespace-pre-line",
+};
+
 const router = useRouter();
 
 const dateRange = ref(null);
@@ -270,7 +311,6 @@ const handleCustomerClick = () => {
     path: "/storesprofilelist",
     query: {
       role: "customer",
-   
     },
   });
 };
@@ -281,10 +321,36 @@ const handleRiderClick = () => {
     path: "/storesprofilelist",
     query: {
       role: "rider",
-
     },
   });
 };
+
+const dashboardCards = [
+  {
+    title: "Dealers",
+    icon: "pi pi-briefcase",
+    iconClass: "text-blue-400",
+    bgClass: "bg-blue-100",
+    count: dealerCount,
+    click: handleDealerClick,
+  },
+  {
+    title: "Customers",
+    icon: "pi pi-users",
+    iconClass: "text-yellow-400",
+    bgClass: "bg-green-100",
+    count: customerCount,
+    click: handleCustomerClick,
+  },
+  {
+    title: "Riders",
+    icon: "pi pi-car",
+    iconClass: "text-green-400",
+    bgClass: "bg-purple-100",
+    count: riderCount,
+    click: handleRiderClick,
+  },
+];
 
 const handleExport = () => {
   exportCsv({
@@ -293,7 +359,7 @@ const handleExport = () => {
       { label: "Date", key: "order_date" },
       { label: "Dealer", key: "dealer" },
       { label: "Served Customers", key: "no_of_served_customers" },
-      { label: "Products", key: "product_quantity"},
+      { label: "Products", key: "product_quantity" },
       { label: "Total Sales", key: "total_amount" },
     ],
     data: salesData.value.map((item) => ({
