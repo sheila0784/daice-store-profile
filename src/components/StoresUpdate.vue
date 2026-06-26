@@ -22,7 +22,7 @@
         </div>
 
         <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="font-medium p-2">Store:</div>
+          <div class="text-sm p-2">Store:</div>
           <InputText
             autofocus
             ref="storeRef"
@@ -39,8 +39,8 @@
              :invalid="!!errors.acctNo"
             :maxlength="13"
         -->
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="font-medium p-2">Account No.:</div>
+        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
+          <div class="text-sm p-2">Account No.:</div>
           <InputText
             ref="acctNoRef"
             v-model="acctNo"
@@ -53,8 +53,8 @@
           }}</small>
         </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="font-medium p-2">Address:</div>
+        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+          <div class="text-sm p-2">Address:</div>
           <InputText
             ref="addressRef"
             v-model="address"
@@ -68,8 +68,8 @@
           }}</small>
         </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="font-medium p-2">Province:</div>
+        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+          <div class="text-sm p-2">Province:</div>
           <Select
             ref="provinceRef"
             v-model="province"
@@ -87,8 +87,8 @@
           }}</small>
         </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="font-medium p-2">City / Municipality:</div>
+        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
+          <div class="text-sm p-2">City / Municipality:</div>
           <Select
             ref="cityRef"
             v-model="city"
@@ -105,8 +105,8 @@
           <small v-if="errors.city" class="flex text-red-500 items-center">{{ errors.city }}</small>
         </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="font-medium p-2">Barangay:</div>
+        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
+          <div class="text-sm p-2">Barangay:</div>
           <Select
             ref="barangayRef"
             v-model="barangay"
@@ -125,8 +125,8 @@
           }}</small>
         </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="font-medium p-2">Longitude:</div>
+        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+          <div class="text-sm p-2">Longitude:</div>
           <InputText
             ref="lonRef"
             v-model="lon"
@@ -137,8 +137,8 @@
           <div />
           <small v-if="errors.lon" class="flex text-red-500 items-center">{{ errors.lon }}</small>
         </div>
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="font-medium p-2">Latitude:</div>
+        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+          <div class="text-sm p-2">Latitude:</div>
           <InputText
             ref="latRef"
             v-model="lat"
@@ -151,7 +151,7 @@
         </div>
 
         <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="flex font-medium p-2"></div>
+          <div class="flex text-sm p-2"></div>
           <div>
             <Checkbox inputId="active" v-model="activeModel" binary class="mr-2" />
             <label for="active">Active</label>
