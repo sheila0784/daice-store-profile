@@ -83,8 +83,8 @@
       />
     </div> -->
 
-    <!-- <div class="flex items-center flex-wrap justify-center w-full text-sm rounded-lg"> -->
-    <div class="overflow-hidden">
+    <div class="flex items-center flex-wrap justify-center w-full text-sm rounded-lg">
+    <!--  <div class="overflow-hidden">  -->
       <!-- <div class="flex mb-2 mt-2 justify-center">
         <span v-if="dateRange?.[0] && dateRange?.[1]" class="font-bold text-blue-500">
           {{ formatDateLabel(dateRange) }}
