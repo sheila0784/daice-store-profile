@@ -3,9 +3,7 @@
     <MenuBar />
     <Card class="w-full max-w-full shadow-2 border-gray-300 mx-auto">
       <template #title>
-        <div class="flex items-center gap-2">
-          <span>Announcements</span>
-        </div>
+        <span class="text-3xl font-extrabold tracking-wide"> Announcements </span>
       </template>
       <template #content>
         <div class="flex flex-col md:flex-row md:items-center gap-2">
@@ -13,7 +11,11 @@
             <div class="w-full flex flex-col sm:flex-row flex-wrap gap-2">
               <IconField>
                 <InputIcon class="pi pi-search" />
-                <InputText v-model="searchValue" placeholder="Search"  @keyup.enter="fetchAnnouncements"/>
+                <InputText
+                  v-model="searchValue"
+                  placeholder="Search"
+                  @keyup.enter="fetchAnnouncements"
+                />
               </IconField>
             </div>
           </div>
@@ -25,7 +27,7 @@
               label="Create New"
               icon="pi pi-plus"
               :loading="loading"
-              class="md:ml-auto"
+              class="md:ml-auto text-xs"
               @click="handleUpdate"
             />
           </div>
@@ -41,20 +43,21 @@
           stripedRows
           :loading="loading"
           selectionMode="single"
-          
         >
-        <Column field="title" header="Title" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
-        <Column field="body" header="Content" headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
-        <Column field="target_roles" header="Target Roles" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs"></Column>
-        <Column field="created_at" header="Created At" sortable headerClass="bg-yellow-50 text-xs" bodyClass="text-xs">
-          <template #body="slotProps">
-            {{ new Date(slotProps.data.created_at).toLocaleString() }}
-          </template>
-        </Column>
-
-        
+          <Column field="title" header="Title" sortable v-bind="columnDefaults"></Column>
+          <Column field="body" header="Content" v-bind="columnDefaults"></Column>
+          <Column
+            field="target_roles"
+            header="Target Roles"
+            sortable
+            v-bind="columnDefaults"
+          ></Column>
+          <Column field="created_at" header="Created At" sortable v-bind="columnDefaults">
+            <template #body="slotProps">
+              {{ new Date(slotProps.data.created_at).toLocaleString() }}
+            </template>
+          </Column>
         </DataTable>
-
       </template>
 
       <p class="text-gray-600">
@@ -66,7 +69,7 @@
 </template>
 
 <script setup>
-import { onMounted} from "vue";
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 import Card from "primevue/card";
@@ -82,12 +85,18 @@ import IconField from "primevue/iconfield";
 
 import { useAppAnnouncements } from "../composables/useAppAnnouncements";
 
+const columnDefaults = {
+  headerClass: "bg-blue-400 text-xs text-gray-100",
+  bodyClass: "text-xs whitespace-pre-line",
+};
+
 const router = useRouter();
 
-const { rows, rowsPerPageOptions, announcements, loading, fetchAnnouncements, searchValue } = useAppAnnouncements();
+const { rows, rowsPerPageOptions, announcements, loading, fetchAnnouncements, searchValue } =
+  useAppAnnouncements();
 
 const handleUpdate = (announcement) => {
-console.log("Edit announcement:", announcement);
+  console.log("Edit announcement:", announcement);
 
   // 👇 then navigate
   router.push({ name: "AppAnnouncementsUpdate" });
@@ -96,5 +105,4 @@ console.log("Edit announcement:", announcement);
 onMounted(() => {
   fetchAnnouncements();
 });
-
 </script>

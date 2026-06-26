@@ -72,26 +72,7 @@
       </Card>
     </div>
 
-    <!-- <div class="flex items-center flex-wrap justify-center">
-      <DatePicker
-        v-model="dateRange"
-        selectionMode="range"
-        showIcon
-        placeholder="Select date range"
-        inputClass="text-sm py-1"
-        dateFormat="M d, yy"
-      />
-    </div> -->
-
     <div class="flex items-center flex-wrap justify-center w-full text-sm rounded-lg">
-    <!--  <div class="overflow-hidden">  -->
-      <!-- <div class="flex mb-2 mt-2 justify-center">
-        <span v-if="dateRange?.[0] && dateRange?.[1]" class="font-bold text-blue-500">
-          {{ formatDateLabel(dateRange) }}
-        </span>
-      </div> -->
-
-      <!-- class="w-full max-w-lg" -->
       <div class="flex mb-3 mt-2 justify-center">
         <DatePicker
           v-model="dateRange"
@@ -100,8 +81,7 @@
           placeholder="Select date range"
           inputClass="text-sm py-2 font-bold text-blue-400"
           dateFormat="M d, yy"
-          
-          class="w-[320px]"
+          class="w-[250px]"
         />
       </div>
 
@@ -173,17 +153,18 @@
       >
         <template #header>
           <div class="flex flex-col items-center gap-1">
-            <div class="text-xs text-gray-600">
+            <div class="text-xs text-gray-500">
               <p>
-                Dealer: <span class="text-blue-700 text-bold text-lg">{{ selRowDealer }}</span>
+                Dealer: <span class="text-blue-500 font-bold text-lg">{{ selRowDealer }}</span>
               </p>
               <p>
-                Sales Date: <span class="text-gray-800 text-bold text-lg">{{ selRowDate }}</span>
+                Sales Date:
+                <span class="text-blue-400 text-base font-semibold">{{ selRowDate }}</span>
               </p>
 
               <p>
                 Total Sales:
-                <span class="text-gray-800 text-bold text-lg"
+                <span class="text-blue-400 text-base font-semibold"
                   ><i class="pi pi-money-bill text-green-500"></i>
                   {{ formatNumber(selRowTotal) }}</span
                 >
@@ -197,8 +178,7 @@
             <Column
               header="#"
               style="width: 60px"
-              headerClass="bg-yellow-50 text-xs"
-              bodyClass="text-xs"
+              v-bind="dialogColumnDefaults"
             >
               <template #body="slotProps">
                 {{ slotProps.index + 1 }}
@@ -207,20 +187,17 @@
             <Column
               field="recipient"
               header="Customer"
-              headerClass="bg-yellow-50 text-xs"
-              bodyClass="text-xs"
+              v-bind="dialogColumnDefaults"
             ></Column>
             <Column
               field="product_quantity"
               header="Product"
-              headerClass="bg-yellow-50 text-xs"
-              bodyClass="text-xs"
+              v-bind="dialogColumnDefaults"
             ></Column>
             <Column
               field="total_amount"
-              headerClass="text-right bg-yellow-50 text-xs"
               header="Amount"
-              bodyClass="text-right text-xs"
+              v-bind="dialogColumnDefaults"
               sortable
             >
               <template #body="{ data }">
@@ -251,6 +228,11 @@ import { exportCsv } from "@/utils/exportCsv";
 const columnDefaults = {
   headerClass: "bg-blue-400 text-xs text-gray-100",
   bodyClass: "text-xs whitespace-pre-line",
+};
+
+const dialogColumnDefaults = {
+  headerClass: "bg-blue-100 text-xs text-blue-900",
+  bodyClass: "text-xs",
 };
 
 const router = useRouter();

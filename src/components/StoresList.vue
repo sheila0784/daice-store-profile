@@ -111,6 +111,18 @@
             >No records found. Try searching again.</Message
           >
         </div>
+         <div v-else>
+          <Button
+            variant="text"
+            severity="secondary"
+            label="Download CSV File"
+            icon="pi pi-download"
+            :loading="loading"
+            class="md:ml-auto text-xs text-blue-600"
+            @click="handleExport"
+          />
+        </div>
+
       </template>
     </Card>
 
@@ -273,6 +285,7 @@ import { useToast } from "primevue/usetoast";
 import { useConfirm } from "primevue/useconfirm";
 
 import Button from "primevue/button";
+import { exportCsv } from "@/utils/exportCsv";
 
 const columnDefaults = {
   headerClass: "bg-blue-400 text-xs text-gray-100",
@@ -370,6 +383,25 @@ const statusOptions = [
   { label: "Inactive", value: "false" },
   { label: "All", value: null },
 ];
+
+const handleExport = () => {
+  exportCsv({
+    filename: `dealers_${new Date().toISOString().slice(0, 10)}.csv`,
+    headers: [
+      { label: "Name", key: "name" },
+      { label: "Address", key: "address" },
+      { label: "Barangay", key: "barangay" },
+      { label: "City", key: "city" },
+      { label: "Province", key: "province" },
+      { label: "Active", key: "active" },
+     
+    ],
+    data: items.value.map((item) => ({
+      ...item,
+    
+    })),
+  });
+};
 
 onMounted(() => {
   fetchStores();

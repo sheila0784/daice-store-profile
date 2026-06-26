@@ -251,7 +251,7 @@
             v-if="dialogData.status === 'approved'"
             class="pi pi-thumbs-up text-green-600 text-xl ml-2"
           ></i>
-          <span v-else>
+          <span v-else class="text-lg ml-2 text-orange-600">
             {{ dialogData.status }}
           </span>
         </p>
@@ -267,7 +267,16 @@
         </p>
         <p>
           <span class="text-sm font-semibold text-gray-500">Last Sign-in:</span>
-          <span class="text-xs ml-2">{{ formatDate(dialogData.last_sign_in_at) }}</span>
+          <span class="text-xs ml-2">
+            <template v-if="dialogData.last_sign_in_at">
+              {{ formatDate(dialogData.last_sign_in_at) }}
+            </template>
+
+            <template v-else>
+              <i class="pi pi-clock text-orange-500 mr-1"></i>
+              <span class="text-orange-600">Awaiting first sign-in</span>
+            </template>
+          </span>
         </p>
 
         <p v-if="dialogData.role === 'customer' && dialogData.last_order_placed">
