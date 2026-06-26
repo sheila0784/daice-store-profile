@@ -111,7 +111,7 @@
             >No records found. Try searching again.</Message
           >
         </div>
-         <div v-else>
+        <div v-else>
           <Button
             variant="text"
             severity="secondary"
@@ -122,49 +122,49 @@
             @click="handleExport"
           />
         </div>
-
       </template>
     </Card>
 
-    <Dialog v-model:visible="showDialog" modal :style="{ width: '25rem' }" class="m-4">
+    <Dialog v-model:visible="showDialog" modal class="m-4 w-[25rem]">
       <template #header>
         <span class="text-xl font-bold text-blue-500">{{ dialogData.name }}</span>
       </template>
       <Divider />
 
+       <!--  -->
       <div v-if="dialogData" class="space-y-2">
-        <p>
-          <span class="text-sm font-semibold text-gray-500">Dealer Id:</span>
-          <span class="text-md ml-2">{{ dialogData.id }}</span>
+        <p class="m-1">
+          <span class="text-xs text-gray-500">Dealer Id:</span>
+          <span class="text-xs ml-2">{{ dialogData.id }}</span>
         </p>
 
-        <p>
-          <span class="text-sm font-semibold text-gray-500">Account No.:</span>
-          <span class="text-md ml-2">{{ dialogData.acctNo }}</span>
+        <p class="m-1">
+          <span class="text-xs text-gray-500">Account No.:</span>
+          <span class="text-sm ml-2">{{ dialogData.acctNo }}</span>
         </p>
 
-        <p>
-          <span class="text-sm font-semibold text-gray-500">Address:</span>
-          <span class="text-xl ml-2">{{ dialogData.address }}</span>
+        <p class="m-1">
+          <span class="text-xs text-gray-500">Address:</span>
+          <span class="text-sm ml-2">{{ dialogData.address }}</span>
         </p>
 
-        <p>
-          <span class="text-sm font-semibold text-gray-500">Barangay:</span>
-          <span class="text-xl ml-2">{{ dialogData.barangay }}</span>
+        <p class="m-1">
+          <span class="text-xs text-gray-500">Barangay:</span>
+          <span class="text-sm ml-2">{{ dialogData.barangay }}</span>
         </p>
 
-        <p>
-          <span class="text-sm font-semibold text-gray-500">City:</span>
-          <span class="text-xl ml-2">{{ dialogData.city }}</span>
+        <p class="m-1">
+          <span class="text-xs text-gray-500">City:</span>
+          <span class="text-sm ml-2">{{ dialogData.city }}</span>
         </p>
 
-        <p>
-          <span class="text-sm font-semibold text-gray-500">Province:</span>
-          <span class="text-xl ml-2">{{ dialogData.province }}</span>
+        <p class="m-1">
+          <span class="text-xs text-gray-500">Province:</span>
+          <span class="text-sm ml-2">{{ dialogData.province }}</span>
         </p>
 
-        <p v-if="!longitude.value || !latitude.value">
-          <span class="text-sm font-semibold text-gray-500">Store Location:</span>
+        <p v-if="!longitude.value || !latitude.value" class="m-1">
+          <span class="text-xs text-gray-500">Store Location:</span>
           <span class="text-sm ml-2">{{ longitude }}, {{ latitude }}</span>
           <span class="block mt-1 ml-8 pl-4">
             <div class="flex items-center gap-1">
@@ -177,8 +177,8 @@
           </span>
         </p>
 
-        <p class="flex items-center gap-2">
-          <span class="text-sm font-semibold text-gray-500">Active:</span>
+        <p class="flex items-center gap-2 m-1 mb-4">
+          <span class="text-xs text-gray-500">Active:</span>
           <i v-if="dialogData.active" class="pi pi-check-square text-green-600 text-md"></i>
           <i v-else class="pi pi-stop text-gray-500 text-xl"></i>
         </p>
@@ -187,7 +187,7 @@
       <div>
         <Accordion v-if="dialogData.display_name" class="mb-1">
           <AccordionPanel value="0">
-            <AccordionHeader class="text-sm font-semibold text-gray-500 bg-blue-100 pt-2 pb-2"
+            <AccordionHeader class="text-xs text-gray-500 bg-blue-100 pt-2 pb-2"
               >Delivery Mode</AccordionHeader
             >
             <AccordionContent>
@@ -197,7 +197,7 @@
                   class="pi pi-check-square text-green-600 text-md"
                 ></i>
                 <i v-else class="pi pi-stop text-green-600 text-md"></i>
-                <span class="text-sm font-semibold text-gray-500">Allow Immediate</span>
+                <span class="text-xs text-gray-500">Allow Immediate</span>
               </p>
 
               <div v-if="dialogData.allow_immediate" class="pl-4 text-xs">
@@ -211,7 +211,7 @@
                   class="pi pi-check-square text-green-600 text-md"
                 ></i>
                 <i v-else class="pi pi-stop text-green-600 text-md"></i>
-                <span class="text-sm font-semibold text-gray-500">Allow Scheduled</span>
+                <span class="text-xs text-gray-500">Allow Scheduled</span>
               </p>
               <div v-if="dialogData.allow_scheduled" class="pl-4 text-xs">
                 <DataTable :value="schedules" size="small" stripedRows>
@@ -232,21 +232,21 @@
 
         <Accordion v-if="dialogData.display_name">
           <AccordionPanel value="0">
-            <AccordionHeader class="text-sm font-semibold text-gray-500 bg-blue-100 pt-2 pb-2"
+            <AccordionHeader class="text-xs text-gray-500 bg-blue-100 pt-2 pb-2"
               >Profile</AccordionHeader
             >
             <AccordionContent>
               <p>
-                <span class="text-sm font-semibold text-gray-500">Profile Id:</span>
+                <span class="text-xs text-gray-500">Profile Id:</span>
                 <span class="text-sm ml-2">{{ dialogData.profile_id }}</span>
               </p>
               <p>
-                <span class="text-sm font-semibold text-gray-500">Name:</span>
-                <span class="text-xl ml-2">{{ dialogData.display_name }}</span>
+                <span class="text-xs text-gray-500">Name:</span>
+                <span class="text-sm ml-2">{{ dialogData.display_name }}</span>
               </p>
               <p>
-                <span class="text-sm font-semibold text-gray-500">Contact No.:</span>
-                <span class="text-xl ml-2">{{ dialogData.contact }}</span>
+                <span class="text-xs text-gray-500">Contact No.:</span>
+                <span class="text-sm ml-2">{{ dialogData.contact }}</span>
               </p>
             </AccordionContent>
           </AccordionPanel>
@@ -286,6 +286,7 @@ import { useConfirm } from "primevue/useconfirm";
 
 import Button from "primevue/button";
 import { exportCsv } from "@/utils/exportCsv";
+// import { label } from "@primeuix/themes/aura/metergroup";
 
 const columnDefaults = {
   headerClass: "bg-blue-400 text-xs text-gray-100",
@@ -389,16 +390,22 @@ const handleExport = () => {
     filename: `dealers_${new Date().toISOString().slice(0, 10)}.csv`,
     headers: [
       { label: "Name", key: "name" },
+      { label: "Account No.", key: "acctNo" },
       { label: "Address", key: "address" },
       { label: "Barangay", key: "barangay" },
       { label: "City", key: "city" },
       { label: "Province", key: "province" },
+      { label: "Longitude", key: "lon" },
+      { label: "Latitude", key: "lat" },
       { label: "Active", key: "active" },
-     
+      { label: "Allow Immediate Delivery", key: "allow_immediate" },
+      { label: "Distance Limit (km)", key: "allow_immediate_km" },
+      { label: "Allow Scheduled Delivery", key: "allow_scheduled" },
+      { label: "Profile Name", key: "display_name" },
+      { label: "Contact No.", key: "contact" },
     ],
     data: items.value.map((item) => ({
       ...item,
-    
     })),
   });
 };

@@ -226,47 +226,47 @@
           />
         </div>
 
-        <p>
-          <span class="text-sm font-semibold text-gray-500">Id:</span>
+        <p class="m-1 mt-2">
+          <span class="text-xs text-gray-500">Id:</span>
           <span class="text-xs ml-2">{{ dialogData.id }}</span>
         </p>
 
-        <p>
-          <span class="text-sm font-semibold text-gray-500">Role:</span>
-          <span class="text-md ml-2">{{ dialogData.role.toUpperCase() }}</span>
+        <p class="m-1">
+          <span class="text-xs text-gray-500">Role:</span>
+          <span class="text-sm ml-2">{{ dialogData.role.toUpperCase() }}</span>
         </p>
 
-        <p v-if="dialogData.contact">
-          <span class="text-sm font-semibold text-gray-500">Contact No.:</span>
-          <span class="text-xl ml-2">{{ dialogData.contact }}</span>
+        <p v-if="dialogData.contact" class="m-1">
+          <span class="text-xs text-gray-500">Contact No.:</span>
+          <span class="text-sm ml-2">{{ dialogData.contact }}</span>
         </p>
-        <p>
-          <span class="text-sm font-semibold text-gray-500">Email:</span>
-          <span class="text-xl ml-2">{{ dialogData.email }}</span>
+        <p class="m-1">
+          <span class="text-xs text-gray-500">Email:</span>
+          <span class="text-sm ml-2">{{ dialogData.email }}</span>
         </p>
 
-        <p v-if="dialogData.status">
-          <span class="text-sm font-semibold text-gray-500">Status:</span>
+        <p v-if="dialogData.status" class="m-1">
+          <span class="text-xs text-gray-500">Status:</span>
           <i
             v-if="dialogData.status === 'approved'"
-            class="pi pi-thumbs-up text-green-600 text-xl ml-2"
+            class="pi pi-thumbs-up text-green-600 text-sm ml-2"
           ></i>
-          <span v-else class="text-lg ml-2 text-orange-600">
+          <span v-else class="text-sm ml-2 text-orange-600">
             {{ dialogData.status }}
           </span>
         </p>
 
         <!-- <p v-if="dialogData.name">
-          <span class="text-sm font-semibold text-gray-500">Dealer:</span>
+          <span class="text-xs text-gray-500">Dealer:</span>
           <span class="text-xl ml-2">{{ dialogData.name }}</span>
         </p> -->
 
-        <p>
-          <span class="text-sm font-semibold text-gray-500">Account Created:</span>
+        <p class="m-1">
+          <span class="text-xs text-gray-500">Account Created:</span>
           <span class="text-xs ml-2">{{ formatDate(dialogData.created_at) }}</span>
         </p>
-        <p>
-          <span class="text-sm font-semibold text-gray-500">Last Sign-in:</span>
+        <p class="m-1">
+          <span class="text-xs text-gray-500">Last Sign-in:</span>
           <span class="text-xs ml-2">
             <template v-if="dialogData.last_sign_in_at">
               {{ formatDate(dialogData.last_sign_in_at) }}
@@ -279,8 +279,8 @@
           </span>
         </p>
 
-        <p v-if="dialogData.role === 'customer' && dialogData.last_order_placed">
-          <span class="text-sm font-semibold text-gray-500">Last Order Placed:</span>
+        <p v-if="dialogData.role === 'customer' && dialogData.last_order_placed" class="m-1">
+          <span class="text-xs text-gray-500">Last Order Placed:</span>
           <span class="text-xs ml-2">{{ formatDate(dialogData.last_order_placed) }}</span>
         </p>
       </div>
