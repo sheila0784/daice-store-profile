@@ -18,6 +18,7 @@ import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
 
 import './style.css'
+import "./assets/daice-theme.css";
 
 const app = createApp(App)
 
