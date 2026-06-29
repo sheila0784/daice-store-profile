@@ -169,57 +169,88 @@
 /* END OF FOOTER INTERFACE */
 
 
-/* for menubar */
+/* MENUBAR - DA ICE THEME */
+.daice-menubar {
+  position: relative;
+  z-index: 1000;
+}
+
 .daice-menubar.p-menubar {
-  border: none;
-  border-radius: 0;
-  padding: 0.45rem 1rem;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0.45rem 1rem !important;
 
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.92),
-    rgba(235, 249, 255, 0.9)
-  );
+    rgba(255, 255, 255, 0.94),
+    rgba(235, 249, 255, 0.92)
+  ) !important;
+
+  color: #334155 !important;
 
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 
   box-shadow:
     0 4px 18px rgba(14, 165, 233, 0.12),
-    inset 0 -1px rgba(125, 211, 252, 0.25);
+    inset 0 -1px rgba(125, 211, 252, 0.25) !important;
 }
 
+/* Menubar title */
 .daice-menubar-title {
   font-size: 0.9rem;
   font-weight: 800;
-  color: #0284c7;
+  color: #0284c7 !important;
   letter-spacing: 0.08em;
 }
 
-.daice-menubar .p-menubar-item-link {
-  border-radius: 12px;
-  color: #475569;
-  font-size: 0.82rem;
-  font-weight: 600;
+/* Menu item text */
+.daice-menubar .p-menubar-item-link,
+.daice-menubar .p-menubar-item-content,
+.daice-menubar .p-menubar-item-label {
+  color: #334155 !important;
+}
+
+/* Menu item button area */
+.daice-menubar .p-menubar-item-content {
+  border-radius: 12px !important;
   transition: all 0.2s ease;
 }
 
+/* Hover */
+.daice-menubar .p-menubar-item-content:hover,
 .daice-menubar .p-menubar-item-link:hover {
-  background: rgba(224, 247, 255, 0.8);
-  color: #0284c7;
+  background: rgba(224, 247, 255, 0.9) !important;
+  color: #0284c7 !important;
 }
 
-.daice-menubar .p-menubar-item-icon {
-  color: #38bdf8;
+/* Icons */
+.daice-menubar .p-menubar-item-icon,
+.daice-menubar .pi {
+  color: #38bdf8 !important;
 }
 
+/* Submenu */
 .daice-menubar .p-menubar-submenu {
-  border: 1px solid #d9f3ff;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 12px 24px rgba(14, 165, 233, 0.16);
+  border: 1px solid #d9f3ff !important;
+  border-radius: 14px !important;
+
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #334155 !important;
+
+  box-shadow: 0 12px 24px rgba(14, 165, 233, 0.16) !important;
   overflow: hidden;
+  z-index: 99999 !important;
 }
+
+.daice-menubar .p-menubar-button {
+  color: #0284c7 !important;
+}
+
+.daice-menubar .p-menubar-button:hover {
+  background: rgba(224, 247, 255, 0.9) !important;
+}
+
 
 .daice-logout-btn {
   color: #ef4444 !important;
@@ -639,4 +670,92 @@ flex-wrap: wrap;
 .p-dialog-footer{
     background:transparent !important;
     color:#334155 !important;
+}
+
+.daice-toolbar {
+  padding: 0.75rem;
+  border: 1px solid #d9f3ff;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(10px);
+}
+
+.daice-select.p-select {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid #cfefff !important;
+  color: #334155 !important;
+  border-radius: 12px !important;
+}
+
+.daice-select .p-select-label {
+  color: #334155 !important;
+  font-size: 0.85rem;
+}
+
+.daice-select .p-select-dropdown {
+  color: #0284c7 !important;
+}
+
+.daice-action-btn.p-button {
+  background: linear-gradient(180deg, #42b8ff, #0ea5e9) !important;
+  border: none !important;
+  color: #ffffff !important;
+  border-radius: 12px !important;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(14, 165, 233, 0.25);
+}
+
+.daice-action-btn.p-button:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.daice-link-btn.p-button {
+  color: #0284c7 !important;
+  font-weight: 600;
+}
+
+.daice-link-btn.p-button:hover {
+  background: rgba(224, 247, 255, 0.8) !important;
+}
+
+.daice-accordion .p-accordionheader {
+  background: linear-gradient(180deg, #e0f7ff, #bae6fd) !important;
+  color: #075985 !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  border-radius: 12px !important;
+}
+
+.daice-accordion .p-accordioncontent-content {
+  background: rgba(255, 255, 255, 0.82) !important;
+  color: #334155 !important;
+  border: 1px solid #d9f3ff;
+  border-top: none;
+}
+
+/* FOR SEARCH BOX */
+.daice-search .p-inputtext {
+  background: rgba(255, 255, 255, 0.88) !important;
+  color: #334155 !important;
+  border: 1px solid #cfefff !important;
+  border-radius: 12px !important;
+  caret-color: #0284c7;
+}
+
+.daice-search .p-inputtext::placeholder {
+  color: #94a3b8 !important;
+}
+
+.daice-search .p-inputtext:focus {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #334155 !important;
+  border-color: #38bdf8 !important;
+  box-shadow:
+    0 0 0 0.15rem rgba(56, 189, 248, 0.18),
+    0 0 14px rgba(125, 211, 252, 0.25) !important;
+}
+
+.daice-search .p-inputicon {
+  color: #0284c7 !important;
 }

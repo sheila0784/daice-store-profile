@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Menubar :model="items" class="daice-menubar mb-1">
+    <Menubar :model="items" class="daice-menubar mb-1 bg-white">
       <template #start>
         <div class="flex items-center gap-2 mr-4">
           <img src="/daice-logo-only.png" class="w-2rem h-2rem object-contain" />

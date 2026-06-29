@@ -93,18 +93,11 @@
           label="Download CSV File"
           icon="pi pi-download"
           :loading="loading"
-          class="text-xs text-blue-600"
+          class="daice-link-btn text-xs"
           @click="handleExport"
         />
       </div>
 
-      <!-- <Dialog
-        v-model:visible="showDiaSalesPerDay"
-        :modal="true"
-        :closable="true"
-        :style="{ width: '400px' }"
-        class="daice-dialog"
-      > -->
       <Dialog
         v-model:visible="showDiaSalesPerDay"
         :modal="true"
@@ -112,28 +105,6 @@
         :style="{ width: '400px', maxWidth: '92vw' }"
         class="daice-dialog"
       >
-        <!-- <template #header>
-          <div class="flex flex-col items-center gap-1">
-            <div class="text-xs text-gray-500">
-              <p>
-                Dealer: <span class="text-blue-500 font-bold text-lg">{{ selRowDealer }}</span>
-              </p>
-              <p>
-                Sales Date:
-                <span class="text-blue-400 text-base font-semibold">{{ selRowDate }}</span>
-              </p>
-
-              <p>
-                Total Sales:
-                <span class="text-blue-400 text-base font-semibold"
-                  ><i class="pi pi-money-bill text-green-500"></i>
-                  {{ formatNumber(selRowTotal) }}</span
-                >
-              </p>
-            </div>
-          </div>
-        </template> -->
-
         <template #header>
           <div class="dialog-header-info">
             <p>
@@ -153,15 +124,6 @@
         </template>
 
         <div>
-          <!-- <Datatable :value="salesPerDay" class="w-full text-xs" size="small" stripedRows> -->
-
-          <!-- <Datatable
-            :value="salesPerDay"
-            class="daice-table daice-dialog-table w-full text-xs"
-            size="small"
-            stripedRows
-          > -->
-
           <Datatable
             :value="salesPerDay"
             class="daice-table daice-dialog-table w-full text-xs"
@@ -179,7 +141,13 @@
               header="Product"
               v-bind="dialogColumnDefaults"
             ></Column>
-            <Column field="total_amount" header="Amount" v-bind="dialogColumnDefaults" sortable>
+            <Column
+              field="total_amount"
+              header="Amount"
+              v-bind="dialogColumnDefaults"
+              sortable
+              bodyClass="flex justify-end"
+            >
               <template #body="{ data }">
                 {{ formatNumber(data.total_amount) }}
               </template>

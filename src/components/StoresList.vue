@@ -1,137 +1,160 @@
 <template>
-  <div class="min-h-screen text-sm">
+  <!-- <div class="min-h-screen text-sm"> -->
+  <div class="daice-page min-h-screen text-sm">
     <MenuBar />
     <Toast />
     <ConfirmDialog />
-    <Card class="w-full max-w-full shadow-2 border-gray-300 mx-auto">
-      <template #title
-        ><span class="text-3xl font-extrabold tracking-wide"> Dealers </span></template
-      >
-      <!-- <template #subtitle>Da ICE Dealers / Distributors</template> -->
-      <template #content>
-        <!-- <div class="flex flex-col gap-2 flex-row md:items-center"> -->
-        <div class="flex flex-col md:flex-row md:items-center gap-2">
-          <div class="w-full md:flex-1">
-            <!-- <div class="w-full flex gap-2"> -->
-            <div class="w-full flex flex-col sm:flex-row flex-wrap gap-2">
-              <IconField>
-                <InputIcon class="pi pi-search" />
-                <InputText v-model="searchValue" placeholder="Search" @keyup.enter="fetchStores" />
-              </IconField>
-              <div>
-                <Select
-                  v-model="filterActive"
-                  :options="statusOptions"
-                  optionLabel="label"
-                  optionValue="value"
-                  placeholder="Select status"
-                  @change="fetchStores"
-                />
+    <div class="dashboard-inner p-3 md:p-5">
+      <Card class="dashboard-shell">
+        <template #title>
+          <div class="dashboard-title">Dealers</div>
+        </template>
+
+        <!-- <template #subtitle>
+          <div class="dashboard-subtitle mb-2">
+            <i class="pi pi-briefcase mr-2"></i>
+            Da ICE Dealers / Distributors
+          </div>
+
+          <Divider class="ice-divider" />
+        </template> -->
+
+        <template #content>
+            <div class="flex flex-col md:flex-row md:items-center gap-2">
+            <div class="w-full md:flex-1">
+              <!-- <div class="w-full flex gap-2"> -->
+              <div class="daice-toolbar flex flex-col md:flex-row md:items-center gap-2">
+                <IconField class="daice-search w-full">
+                  <InputIcon class="pi pi-search" />
+                  <InputText
+                    v-model="searchValue"
+                    placeholder="Search"
+                    class="w-full"
+                    @keyup.enter="fetchStores"
+                  />
+                </IconField>
+
+                <div>
+                  <Select
+                    v-model="filterActive"
+                    :options="statusOptions"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Select status"
+                    class="daice-select"
+                    @change="fetchStores"
+                  />
+                </div>
               </div>
+            </div>
+
+            <div class="w-full md:w-auto md:ml-auto">
+              <Button
+                type="button"
+                label="Create New"
+                icon="pi pi-plus"
+                :loading="loading"
+                class="daice-action-btn text-xs"
+                @click="handleUpdate"
+              />
             </div>
           </div>
 
-          <div class="w-full md:w-auto md:ml-auto">
+          <Divider />
+
+          <DataTable
+            :value="items"
+            stripedRows
+            :loading="loading"
+            paginator
+            :rows="rows"
+            :rowsPerPageOptions="rowsPerPageOptions"
+            selectionMode="single"
+            v-model="selectedItem"
+            dataKey="id"
+            @row-click="onRowClick"
+            class="daice-table w-full text-xs"
+          >
+            <!-- <Column field="acctNo" header="Account No."></Column> -->
+            <Column header="#" style="width: 60px" v-bind="columnDefaults">
+              <template #body="slotProps">
+                {{ slotProps.index + 1 }}
+              </template>
+            </Column>
+
+            <Column field="name" header="Name" sortable v-bind="columnDefaults"></Column>
+            <Column field="address" header="Address" v-bind="columnDefaults"></Column>
+            <Column field="barangay" header="Barangay" v-bind="columnDefaults"></Column>
+            <Column field="city" header="City" v-bind="columnDefaults"></Column>
+            <Column field="province" header="Province" v-bind="columnDefaults"></Column>
+            <Column field="active" header="Active" v-bind="columnDefaults">
+              <template #body="slotProps">
+                <i v-if="slotProps.data.active" class="pi pi-check-square text-gray-500"></i>
+                <i v-else class="pi pi-stop text-gray-500"></i>
+              </template>
+            </Column>
+
+            <!-- Actions Column -->
+            <Column style="width: 140px" v-bind="columnDefaults">
+              <template #body="slotProps">
+                <div class="flex gap-2">
+                  <Button
+                    icon="pi pi-pencil"
+                    severity="info"
+                    size="small"
+                    variant="text"
+                    v-tooltip.bottom="'Edit Record'"
+                    @click.stop="handleUpdate(slotProps.data)"
+                  />
+
+                  <Button
+                    icon="pi pi-trash"
+                    severity="danger"
+                    size="small"
+                    variant="text"
+                    v-tooltip.bottom="'Delete Record'"
+                    @click="handleDelete(slotProps.data)"
+                  />
+                </div>
+              </template>
+            </Column>
+          </DataTable>
+        </template>
+
+        <template #footer>
+          <div v-if="!items.length" class="flex gap-4 mt-1">
+            <Message severity="secondary" variant="simple" size="small"
+              >No records found. Try searching again.</Message
+            >
+          </div>
+          <div v-else>
             <Button
-              type="button"
+              variant="text"
               severity="secondary"
-              label="Create New"
-              icon="pi pi-plus"
+              label="Download CSV File"
+              icon="pi pi-download"
               :loading="loading"
-              class="md:ml-auto text-xs"
-              @click="handleUpdate"
+              class="daice-link-btn text-xs"
+              @click="handleExport"
             />
           </div>
-        </div>
+        </template>
+      </Card>
+    </div>
 
-        <Divider />
-
-        <DataTable
-          :value="items"
-          stripedRows
-          :loading="loading"
-          paginator
-          :rows="rows"
-          :rowsPerPageOptions="rowsPerPageOptions"
-          selectionMode="single"
-          v-model="selectedItem"
-          dataKey="id"
-          @row-click="onRowClick"
-          class="w-full text-xs border-0 border-gray-300"
-        >
-          <!-- <Column field="acctNo" header="Account No."></Column> -->
-          <Column header="#" style="width: 60px" v-bind="columnDefaults">
-            <template #body="slotProps">
-              {{ slotProps.index + 1 }}
-            </template>
-          </Column>
-
-          <Column field="name" header="Name" sortable v-bind="columnDefaults"></Column>
-          <Column field="address" header="Address" v-bind="columnDefaults"></Column>
-          <Column field="barangay" header="Barangay" v-bind="columnDefaults"></Column>
-          <Column field="city" header="City" v-bind="columnDefaults"></Column>
-          <Column field="province" header="Province" v-bind="columnDefaults"></Column>
-          <Column field="active" header="Active" v-bind="columnDefaults">
-            <template #body="slotProps">
-              <i v-if="slotProps.data.active" class="pi pi-check-square text-gray-500"></i>
-              <i v-else class="pi pi-stop text-gray-500"></i>
-            </template>
-          </Column>
-
-          <!-- Actions Column -->
-          <Column style="width: 140px" v-bind="columnDefaults">
-            <template #body="slotProps">
-              <div class="flex gap-2">
-                <Button
-                  icon="pi pi-pencil"
-                  severity="info"
-                  size="small"
-                  variant="text"
-                  v-tooltip.bottom="'Edit Record'"
-                  @click.stop="handleUpdate(slotProps.data)"
-                />
-
-                <Button
-                  icon="pi pi-trash"
-                  severity="danger"
-                  size="small"
-                  variant="text"
-                  v-tooltip.bottom="'Delete Record'"
-                  @click="handleDelete(slotProps.data)"
-                />
-              </div>
-            </template>
-          </Column>
-        </DataTable>
-      </template>
-
-      <template #footer>
-        <div v-if="!items.length" class="flex gap-4 mt-1">
-          <Message severity="secondary" variant="simple" size="small"
-            >No records found. Try searching again.</Message
-          >
-        </div>
-        <div v-else>
-          <Button
-            variant="text"
-            severity="secondary"
-            label="Download CSV File"
-            icon="pi pi-download"
-            :loading="loading"
-            class="md:ml-auto text-xs text-blue-600"
-            @click="handleExport"
-          />
-        </div>
-      </template>
-    </Card>
-
-    <Dialog v-model:visible="showDialog" modal class="m-4 w-[25rem]">
+    <Dialog v-model:visible="showDialog" modal :style="{ width: '25rem', maxWidth: '92vw' }">
       <template #header>
-        <span class="text-xl font-bold text-blue-500">{{ dialogData.name }}</span>
+        <div class="dialog-header-info">
+          <p>
+            Dealer
+            <span>{{ dialogData.name }}</span>
+          </p>
+        </div>
       </template>
-      <Divider />
 
-       <!--  -->
+      <Divider class="ice-divider" />
+
+      <!--  -->
       <div v-if="dialogData" class="space-y-2">
         <p class="m-1">
           <span class="text-xs text-gray-500">Dealer Id:</span>
@@ -185,7 +208,7 @@
       </div>
 
       <div>
-        <Accordion v-if="dialogData.display_name" class="mb-1">
+        <Accordion v-if="dialogData.display_name" class="daice-accordion mb-1">
           <AccordionPanel value="0">
             <AccordionHeader class="text-xs text-gray-500 bg-blue-100 pt-2 pb-2"
               >Delivery Mode</AccordionHeader
@@ -214,7 +237,12 @@
                 <span class="text-xs text-gray-500">Allow Scheduled</span>
               </p>
               <div v-if="dialogData.allow_scheduled" class="pl-4 text-xs">
-                <DataTable :value="schedules" size="small" stripedRows>
+                <DataTable
+                  :value="schedules"
+                  size="small"
+                  stripedRows
+                  class="daice-table daice-dialog-table w-full text-xs"
+                >
                   <Column field="day_name" header="Day"></Column>
                   <Column field="open_time" header="From"></Column>
                   <Column field="close_time" header="To"></Column>
@@ -230,15 +258,15 @@
           </AccordionPanel>
         </Accordion>
 
-        <Accordion v-if="dialogData.display_name">
+        <Accordion v-if="dialogData.display_name" class="daice-accordion mb-1">
           <AccordionPanel value="0">
             <AccordionHeader class="text-xs text-gray-500 bg-blue-100 pt-2 pb-2"
               >Profile</AccordionHeader
             >
             <AccordionContent>
-              <p>
+              <p class="pt-2">
                 <span class="text-xs text-gray-500">Profile Id:</span>
-                <span class="text-sm ml-2">{{ dialogData.profile_id }}</span>
+                <span class="text-xs ml-2">{{ dialogData.profile_id }}</span>
               </p>
               <p>
                 <span class="text-xs text-gray-500">Name:</span>
@@ -286,10 +314,9 @@ import { useConfirm } from "primevue/useconfirm";
 
 import Button from "primevue/button";
 import { exportCsv } from "@/utils/exportCsv";
-// import { label } from "@primeuix/themes/aura/metergroup";
 
 const columnDefaults = {
-  headerClass: "bg-blue-400 text-xs text-gray-100",
+  headerClass: "daice-table-header",
   bodyClass: "text-xs whitespace-pre-line",
 };
 

@@ -40,7 +40,7 @@
             :loading="loading"
             @click="login"
             iconClass="text-cyan-100"
-            class="login-btn w-full mb-4 text-xs"
+            class="login-btn w-full mb-4 text-xs text-white"
             severity="info"
           />
 
