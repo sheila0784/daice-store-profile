@@ -1,8 +1,22 @@
 <template>
   <div>
-    <Menubar :model="items" class="mb-1  shadow-none !rounded-none border-0">
+    <Menubar :model="items" class="daice-menubar mb-1">
+      <template #start>
+        <div class="flex items-center gap-2 mr-4">
+          <img src="/daice-logo-only.png" class="w-2rem h-2rem object-contain" />
+          <span class="daice-menubar-title">Da ICE</span>
+        </div>
+      </template>
+
       <template #end>
-        <Button label="Logout" severity="danger" icon="pi pi-sign-out" @click="logout" variant="text" class="text-sm"/>
+        <Button
+          label="Logout"
+          severity="danger"
+          icon="pi pi-sign-out"
+          @click="logout"
+          variant="text"
+          class="daice-logout-btn text-sm"
+        />
       </template>
     </Menubar>
   </div>
