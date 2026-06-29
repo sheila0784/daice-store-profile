@@ -1,5 +1,4 @@
 <template>
-  <!-- <div class="min-h-screen text-sm"> -->
   <div class="daice-page min-h-screen text-sm">
     <MenuBar />
     <Toast />
@@ -10,17 +9,8 @@
           <div class="dashboard-title">Dealers</div>
         </template>
 
-        <!-- <template #subtitle>
-          <div class="dashboard-subtitle mb-2">
-            <i class="pi pi-briefcase mr-2"></i>
-            Da ICE Dealers / Distributors
-          </div>
-
-          <Divider class="ice-divider" />
-        </template> -->
-
         <template #content>
-            <div class="flex flex-col md:flex-row md:items-center gap-2">
+          <div class="flex flex-col md:flex-row md:items-center gap-2">
             <div class="w-full md:flex-1">
               <!-- <div class="w-full flex gap-2"> -->
               <div class="daice-toolbar flex flex-col md:flex-row md:items-center gap-2">
@@ -60,7 +50,7 @@
             </div>
           </div>
 
-          <Divider />
+          <Divider class="ice-divider" />
 
           <DataTable
             :value="items"
@@ -295,7 +285,6 @@ import { useStoreStore } from "@/stores/storeStore";
 import { useStoresUpdate } from "../composables/useStoresUpdate";
 
 import Card from "primevue/card";
-import Divider from "primevue/divider";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import InputText from "primevue/inputtext";
@@ -304,6 +293,7 @@ import IconField from "primevue/iconfield";
 import Message from "primevue/message";
 import Dialog from "primevue/dialog";
 import Select from "primevue/select";
+import Divider from "primevue/divider"
 
 import Accordion from "primevue/accordion";
 import AccordionPanel from "primevue/accordionpanel";

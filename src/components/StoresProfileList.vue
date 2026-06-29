@@ -1,112 +1,117 @@
 <template>
-  <div class="min-h-screen text-sm">
+  <div class="daice-page min-h-screen text-sm">
     <MenuBar />
     <Toast />
     <ConfirmDialog />
-    <Card class="w-full max-w-full shadow-2 border-gray-300 mx-auto">
-      <template #title
-        ><span class="text-3xl font-extrabold tracking-wide"> Profiles </span></template
-      >
-      <template #content>
-        <div class="flex flex-col md:flex-row md:items-center gap-2">
-          <div class="w-full md:flex-1">
-            <div class="w-full flex flex-col sm:flex-row flex-wrap gap-2">
-              <IconField>
-                <InputIcon class="pi pi-search" />
-                <InputText v-model="searchValue" placeholder="Search" @keyup.enter="onSearch" />
-              </IconField>
-              <div>
-                <Select
-                  v-model="filterRole"
-                  :options="roleOptions"
-                  optionLabel="label"
-                  optionValue="value"
-                  placeholder="Select Role"
-                  @change="onRoleChanged"
-                />
+    <div class="dashboard-inner p-3 md:p-5">
+      <Card class="dashboard-shell">
+        <template #title><span class="dashboard-title"> Profiles </span></template>
+        <template #content>
+          <div class="flex flex-col md:flex-row md:items-center gap-2">
+            <div class="w-full md:flex-1">
+              <div class="daice-toolbar flex flex-col md:flex-row md:items-center gap-2">
+                <IconField class="daice-search w-full">
+                  <InputIcon class="pi pi-search" />
+                  <InputText
+                    v-model="searchValue"
+                    placeholder="Search"
+                    @keyup.enter="onSearch"
+                    class="w-full"
+                  />
+                </IconField>
+                <div>
+                  <Select
+                    v-model="filterRole"
+                    :options="roleOptions"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Select Role"
+                    class="daice-select"
+                    @change="onRoleChanged"
+                  />
+                </div>
               </div>
+            </div>
+
+            <div class="w-full md:w-auto md:ml-auto">
+              <Button
+                type="button"
+                severity="secondary"
+                label="Create New"
+                icon="pi pi-plus"
+                :loading="loading"
+                class="daice-action-btn text-xs"
+                @click="handleUpdate"
+              />
             </div>
           </div>
 
-          <div class="w-full md:w-auto md:ml-auto">
-            <Button
-              type="button"
-              severity="secondary"
-              label="Create New"
-              icon="pi pi-plus"
-              :loading="loading"
-              class="md:ml-auto text-xs"
-              @click="handleUpdate"
-            />
-          </div>
-        </div>
+          <Divider class="ice-divider" />
 
-        <Divider />
-
-        <DataTable
-          :value="items"
-          stripedRows
-          :loading="loading"
-          paginator
-          :rows="rows"
-          :rowsPerPageOptions="rowsPerPageOptions"
-          selectionMode="single"
-          v-model="selectedItem"
-          dataKey="id"
-          @row-click="onRowClick"
-          class="w-full text-xs border-0 border-gray-300"
-        >
-          <!-- <Column
+          <DataTable
+            :value="items"
+            stripedRows
+            :loading="loading"
+            paginator
+            :rows="rows"
+            :rowsPerPageOptions="rowsPerPageOptions"
+            selectionMode="single"
+            v-model="selectedItem"
+            dataKey="id"
+            @row-click="onRowClick"
+            class="daice-table w-full text-xs"
+          >
+            <!-- <Column
             field="id"
             header="Id"
             headerClass="bg-yellow-50 text-xs"
             bodyClass="text-xs"
           ></Column> -->
 
-          <!-- Row Count Column -->
-          <Column header="#" style="width: 60px" v-bind="columnDefaults">
-            <template #body="slotProps">
-              {{ slotProps.index + 1 }}
-            </template>
-          </Column>
+            <!-- Row Count Column -->
+            <Column header="#" style="width: 60px" v-bind="columnDefaults">
+              <template #body="slotProps">
+                {{ slotProps.index + 1 }}
+              </template>
+            </Column>
 
-          <!-- <Column field="id" header="Id"></Column>
+            <!-- <Column field="id" header="Id"></Column>
           <Column field="store_id" header="Store Id"></Column> -->
 
-          <Column field="role" header="Role" sortable v-bind="columnDefaults">
-            <template #body="{ data }">
-              <i v-if="data.role === 'dealer'" class="pi pi-briefcase text-blue-400"></i>
-              <i v-else-if="data.role === 'rider'" class="pi pi-car text-green-400"></i>
-              <span v-else>
-                <i class="pi pi-user text-yellow-400"></i>
-              </span>
-            </template>
-          </Column>
+            <Column field="role" header="Role" sortable v-bind="columnDefaults">
+              <template #body="{ data }">
+                <i v-if="data.role === 'dealer'" class="pi pi-briefcase text-blue-400"></i>
+                <i v-else-if="data.role === 'rider'" class="pi pi-car text-green-400"></i>
+                <span v-else>
+                  <i class="pi pi-user text-yellow-400"></i>
+                </span>
+              </template>
+            </Column>
 
-          <Column field="display_name" header="Profile Name" sortable v-bind="columnDefaults">
-          </Column>
+            <Column field="display_name" header="Profile Name" sortable v-bind="columnDefaults">
+            </Column>
 
-          <Column field="email" header="Email" sortable v-bind="columnDefaults"></Column>
+            <Column field="email" header="Email" sortable v-bind="columnDefaults"></Column>
 
-          <Column field="contact" header="Contact No." v-bind="columnDefaults"></Column>
+            <Column field="contact" header="Contact No." v-bind="columnDefaults"></Column>
 
-          <Column
-            field="shipping_details"
-            header="Shipping Details"
-            v-bind="columnDefaults"
-          ></Column>
+            <Column
+              field="shipping_details"
+              header="Shipping Details"
+              v-bind="columnDefaults"
+            ></Column>
 
-          <Column field="status" header="Status" v-bind="columnDefaults">
-            <template #body="{ data }">
-              <i v-if="data.status === 'approved'" class="pi pi-thumbs-up text-green-600"></i>
+            <Column field="status" header="Status" v-bind="columnDefaults">
+              <template #body="{ data }">
+                <i v-if="data.status === 'approved'" class="pi pi-thumbs-up text-green-600"></i>
 
-              <span v-else>
-                {{ data.status }}
-              </span>
-            </template>
-          </Column>
+                <span v-else>
+                  {{ data.status }}
+                </span>
+              </template>
+            </Column>
 
-          <!-- <Column
+            <!-- <Column
             field="store_id"
             header="Store Id"
             sortable
@@ -118,96 +123,114 @@
             </template>
           </Column> -->
 
-          <Column field="store" header="Store" sortable v-bind="columnDefaults">
-            <template #body="slotProps">
-              {{ slotProps.data.store }}
-            </template>
-          </Column>
+            <Column field="store" header="Store" sortable v-bind="columnDefaults">
+              <template #body="slotProps">
+                {{ slotProps.data.store }}
+              </template>
+            </Column>
 
-          <Column field="created_at" header="Account Creation" sortable v-bind="columnDefaults">
-            <template #body="slotProps">
-              {{ formatDate(slotProps.data.created_at) }}
-            </template>
-          </Column>
+            <Column field="created_at" header="Account Creation" sortable v-bind="columnDefaults">
+              <template #body="slotProps">
+                {{ formatDate(slotProps.data.created_at) }}
+              </template>
+            </Column>
 
-          <Column field="last_sign_in_at" header="Last Sign-in" sortable v-bind="columnDefaults">
-            <template #body="slotProps">
-              {{ formatDate(slotProps.data.last_sign_in_at) }}
-            </template>
-          </Column>
+            <Column field="last_sign_in_at" header="Last Sign-in" sortable v-bind="columnDefaults">
+              <template #body="slotProps">
+                {{ formatDate(slotProps.data.last_sign_in_at) }}
+              </template>
+            </Column>
 
-          <Column
-            v-if="filterRole === 'customer' || filterRole === null"
-            field="last_order_placed"
-            header="Last Order Placed"
-            sortable
-            v-bind="columnDefaults"
-          >
-            <template #body="slotProps">
-              {{ formatDate(slotProps.data.last_order_placed) }}
-            </template>
-          </Column>
+            <Column
+              v-if="filterRole === 'customer' || filterRole === null"
+              field="last_order_placed"
+              header="Last Order Placed"
+              sortable
+              v-bind="columnDefaults"
+            >
+              <template #body="slotProps">
+                {{ formatDate(slotProps.data.last_order_placed) }}
+              </template>
+            </Column>
 
-          <!-- <Column field="last_delivery_at" header="Last Order Record" sortable class="text-xs">
+            <!-- <Column field="last_delivery_at" header="Last Order Record" sortable class="text-xs">
             <template #body="slotProps">
               {{ formatDate(slotProps.data.last_delivery_at) }}
             </template>
           </Column> -->
 
-          <!-- Actions Column -->
-          <Column style="width: 140px" v-bind="columnDefaults">
-            <template #body="slotProps">
-              <div class="flex gap-2">
-                <Button
-                  icon="pi pi-pencil"
-                  severity="info"
-                  size="small"
-                  variant="text"
-                  v-tooltip.bottom="'Edit Record'"
-                  @click.stop="handleUpdate(slotProps.data)"
-                />
-                <Button
-                  v-if="
-                    slotProps.data.last_sign_in_at === null || slotProps.data.last_sign_in_at === ''
-                  "
-                  icon="pi pi-trash"
-                  severity="danger"
-                  size="small"
-                  variant="text"
-                  v-tooltip.bottom="'Delete Record'"
-                  @click.stop="handleDelete(slotProps.data)"
-                />
-              </div>
-            </template>
-          </Column>
-        </DataTable>
-      </template>
+            <!-- Actions Column -->
+            <Column style="width: 140px" v-bind="columnDefaults">
+              <template #body="slotProps">
+                <div class="flex gap-2">
+                  <Button
+                    icon="pi pi-pencil"
+                    severity="info"
+                    size="small"
+                    variant="text"
+                    v-tooltip.bottom="'Edit Record'"
+                    @click.stop="handleUpdate(slotProps.data)"
+                  />
+                  <Button
+                    v-if="
+                      slotProps.data.last_sign_in_at === null ||
+                      slotProps.data.last_sign_in_at === ''
+                    "
+                    icon="pi pi-trash"
+                    severity="danger"
+                    size="small"
+                    variant="text"
+                    v-tooltip.bottom="'Delete Record'"
+                    @click.stop="handleDelete(slotProps.data)"
+                  />
+                </div>
+              </template>
+            </Column>
+          </DataTable>
+        </template>
 
-      <template #footer>
-        <div v-if="!items.length" class="flex gap-4 mt-1">
-          <Message severity="secondary" variant="simple" size="small"
-            >No records found. Try searching again.</Message
-          >
-        </div>
-        <div v-else>
-          <Button
-            variant="text"
-            severity="secondary"
-            label="Download CSV File"
-            icon="pi pi-download"
-            :loading="loading"
-            class="md:ml-auto text-xs text-blue-600"
-            @click="handleExport"
-          />
-        </div>
-      </template>
-    </Card>
+        <template #footer>
+          <div v-if="!items.length" class="flex gap-4 mt-1">
+            <Message severity="secondary" variant="simple" size="small"
+              >No records found. Try searching again.</Message
+            >
+          </div>
+          <div v-else>
+            <Button
+              variant="text"
+              severity="secondary"
+              label="Download CSV File"
+              icon="pi pi-download"
+              :loading="loading"
+              class="daice-link-btn text-xs"
+              @click="handleExport"
+            />
+          </div>
+        </template>
+      </Card>
+    </div>
 
-    <Dialog v-model:visible="showDialog" modal :style="{ width: '25rem' }" class="m-4">
+    <Dialog v-model:visible="showDialog" modal :style="{ width: '25rem', maxWidth: '92vw' }">
       <template #header>
-        <span class="text-xl font-bold text-blue-500">{{ dialogData.display_name }}</span>
+        <div class="dialog-header-info">
+          <div class="flex justify-center mb-4">
+            <img
+              v-if="dialogData?.avatar_url"
+              :src="dialogData.avatar_url"
+              alt="Avatar"
+              class="daice-avatar"
+              :class="{ 'opacity-0': imageLoading, 'opacity-100': !imageLoading }"
+              @load="imageLoading = false"
+            />
+          </div>
+
+          <p>
+            Dealer
+            <span>{{ dialogData.display_name }}</span>
+          </p>
+        </div>
       </template>
-      <Divider />
+      <Divider class="ice-divider" />
 
       <div v-if="dialogData" class="space-y-2">
         <div class="flex items-center justify-center">
@@ -215,15 +238,6 @@
           <div v-if="imageLoading" class="absolute inset-0 flex items-center justify-center">
             <i class="pi pi-spinner pi-spin text-blue-500 text-lg"></i>
           </div>
-          <!-- Image -->
-          <img
-            v-if="dialogData?.avatar_url"
-            :src="dialogData.avatar_url"
-            alt="Avatar"
-            class="w-10 h-10 border border-blue-300 rounded-[3%] object-cover shadow-md shadow-blue-200"
-            :class="{ 'opacity-0': imageLoading, 'opacity-100': !imageLoading }"
-            @load="imageLoading = false"
-          />
         </div>
 
         <p class="m-1 mt-2">

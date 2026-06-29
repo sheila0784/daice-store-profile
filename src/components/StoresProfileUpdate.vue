@@ -1,20 +1,42 @@
 <template>
-  <div>
+  <div class="daice-page min-h-screen">
     <Toast />
-    <Card>
-      <template #title>
+    <Card class="dashboard-shell">
+      <!-- <template #title>
         <div class="flex gap-3">
           <Button severity="danger" variant="text" icon="pi pi-arrow-left" @click="router.back()" />
           Profile
         </div>
-      </template>
-      <template #content>
-        <Divider />
+      </template> -->
 
+      <template #title>
+        <div class="dashboard-title flex items-center gap-3">
+          <Button
+            icon="pi pi-arrow-left"
+            severity="contrast"
+            variant="text"
+            rounded
+            @click="router.back()"
+          />
+
+          Profile Maintenance
+        </div>
+      </template>
+
+      <template #subtitle>
+        <div class="dashboard-subtitle">
+          <i class="pi pi-user mr-2"></i>
+          Da ICE Mobile App Administration Portal
+        </div>
+
+        <Divider class="ice-divider" />
+      </template>
+
+      <template #content>
         <div class="grid grid-cols-[110px_1fr] gap-1 p-1">
-          <div class="text-sm p-2"></div>
+          <div class="daice-label"></div>
           <div class="flex flex-col items-center">
-            <div>
+            <!-- <div>
               <img
                 :src="imagePreview || avatar_url || defaultAvatar"
                 class="w-[120px] h-[120px] object-cover rounded-full border-2 border-gray-300 shadow"
@@ -35,28 +57,45 @@
                   label: 'Select Photo',
                 }"
               />
+            </div> -->
+
+            <div class="flex flex-col items-center mb-4">
+              <img :src="imagePreview || avatar_url || defaultAvatar" class="daice-avatar-lg" />
+
+              <FileUpload
+                mode="basic"
+                accept="image/*"
+                @select="onImageSelected"
+                :auto="true"
+                :chooseButtonProps="{
+                  severity: 'secondary',
+                  variant: 'text',
+                  size: 'small',
+                  icon: 'pi pi-image',
+                  label: 'Select Photo',
+                }"
+              />
             </div>
-          
           </div>
         </div>
 
         <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="text-sm p-2">Id:</div>
+          <div class="daice-label">Id:</div>
           <InputText
             disabled
             v-model="profile.id"
-            class="w-full text-xs"
+            class="daice-input w-full bg-gray-200 text-sm"
             @keydown.enter="focusNext('profileNameRef')"
           />
         </div>
 
         <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="text-sm p-2">Profile Name:</div>
+          <div class="daice-label">Profile Name:</div>
           <InputText
             autofocus
             ref="profileNameRef"
             v-model="display_name"
-            class="w-full"
+            class="daice-input w-full"
             :invalid="!!errors.display_name"
             @keydown.enter="focusNext('contactRef')"
           />
@@ -67,11 +106,11 @@
         </div>
 
         <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="text-sm p-2">Contact No.:</div>
+          <div class="daice-label">Contact No.:</div>
           <InputText
             ref="contactRef"
             v-model="contact"
-            class="w-full"
+            class="daice-input w-full"
             :invalid="!!errors.contact"
             @keydown.enter.prevent="focusNextSel('roleRef')"
           />
@@ -82,25 +121,25 @@
         </div>
 
         <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="text-sm p-2">Role:</div>
+          <div class="daice-label">Role:</div>
           <Select
             ref="roleRef"
             v-model="role"
             :options="roles"
             optionLabel="name"
             optionValue="code"
-            class="w-full"
+            class="daice-select w-full"
           />
           <div />
           <small v-if="errors.role" class="flex text-red-500 items-center">{{ errors.role }}</small>
         </div>
 
         <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="text-sm p-2">Email:</div>
+          <div class="daice-label">Email:</div>
           <InputText
             ref="emailRef"
             v-model="email"
-            class="w-full"
+            class="daice-input w-full"
             :invalid="!!errors.email"
             @keydown.enter.prevent="focusNext('passwordRef')"
           />
@@ -114,12 +153,12 @@
           v-if="!profile.id || showPasswordFields"
           class="grid grid-cols-[110px_1fr] gap-2 p-2 pb-1 items-center"
         >
-          <div class="text-sm p-2">Password:</div>
+          <div class="daice-label">Password:</div>
           <InputText
             type="password"
             ref="passwordRef"
             v-model="password"
-            class="w-full"
+            class="daice-input w-full"
             :invalid="!!errors.password"
             @keydown.enter.prevent="focusNext('confirmPasswordRef')"
           />
@@ -131,12 +170,12 @@
           v-if="!profile.id || showPasswordFields"
           class="grid grid-cols-[110px_1fr] gap-2 p-2 pt-0 pb-0 items-center"
         >
-          <div class="text-sm p-2">Confirm Password:</div>
+          <div class="daice-label">Confirm Password:</div>
           <InputText
             type="password"
             ref="confirmPasswordRef"
             v-model="confirmPassword"
-            class="w-full"
+            class="daice-input w-full"
             :invalid="!!errors.confirmPassword"
             @keydown.enter.prevent="focusNextSel('storeNameRef')"
           />
@@ -146,26 +185,27 @@
           }}</small>
         </div>
 
-        <!-- @click="showPasswordFields = !showPasswordFields" -->
         <div v-if="profile.id" class="flex rounded relative justify-end text-xs mb-2" role="alert">
           <Button
-            :label="showPasswordFields ? 'Cancel' : 'Set New Password'"
-            severity="primary"
-            variant="text"
-            class="p-0 pr-2 border-none bg-transparent shadow-none underline text-blue-500 hover:text-blue-700 text-xs"
+            icon="pi pi-lock"
+            :label="showPasswordFields ? 'Cancel' : 'Change Password'"
+            severity="secondary"
+            variant="outlined"
+            size="small"
+            class="text-xs"
             @click="togglePasswordFields"
           />
         </div>
 
         <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="text-sm p-2">Store:</div>
+          <div class="daice-label">Store:</div>
           <Select
             ref="storeNameRef"
             v-model="store_id"
             :options="storeList"
             optionLabel="label"
             optionValue="value"
-            class="w-full"
+            class="daice-select w-full"
             @keydown.enter.prevent="focusNextSel('statusRef')"
           />
           <div />
@@ -179,14 +219,14 @@
         </div>
 
         <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="text-sm p-2">Status:</div>
+          <div class="daice-label">Status:</div>
           <Select
             ref="statusRef"
             v-model="status"
             :options="statusOptions"
             optionLabel="name"
             optionValue="code"
-            class="w-full"
+            class="daice-select w-full"
           />
           <div />
           <small v-if="errors.status" class="flex text-red-500 items-center">{{
@@ -195,13 +235,22 @@
         </div>
 
         <div class="flex py-1 rounded relative gap-2 justify-end" role="alert">
-          <Button
+          <!-- <Button
             ref="submitRef"
             label="Submit"
             severity="primary"
             variant="text"
             class="flex justify-end"
             icon="pi pi-check"
+            :loading="loading"
+            @click="onSave"
+          /> -->
+
+          <Button
+            ref="submitRef"
+            class="daice-action-btn text-xs"
+            icon="pi pi-check"
+            label="Save Profile"
             :loading="loading"
             @click="onSave"
           />
