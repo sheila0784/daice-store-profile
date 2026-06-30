@@ -1,266 +1,265 @@
 <template>
   <div class="daice-page min-h-screen">
+    <MenuBar />
     <Toast />
-    <Card class="dashboard-shell">
-      <!-- <template #title>
-        <div class="flex gap-3">
-          <Button severity="danger" variant="text" icon="pi pi-arrow-left" @click="router.back()" />
-          Profile
-        </div>
-      </template> -->
+    <ConfirmDialog />
+    <div class="dashboard-inner p-3 md:p-5">
+      <Card class="dashboard-shell">
+        <template #title>
+          <div class="dashboard-title flex items-center gap-3">
+            <Button
+              icon="pi pi-arrow-left"
+              severity="contrast"
+              variant="text"
+              rounded
+              @click="router.back()"
+            />
 
-      <template #title>
-        <div class="dashboard-title flex items-center gap-3">
-          <Button
-            icon="pi pi-arrow-left"
-            severity="contrast"
-            variant="text"
-            rounded
-            @click="router.back()"
-          />
+            Profile Maintenance
+          </div>
+          <Divider class="ice-divider" />
+        </template>
 
-          Profile Maintenance
-        </div>
-      </template>
-
-      <template #subtitle>
-        <div class="dashboard-subtitle">
-          <i class="pi pi-user mr-2"></i>
-          Da ICE Mobile App Administration Portal
-        </div>
-
-        <Divider class="ice-divider" />
-      </template>
-
-      <template #content>
-        <div class="grid grid-cols-[110px_1fr] gap-1 p-1">
-          <div class="daice-label"></div>
-          <div class="flex flex-col items-center">
-            <!-- <div>
-              <img
-                :src="imagePreview || avatar_url || defaultAvatar"
-                class="w-[120px] h-[120px] object-cover rounded-full border-2 border-gray-300 shadow"
-              />
+        <template #content>
+          <div class="grid grid-cols-[110px_1fr] gap-1 p-1">
+            <div class="daice-label"></div>
+            <div class="flex flex-col items-center">
+              <div class="flex flex-col items-center mb-4">
+                <img :src="imagePreview || avatar_url || defaultAvatar" class="daice-avatar-lg" />
+                <FileUpload
+                  mode="basic"
+                  accept="image/*"
+                  @select="onImageSelected"
+                  :auto="true"
+                  :chooseButtonProps="{
+                    severity: 'secondary',
+                    variant: 'text',
+                    size: 'small',
+                    icon: 'pi pi-image',
+                    label: 'Select Photo',
+                  }"
+                />
+              </div>
             </div>
+          </div>
 
-            <div>
-              <FileUpload
-                mode="basic"
-                accept="image/*"
-                @select="onImageSelected"
-                :auto="true"
-                :chooseButtonProps="{
-                  severity: 'secondary',
-                  variant: 'text',
-                  size: 'small',
-                  icon: 'pi pi-image',
-                  label: 'Select Photo',
-                }"
-              />
-            </div> -->
-
-            <div class="flex flex-col items-center mb-4">
-              <img :src="imagePreview || avatar_url || defaultAvatar" class="daice-avatar-lg" />
-
-              <FileUpload
-                mode="basic"
-                accept="image/*"
-                @select="onImageSelected"
-                :auto="true"
-                :chooseButtonProps="{
-                  severity: 'secondary',
-                  variant: 'text',
-                  size: 'small',
-                  icon: 'pi pi-image',
-                  label: 'Select Photo',
-                }"
+          <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+            <div class="daice-label">Id:</div>
+            <div class="relative w-full mb-1">
+              <InputText
+                disabled
+                v-model="profile.id"
+                class="daice-input w-full bg-gray-200 text-sm"
+                @keydown.enter="focusNext('profileNameRef')"
               />
             </div>
           </div>
-        </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="daice-label">Id:</div>
-          <InputText
-            disabled
-            v-model="profile.id"
-            class="daice-input w-full bg-gray-200 text-sm"
-            @keydown.enter="focusNext('profileNameRef')"
-          />
-        </div>
+          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+            <div class="daice-label">Profile Name:</div>
+            <div class="relative w-full mb-1">
+              <InputText
+                autofocus
+                ref="profileNameRef"
+                v-model="display_name"
+                class="daice-input w-full pr-10"
+                :invalid="!!errors.display_name"
+                @keydown.enter="focusNext('contactRef')"
+              />
+              <i
+                v-if="errors.display_name"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.display_name"
+              ></i>
+            </div>
+          </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="daice-label">Profile Name:</div>
-          <InputText
-            autofocus
-            ref="profileNameRef"
-            v-model="display_name"
-            class="daice-input w-full"
-            :invalid="!!errors.display_name"
-            @keydown.enter="focusNext('contactRef')"
-          />
-          <div />
-          <small v-if="errors.display_name" class="flex text-red-500 items-center">{{
-            errors.display_name
-          }}</small>
-        </div>
+          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+            <div class="daice-label">Contact No.:</div>
+            <div class="relative w-full mb-1">
+              <InputText
+                ref="contactRef"
+                v-model="contact"
+                class="daice-input w-full"
+                :invalid="!!errors.contact"
+                @keydown.enter.prevent="focusNextSel('roleRef')"
+              />
+              <i
+                v-if="errors.contact"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.contact"
+              ></i>
+              <div />
+            </div>
+          </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="daice-label">Contact No.:</div>
-          <InputText
-            ref="contactRef"
-            v-model="contact"
-            class="daice-input w-full"
-            :invalid="!!errors.contact"
-            @keydown.enter.prevent="focusNextSel('roleRef')"
-          />
-          <div />
-          <small v-if="errors.contact" class="flex text-red-500 items-center">{{
-            errors.contact
-          }}</small>
-        </div>
+          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+            <div class="daice-label">Role:</div>
+            <div class="relative w-full mb-1">
+              <Select
+                ref="roleRef"
+                v-model="role"
+                :options="roles"
+                optionLabel="name"
+                optionValue="code"
+                class="daice-select w-full"
+              />
+              <i
+                v-if="errors.role"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.role"
+              ></i>
+            </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="daice-label">Role:</div>
-          <Select
-            ref="roleRef"
-            v-model="role"
-            :options="roles"
-            optionLabel="name"
-            optionValue="code"
-            class="daice-select w-full"
-          />
-          <div />
-          <small v-if="errors.role" class="flex text-red-500 items-center">{{ errors.role }}</small>
-        </div>
+            <div />
+          </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="daice-label">Email:</div>
-          <InputText
-            ref="emailRef"
-            v-model="email"
-            class="daice-input w-full"
-            :invalid="!!errors.email"
-            @keydown.enter.prevent="focusNext('passwordRef')"
-          />
-          <div />
-          <small v-if="errors.email" class="flex text-red-500 items-center">{{
-            errors.email
-          }}</small>
-        </div>
+          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+            <div class="daice-label">Email:</div>
+            <div class="relative w-full mb-1">
+              <InputText
+                ref="emailRef"
+                v-model="email"
+                class="daice-input w-full"
+                :invalid="!!errors.email"
+                @keydown.enter.prevent="focusNext('passwordRef')"
+              />
+              <div />
+              <i
+                v-if="errors.email"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.email"
+              ></i>
+            </div>
+          </div>
 
-        <div
-          v-if="!profile.id || showPasswordFields"
-          class="grid grid-cols-[110px_1fr] gap-2 p-2 pb-1 items-center"
-        >
-          <div class="daice-label">Password:</div>
-          <InputText
-            type="password"
-            ref="passwordRef"
-            v-model="password"
-            class="daice-input w-full"
-            :invalid="!!errors.password"
-            @keydown.enter.prevent="focusNext('confirmPasswordRef')"
-          />
-          <div />
-          <small class="flex text-red-500 items-center">{{ errors.password }}</small>
-        </div>
+          <div
+            v-if="!profile.id || showPasswordFields"
+            class="grid grid-cols-[110px_1fr] gap-2 p-2 pb-1 items-center"
+          >
+            <div class="daice-label">Password:</div>
+            <div class="relative w-full mb-1">
+              <InputText
+                type="password"
+                ref="passwordRef"
+                v-model="password"
+                class="daice-input w-full"
+                :invalid="!!errors.password"
+                @keydown.enter.prevent="focusNext('confirmPasswordRef')"
+              />
+              <i
+                v-if="errors.password"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.password"
+              ></i>
+            </div>
+            <div />
+          </div>
 
-        <div
-          v-if="!profile.id || showPasswordFields"
-          class="grid grid-cols-[110px_1fr] gap-2 p-2 pt-0 pb-0 items-center"
-        >
-          <div class="daice-label">Confirm Password:</div>
-          <InputText
-            type="password"
-            ref="confirmPasswordRef"
-            v-model="confirmPassword"
-            class="daice-input w-full"
-            :invalid="!!errors.confirmPassword"
-            @keydown.enter.prevent="focusNextSel('storeNameRef')"
-          />
-          <div />
-          <small v-if="errors.confirmPassword" class="flex text-red-500 items-center">{{
-            errors.confirmPassword
-          }}</small>
-        </div>
+          <div
+            v-if="!profile.id || showPasswordFields"
+            class="grid grid-cols-[110px_1fr] gap-2 p-2 pt-0 pb-0 items-center"
+          >
+            <div class="daice-label">Confirm Password:</div>
+            <div class="relative w-full mb-1">
+              <InputText
+                type="password"
+                ref="confirmPasswordRef"
+                v-model="confirmPassword"
+                class="daice-input w-full"
+                :invalid="!!errors.confirmPassword"
+                @keydown.enter.prevent="focusNextSel('storeNameRef')"
+              />
+              <i
+                v-if="errors.confirmPassword"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.confirmPassword"
+              ></i>
+            </div>
 
-        <div v-if="profile.id" class="flex rounded relative justify-end text-xs mb-2" role="alert">
-          <Button
-            icon="pi pi-lock"
-            :label="showPasswordFields ? 'Cancel' : 'Change Password'"
-            severity="secondary"
-            variant="outlined"
-            size="small"
-            class="text-xs"
-            @click="togglePasswordFields"
-          />
-        </div>
+            <div />
+          </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="daice-label">Store:</div>
-          <Select
-            ref="storeNameRef"
-            v-model="store_id"
-            :options="storeList"
-            optionLabel="label"
-            optionValue="value"
-            class="daice-select w-full"
-            @keydown.enter.prevent="focusNextSel('statusRef')"
-          />
-          <div />
-          <!-- <small v-if="errors.storeName" class="flex text-red-500 items-center">{{
-            errors.storeName
-          }}</small> -->
+          <div
+            v-if="profile.id"
+            class="flex rounded relative justify-end text-xs mb-2"
+            role="alert"
+          >
+            <Button
+              icon="pi pi-lock"
+              :label="showPasswordFields ? 'Cancel' : 'Change Password'"
+              severity="secondary"
+              variant="outlined"
+              size="small"
+              class="text-xs"
+              @click="togglePasswordFields"
+            />
+          </div>
 
-          <small v-if="errors.store_id" class="flex text-red-500 items-center">
-            {{ errors.store_id }}
-          </small>
-        </div>
+          <div
+            v-if="['dealer', 'rider'].includes(role)"
+            class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center"
+          >
+            <div class="daice-label">Store:</div>
+            <div class="relative w-full mb-1">
+              <Select
+                ref="storeNameRef"
+                v-model="store_id"
+                :options="storeList"
+                optionLabel="label"
+                optionValue="value"
+                class="daice-select w-full"
+                @keydown.enter.prevent="focusNextSel('statusRef')"
+              />
+              <i
+                v-if="errors.store_id"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.store_id"
+              ></i>
+            </div>
 
-        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="daice-label">Status:</div>
-          <Select
-            ref="statusRef"
-            v-model="status"
-            :options="statusOptions"
-            optionLabel="name"
-            optionValue="code"
-            class="daice-select w-full"
-          />
-          <div />
-          <small v-if="errors.status" class="flex text-red-500 items-center">{{
-            errors.status
-          }}</small>
-        </div>
+            <div />
+          </div>
 
-        <div class="flex py-1 rounded relative gap-2 justify-end" role="alert">
-          <!-- <Button
-            ref="submitRef"
-            label="Submit"
-            severity="primary"
-            variant="text"
-            class="flex justify-end"
-            icon="pi pi-check"
-            :loading="loading"
-            @click="onSave"
-          /> -->
+          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+            <div class="daice-label">Status:</div>
+            <div class="relative w-full mb-1">
+              <Select
+                ref="statusRef"
+                v-model="status"
+                :options="statusOptions"
+                optionLabel="name"
+                optionValue="code"
+                class="daice-select w-full"
+              />
+              <i
+                v-if="errors.status"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.status"
+              ></i>
+            </div>
 
-          <Button
-            ref="submitRef"
-            class="daice-action-btn text-xs"
-            icon="pi pi-check"
-            label="Save Profile"
-            :loading="loading"
-            @click="onSave"
-          />
-        </div>
-      </template>
-    </Card>
+            <div />
+          </div>
+
+          <div class="flex py-1 rounded relative gap-2 justify-end" role="alert">
+            <Button
+              ref="submitRef"
+              class="daice-action-btn text-xs"
+              icon="pi pi-check"
+              label="Save Profile"
+              :loading="loading"
+              @click="onSave"
+            />
+          </div>
+        </template>
+      </Card>
+    </div>
   </div>
 </template>
 
 <script setup>
+import MenuBar from "../components/Menubar.vue";
 import { onMounted, ref, watch } from "vue";
 import Card from "primevue/card";
 import Divider from "primevue/divider";
@@ -278,6 +277,9 @@ import defaultAvatar from "@/assets/images/avatar-default.png";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
 import { supabase } from "../supabase";
+
+import { useUnsavedChangesGuard } from "@/composables/useUnsavedChangesGuard";
+const { markDirty, markClean } = useUnsavedChangesGuard();
 
 import { useFocusNavigation } from "@/composables/useFocusNavigation";
 import { useStoresProfileUpdate } from "@/composables/useStoresProfileUpdate";
@@ -310,8 +312,11 @@ const schema = yup.object({
     otherwise: (schema) => schema.notRequired(),
   }),
 
-  // storeName: yup.string().required("Store is required"),
-  store_id: yup.string().required("Store is required"),
+  store_id: yup.string().when("role", ([role], schema) => {
+    return ["dealer", "rider"].includes(role)
+      ? schema.required("Store is required")
+      : schema.notRequired().nullable();
+  }),
 
   status: yup.string().required("Status is required"),
 });
@@ -324,18 +329,30 @@ const { defineField, errors, handleSubmit, resetForm } = useForm({
   validationSchema: schema,
 });
 
+// Tell VeeValidate not to validate on every model update.
+const fieldOptions = {
+  validateOnModelUpdate: false,
+};
+const [role] = defineField("role", fieldOptions);
+const [store_id] = defineField("store_id", fieldOptions);
+
 const [display_name] = defineField("display_name");
-const [role] = defineField("role");
 const [contact] = defineField("contact");
 const [email] = defineField("email");
 const [password] = defineField("password");
 const [confirmPassword] = defineField("confirmPassword");
-const [store_id] = defineField("store_id");
 const [status] = defineField("status");
-
 const [avatar_url] = defineField("avatar_url");
 const selectedImageFile = ref(null);
 const imagePreview = ref(null);
+
+// Tell VeeValidate not to validate on every model update.
+// const [store_id] = defineField("store_id", {
+//   validateOnModelUpdate: false,
+// });
+// const [role] = defineField("role", {
+//   validateOnModelUpdate: false,
+// });
 
 const profileNameRef = ref(null);
 const contactRef = ref(null);
@@ -399,6 +416,7 @@ const onSave = handleSubmit(async (values) => {
       detail: "User saved successfully",
       life: 3000,
     });
+    markClean();
     router.back();
   } catch (err) {
     toast.add({
@@ -427,7 +445,6 @@ watch(
   (value) => {
     if (!value) return;
 
-    console.log("here ---- ", value.storeName);
     resetForm({
       values: {
         display_name: value.display_name,
@@ -515,11 +532,6 @@ const onImageSelected = async (event) => {
 };
 
 const uploadProfileImage = async () => {
-  // const { data: sessionData } = await supabase.auth.getSession();
-
-  // console.log("Session:", sessionData?.session);
-  // console.log("User:", sessionData?.session?.user);
-
   if (!selectedImageFile.value) {
     return avatar_url.value || null;
   }
@@ -545,16 +557,22 @@ const uploadProfileImage = async () => {
   return publicUrlData.publicUrl;
 };
 
+watch(
+  () => role.value,
+  (role) => {
+    if (!["dealer", "rider"].includes(role)) {
+      store_id.value = null;
+      console.log("check here: ", role);
+    }
+  },
+);
+
+watch([display_name, contact, role, email, store_id, status, password, confirmPassword], markDirty);
+
 onMounted(async () => {
   await fetchStores();
 });
 </script>
-
-<!-- <style scoped>
-:deep(.p-fileupload-filename) {
-  display: none;
-}
-</style> -->
 
 <style scoped>
 :deep(.avatar-upload .p-fileupload-filename),

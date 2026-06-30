@@ -1,181 +1,255 @@
 <template>
-  <div>
+  <div class="daice-page min-h-screen">
+    <MenuBar />
     <Toast />
-    <Card>
-      <template #title>
-        <div class="flex gap-3">
-          <Button severity="danger" variant="text" icon="pi pi-arrow-left" @click="router.back()" />
-          Store Details
-        </div>
-      </template>
-      <template #content>
-        <Divider />
-
-        <div v-if="store.id" class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="font-cmedium p-2">Id:</div>
-          <InputText
-            disabled
-            v-model="store.id"
-            class="w-full"
-            @keydown.enter="focusNext('storeRef')"
-          />
-        </div>
-
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="text-sm p-2">Store:</div>
-          <InputText
-            autofocus
-            ref="storeRef"
-            v-model="name"
-            class="w-full"
-            :invalid="!!errors.name"
-            @keydown.enter="focusNext('acctNoRef')"
-          />
-          <div />
-          <small v-if="errors.name" class="flex text-red-500 items-center">{{ errors.name }}</small>
-        </div>
-
-        <!-- v-model="store.acctNo" 
-             :invalid="!!errors.acctNo"
-            :maxlength="13"
-        -->
-        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
-          <div class="text-sm p-2">Account No.:</div>
-          <InputText
-            ref="acctNoRef"
-            v-model="acctNo"
-            class="w-full"
-            @keydown.enter="focusNext('addressRef')"
-          />
-          <div />
-          <small v-if="errors.acctNo" class="flex text-red-500 items-center">{{
-            errors.acctNo
-          }}</small>
-        </div>
-
-        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="text-sm p-2">Address:</div>
-          <InputText
-            ref="addressRef"
-            v-model="address"
-            class="w-full"
-            :invalid="!!errors.address"
-            @keydown.enter.prevent="focusNextSel('provinceRef')"
-          />
-          <div />
-          <small v-if="errors.address" class="flex text-red-500 items-center">{{
-            errors.address
-          }}</small>
-        </div>
-
-        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="text-sm p-2">Province:</div>
-          <Select
-            ref="provinceRef"
-            v-model="province"
-            :options="provinces"
-            optionLabel="name"
-            optionValue="code"
-            :loading="loadingProvinces"
-            inputId="province"
-            class="w-full"
-            :invalid="!!errors.province"
-          />
-          <div />
-          <small v-if="errors.province" class="flex text-red-500 items-center">{{
-            errors.province
-          }}</small>
-        </div>
-
-        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
-          <div class="text-sm p-2">City / Municipality:</div>
-          <Select
-            ref="cityRef"
-            v-model="city"
-            :options="cities"
-            optionLabel="name"
-            optionValue="code"
-            :loading="loadingCities"
-            :disabled="!province"
-            inputId="city"
-            class="w-full"
-            :invalid="!!errors.city"
-          />
-          <div />
-          <small v-if="errors.city" class="flex text-red-500 items-center">{{ errors.city }}</small>
-        </div>
-
-        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
-          <div class="text-sm p-2">Barangay:</div>
-          <Select
-            ref="barangayRef"
-            v-model="barangay"
-            :options="barangays"
-            optionLabel="name"
-            optionValue="code"
-            :loading="loadingBarangays"
-            :disabled="!city"
-            inputId="barangay"
-            class="w-full"
-            :invalid="!!errors.barangay"
-          />
-          <div />
-          <small v-if="errors.barangay" class="flex text-red-500 items-center">{{
-            errors.barangay
-          }}</small>
-        </div>
-
-        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="text-sm p-2">Longitude:</div>
-          <InputText
-            ref="lonRef"
-            v-model="lon"
-            class="w-full"
-            :invalid="!!errors.lon"
-            @keydown.enter="focusNext('latRef')"
-          />
-          <div />
-          <small v-if="errors.lon" class="flex text-red-500 items-center">{{ errors.lon }}</small>
-        </div>
-        <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-          <div class="text-sm p-2">Latitude:</div>
-          <InputText
-            ref="latRef"
-            v-model="lat"
-            class="w-full"
-            :invalid="!!errors.lat"
-            @keydown.enter="focusNextButton('submitRef')"
-          />
-          <div />
-          <small v-if="errors.lat" class="flex text-red-500 items-center">{{ errors.lat }}</small>
-        </div>
-
-        <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-          <div class="flex text-sm p-2"></div>
-          <div>
-            <Checkbox inputId="active" v-model="activeModel" binary class="mr-2" />
-            <label for="active">Active</label>
+    <ConfirmDialog />
+    <div class="dashboard-inner p-3 md:p-5">
+      <Card class="dashboard-shell">
+        <template #title>
+          <div class="dashboard-title flex items-center gap-3">
+            <Button
+              icon="pi pi-arrow-left"
+              severity="contrast"
+              variant="text"
+              rounded
+              @click="router.back()"
+            />
+            Dealer Details
           </div>
-        </div>
+          <Divider class="ice-divider" />
+        </template>
+        <template #content>
+          <div v-if="store.id" class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+            <div class="daice-label">Id:</div>
+            <div class="relative w-full mb-1">
+              <InputText
+                disabled
+                v-model="store.id"
+                class="w-full"
+                @keydown.enter="focusNext('storeRef')"
+              />
+            </div>
+          </div>
 
-        <div class="flex py-1 rounded relative gap-2 justify-end" role="alert">
-          <Button
-            ref="submitRef"
-            label="Submit"
-            severity="primary"
-            variant="text"
-            class="flex justify-end"
-            icon="pi pi-check"
-            :loading="loading"
-            @click="onSave"
-          />
-        </div>
-      </template>
-    </Card>
+          <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+            <div class="daice-label">Store:</div>
+            <div class="relative w-full mb-1">
+              <InputText
+                autofocus
+                ref="storeRef"
+                v-model="name"
+                class="w-full"
+                :invalid="!!errors.name"
+                @keydown.enter="focusNext('acctNoRef')"
+              />
+              <i
+                v-if="errors.name"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.name"
+              ></i>
+            </div>
+
+            <div />
+            <!-- <small v-if="errors.name" class="flex text-red-500 items-center">{{
+              errors.name
+            }}</small> -->
+          </div>
+
+          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
+            <div class="daice-label">Account No.:</div>
+            <div class="relative w-full mb-1">
+              <InputText
+                ref="acctNoRef"
+                v-model="acctNo"
+                class="w-full"
+                @keydown.enter="focusNext('addressRef')"
+              />
+              <i
+                v-if="errors.acctNo"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.acctNo"
+              ></i>
+            </div>
+
+            <div />
+            <!-- <small v-if="errors.acctNo" class="flex text-red-500 items-center">{{
+              errors.acctNo
+            }}</small> -->
+          </div>
+
+          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+            <div class="daice-label">Address:</div>
+            <div class="relative w-full mb-1">
+              <InputText
+                ref="addressRef"
+                v-model="address"
+                class="w-full"
+                :invalid="!!errors.address"
+                @keydown.enter.prevent="focusNextSel('provinceRef')"
+              />
+              <i
+                v-if="errors.address"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.address"
+              ></i>
+            </div>
+
+            <div />
+            <!-- <small v-if="errors.address" class="flex text-red-500 items-center">{{
+              errors.address
+            }}</small> -->
+          </div>
+
+          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+            <div class="daice-label">Province:</div>
+            <div class="relative w-full mb-1">
+              <Select
+                ref="provinceRef"
+                v-model="province"
+                :options="provinces"
+                optionLabel="name"
+                optionValue="code"
+                :loading="loadingProvinces"
+                inputId="province"
+                class="w-full"
+                :invalid="!!errors.province"
+              />
+              <i
+                v-if="errors.province"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.province"
+              ></i>
+            </div>
+
+            <div />
+            <!-- <small v-if="errors.province" class="flex text-red-500 items-center">{{
+              errors.province
+            }}</small> -->
+          </div>
+
+          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
+            <div class="daice-label">City / Municipality:</div>
+            <div class="relative w-full mb-1">
+              <Select
+                ref="cityRef"
+                v-model="city"
+                :options="cities"
+                optionLabel="name"
+                optionValue="code"
+                :loading="loadingCities"
+                :disabled="!province"
+                inputId="city"
+                class="w-full"
+                :invalid="!!errors.city"
+              />
+              <i
+                v-if="errors.city"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.city"
+              ></i>
+            </div>
+
+            <div />
+            <!-- <small v-if="errors.city" class="flex text-red-500 items-center">{{
+              errors.city
+            }}</small> -->
+          </div>
+
+          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
+            <div class="daice-label">Barangay:</div>
+            <div class="relative w-full mb-1">
+              <Select
+                ref="barangayRef"
+                v-model="barangay"
+                :options="barangays"
+                optionLabel="name"
+                optionValue="code"
+                :loading="loadingBarangays"
+                :disabled="!city"
+                inputId="barangay"
+                class="w-full"
+                :invalid="!!errors.barangay"
+              />
+              <i
+                v-if="errors.barangay"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.barangay"
+              ></i>
+            </div>
+
+            <div />
+            <!-- <small v-if="errors.barangay" class="flex text-red-500 items-center">{{
+              errors.barangay
+            }}</small> -->
+          </div>
+
+          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+            <div class="daice-label">Longitude:</div>
+            <div class="relative w-full mb-1">
+              <InputText
+                ref="lonRef"
+                v-model="lon"
+                class="w-full"
+                :invalid="!!errors.lon"
+                @keydown.enter="focusNext('latRef')"
+              />
+              <i
+                v-if="errors.lon"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.lon"
+              ></i>
+            </div>
+
+            <div />
+            <!-- <small v-if="errors.lon" class="flex text-red-500 items-center">{{ errors.lon }}</small> -->
+          </div>
+          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+            <div class="daice-label">Latitude:</div>
+            <div class="relative w-full mb-1">
+              <InputText
+                ref="latRef"
+                v-model="lat"
+                class="w-full"
+                :invalid="!!errors.lat"
+                @keydown.enter="focusNextButton('submitRef')"
+              />
+              <i
+                v-if="errors.lat"
+                class="pi pi-exclamation-circle daice-error-icon"
+                v-tooltip.bottom="errors.lat"
+              ></i>
+            </div>
+
+            <div />
+            <!-- <small v-if="errors.lat" class="flex text-red-500 items-center">{{ errors.lat }}</small> -->
+          </div>
+
+          <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+            <div class="daice-label"></div>
+            <div>
+              <Checkbox inputId="active" v-model="activeModel" binary class="mr-2" />
+              <label for="active">Active</label>
+            </div>
+          </div>
+
+          <div class="flex py-1 rounded relative gap-2 justify-end" role="alert">
+            <Button
+              ref="submitRef"
+              class="daice-action-btn text-xs"
+              label="Save Dealer"
+              icon="pi pi-check"
+              :loading="loading"
+              @click="onSave"
+            />
+          </div>
+        </template>
+      </Card>
+    </div>
   </div>
 </template>
 
 <script setup>
+import MenuBar from "../components/Menubar.vue";
 import { computed, ref, watch, onMounted } from "vue";
 import Card from "primevue/card";
 import Divider from "primevue/divider";
@@ -195,6 +269,9 @@ import * as yup from "yup";
 import { useFocusNavigation } from "@/composables/useFocusNavigation";
 import { useStoresUpdate } from "@/composables/useStoresUpdate";
 const { saveStore, loading } = useStoresUpdate();
+
+import { useUnsavedChangesGuard } from "@/composables/useUnsavedChangesGuard";
+const { markDirty, markClean } = useUnsavedChangesGuard();
 
 const toast = useToast();
 
@@ -398,6 +475,7 @@ const onSave = handleSubmit(async () => {
     //   life: 3000,
     // });
 
+    markClean();
     router.back();
   } catch (err) {
     console.error("Save failed:", err);
@@ -409,4 +487,7 @@ const onSave = handleSubmit(async () => {
     });
   }
 });
+
+watch([name, acctNo, address, province, lon,lat], markDirty);
+
 </script>
