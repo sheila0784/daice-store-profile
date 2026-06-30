@@ -1,7 +1,10 @@
 <template>
-  <div class="min-h-screen text-sm">
+  <div class="daice-page min-h-screen text-sm">
     <MenuBar />
-    <Card class="w-full max-w-full shadow-2 border-gray-300 mx-auto">
+    <Toast />
+    <ConfirmDialog />
+    <div class="dashboard-inner p-3 md:p-5">
+    <Card class="dashboard-shell">
       <template #title
         ><span class="text-3xl font-extrabold tracking-wide"> App Version </span></template
       >
@@ -15,6 +18,7 @@
         </div>
       </template>
     </Card>
+    </div>
   </div>
 </template>
 

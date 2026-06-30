@@ -1,89 +1,91 @@
 <template>
-  <div class="min-h-screen text-sm">
+  <div class="daice-page min-h-screen text-sm">
     <MenuBar />
-    <Card class="w-full max-w-full shadow-2 border-gray-300 mx-auto">
-      <template #title>
-        <span class="text-3xl font-extrabold tracking-wide"> Announcements </span>
-      </template>
-      <template #content>
-        <div class="flex flex-col md:flex-row md:items-center gap-2">
-          <div class="w-full md:flex-1">
-            <div class="w-full flex flex-col sm:flex-row flex-wrap gap-2">
-              <IconField>
-                <InputIcon class="pi pi-search" />
-                <InputText
-                  v-model="searchValue"
-                  placeholder="Search"
-                  @keyup.enter="fetchAnnouncements"
-                />
-              </IconField>
+    <Toast />
+    <ConfirmDialog />
+    <div class="dashboard-inner p-3 md:p-5">
+      <Card class="dashboard-shell">
+        <template #title>
+          <div class="dashboard-title">Announcements</div>
+        </template>
+        <template #content>
+          <div class="flex flex-col md:flex-row md:items-center gap-2">
+            <div class="w-full md:flex-1">
+              <div class="daice-toolbar flex flex-col md:flex-row md:items-center gap-2">
+                <IconField  class="daice-search w-full">
+                  <InputIcon class="pi pi-search" />
+                  <InputText
+                    v-model="searchValue"
+                    placeholder="Search"
+                    class="w-full"
+                    @keyup.enter="fetchAnnouncements"
+                  />
+                </IconField>
+              </div>
+            </div>
+
+            <div class="w-full md:w-auto md:ml-auto">
+              <Button
+                type="button"
+                severity="secondary"
+                label="Create New"
+                icon="pi pi-plus"
+                :loading="loading"
+                class="daice-action-btn text-xs"
+                @click="handleUpdate"
+              />
             </div>
           </div>
 
-          <div class="w-full md:w-auto md:ml-auto">
+          <Divider />
+
+          <DataTable
+            :value="announcements"
+            paginator
+            :rows="rows"
+            :rowsPerPageOptions="rowsPerPageOptions"
+            stripedRows
+            :loading="loading"
+            selectionMode="single"
+            class="daice-table w-full text-xs"
+          >
+            <Column field="title" header="Title" sortable v-bind="columnDefaults"></Column>
+            <Column field="body" header="Content" v-bind="columnDefaults"></Column>
+            <Column
+              field="target_roles"
+              header="Target Roles"
+              sortable
+              v-bind="columnDefaults"
+            ></Column>
+            <Column field="created_at" header="Created At" sortable v-bind="columnDefaults">
+              <template #body="slotProps">
+                {{ new Date(slotProps.data.created_at).toLocaleString() }}
+              </template>
+            </Column>
+          </DataTable>
+        </template>
+
+        <template #footer>
+          <div v-if="!announcements.length" class="flex gap-4 mt-1">
+            <Message severity="secondary" variant="simple" size="small"
+              >No records found. Try searching again.</Message
+            >
+          </div>
+          <div v-else>
             <Button
-              type="button"
+              variant="text"
               severity="secondary"
-              label="Create New"
-              icon="pi pi-plus"
+              label="Download CSV File"
+              icon="pi pi-download"
               :loading="loading"
-              class="md:ml-auto text-xs"
-              @click="handleUpdate"
+              class="daice-link-btn text-xs"
+              @click="handleExport"
             />
           </div>
-        </div>
+        </template>
 
-        <Divider />
-
-        <DataTable
-          :value="announcements"
-          paginator
-          :rows="rows"
-          :rowsPerPageOptions="rowsPerPageOptions"
-          stripedRows
-          :loading="loading"
-          selectionMode="single"
-        >
-          <Column field="title" header="Title" sortable v-bind="columnDefaults"></Column>
-          <Column field="body" header="Content" v-bind="columnDefaults"></Column>
-          <Column
-            field="target_roles"
-            header="Target Roles"
-            sortable
-            v-bind="columnDefaults"
-          ></Column>
-          <Column field="created_at" header="Created At" sortable v-bind="columnDefaults">
-            <template #body="slotProps">
-              {{ new Date(slotProps.data.created_at).toLocaleString() }}
-            </template>
-          </Column>
-        </DataTable>
-      </template>
-
-      <template #footer>
-        <div v-if="!announcements.length" class="flex gap-4 mt-1">
-          <Message severity="secondary" variant="simple" size="small"
-            >No records found. Try searching again.</Message
-          >
-        </div>
-        <div v-else>
-          <Button
-            variant="text"
-            severity="secondary"
-            label="Download CSV File"
-            icon="pi pi-download"
-            :loading="loading"
-            class="md:ml-auto text-xs text-blue-600"
-            @click="handleExport"
-          />
-        </div>
-      </template>
-
-      <!-- <p class="text-gray-600">
-        This is the Announcements page. You can add important updates or messages here for your
-        users.
-      </p> -->
-    </Card>
+      </Card>
+    </div>
   </div>
 </template>
 
@@ -132,7 +134,6 @@ const handleExport = () => {
       { label: "Content", key: "body" },
       { label: "Target Roles", key: "target_roles" },
       { label: "Created At", key: "created_at_formatted" },
-    
     ],
     data: announcements.value.map((item) => ({
       ...item,

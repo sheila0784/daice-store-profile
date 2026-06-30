@@ -1,20 +1,25 @@
 <template>
-  <div class="min-h-screen text-sm">
+  <div class="daice-page min-h-screen text-sm">
     <MenuBar />
-    <Card class="w-full max-w-full shadow-2 border-gray-300 mx-auto">
-      <template #title
-        ><span class="text-3xl font-extrabold tracking-wide"> App Maintenance </span></template
-      >
-      <template #content>
-        <div class="min-h-screen flex items-start justify-center bg-white">
-          <img
-            :src="underConstruction"
-            alt="Under Construction"
-            class="w-full md:w-1/2 max-w-4xl max-h-[70vh] object-contain"
-          />
-        </div>
-      </template>
-    </Card>
+    <Toast />
+    <ConfirmDialog />
+    <div class="dashboard-inner p-3 md:p-5">
+      <Card  class="dashboard-shell">
+        <template #title
+          > <div class="dashboard-title mb-2">App Maintenance</div>
+          <Divider class="ice-divider" />
+          </template>
+        <template #content>
+          <div class="min-h-screen flex items-start justify-center bg-white">
+            <img
+              :src="underConstruction"
+              alt="Under Construction"
+              class="w-full md:w-1/2 max-w-4xl max-h-[70vh] object-contain"
+            />
+          </div>
+        </template>
+      </Card>
+    </div>
   </div>
 </template>
 

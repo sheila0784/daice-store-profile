@@ -21,11 +21,11 @@
         <template #content>
           <div v-if="store.id" class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
             <div class="daice-label">Id:</div>
-            <div class="relative w-full mb-1">
+            <div class="relative w-full">
               <InputText
                 disabled
                 v-model="store.id"
-                class="w-full"
+                class="daice-input w-full bg-gray-200 text-sm"
                 @keydown.enter="focusNext('storeRef')"
               />
             </div>
@@ -33,12 +33,12 @@
 
           <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
             <div class="daice-label">Store:</div>
-            <div class="relative w-full mb-1">
+            <div class="relative w-full">
               <InputText
                 autofocus
                 ref="storeRef"
                 v-model="name"
-                class="w-full"
+                class="daice-input w-full pr-10"
                 :invalid="!!errors.name"
                 @keydown.enter="focusNext('acctNoRef')"
               />
@@ -57,11 +57,11 @@
 
           <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
             <div class="daice-label">Account No.:</div>
-            <div class="relative w-full mb-1">
+            <div class="relative w-full">
               <InputText
                 ref="acctNoRef"
                 v-model="acctNo"
-                class="w-full"
+                class="daice-input w-full pr-10"
                 @keydown.enter="focusNext('addressRef')"
               />
               <i
@@ -79,11 +79,11 @@
 
           <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
             <div class="daice-label">Address:</div>
-            <div class="relative w-full mb-1">
+            <div class="relative w-full">
               <InputText
                 ref="addressRef"
                 v-model="address"
-                class="w-full"
+                class="daice-input w-full pr-10"
                 :invalid="!!errors.address"
                 @keydown.enter.prevent="focusNextSel('provinceRef')"
               />
@@ -111,7 +111,7 @@
                 optionValue="code"
                 :loading="loadingProvinces"
                 inputId="province"
-                class="w-full"
+                class="daice-select w-full"
                 :invalid="!!errors.province"
               />
               <i
@@ -139,7 +139,7 @@
                 :loading="loadingCities"
                 :disabled="!province"
                 inputId="city"
-                class="w-full"
+                class="daice-select w-full"
                 :invalid="!!errors.city"
               />
               <i
@@ -157,7 +157,7 @@
 
           <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
             <div class="daice-label">Barangay:</div>
-            <div class="relative w-full mb-1">
+            <div class="relative w-full">
               <Select
                 ref="barangayRef"
                 v-model="barangay"
@@ -167,7 +167,7 @@
                 :loading="loadingBarangays"
                 :disabled="!city"
                 inputId="barangay"
-                class="w-full"
+                class="daice-select w-full"
                 :invalid="!!errors.barangay"
               />
               <i
@@ -185,11 +185,11 @@
 
           <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
             <div class="daice-label">Longitude:</div>
-            <div class="relative w-full mb-1">
+            <div class="relative w-full">
               <InputText
                 ref="lonRef"
                 v-model="lon"
-                class="w-full"
+                class="daice-input w-full pr-10"
                 :invalid="!!errors.lon"
                 @keydown.enter="focusNext('latRef')"
               />
@@ -205,11 +205,11 @@
           </div>
           <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
             <div class="daice-label">Latitude:</div>
-            <div class="relative w-full mb-1">
+            <div class="relative w-full">
               <InputText
                 ref="latRef"
                 v-model="lat"
-                class="w-full"
+                class="daice-input w-full pr-10"
                 :invalid="!!errors.lat"
                 @keydown.enter="focusNextButton('submitRef')"
               />
