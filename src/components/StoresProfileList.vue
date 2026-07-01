@@ -82,8 +82,11 @@
               <template #body="{ data }">
                 <i v-if="data.role === 'dealer'" class="pi pi-briefcase text-blue-400"></i>
                 <i v-else-if="data.role === 'rider'" class="pi pi-car text-green-400"></i>
-                <span v-else>
-                  <i class="pi pi-user text-yellow-400"></i>
+                <i v-else-if="data.role === 'customer'" class="pi pi-user text-yellow-400"></i>
+
+                <span v-else class="text-xs text-gray-400">
+                  {{ data.role.toUpperCase() }}
+                  <!-- <i class="pi pi-user text-gray-500 text-xs">{{data.role.toUpperCase()}}</i> -->
                 </span>
               </template>
             </Column>
@@ -171,10 +174,15 @@
                     v-tooltip.bottom="'Edit Record'"
                     @click.stop="handleUpdate(slotProps.data)"
                   />
-                  <Button
-                    v-if="
+
+                  <!-- v-if="
                       slotProps.data.last_sign_in_at === null ||
                       slotProps.data.last_sign_in_at === ''
+                    " -->
+                  <Button
+                    v-if="
+                      slotProps.data.last_order_placed === null ||
+                      slotProps.data.last_order_placed === ''
                     "
                     icon="pi pi-trash"
                     severity="danger"
@@ -223,10 +231,8 @@
               @load="imageLoading = false"
             />
           </div>
-
           <p>
-            Dealer
-            <span>{{ dialogData.display_name }}</span>
+            <span class="text-sm">{{ dialogData.display_name }}</span>
           </p>
         </div>
       </template>
@@ -456,10 +462,12 @@ const {
 const { deleteProfile } = useStoresProfileUpdate();
 
 const roleOptions = [
+  { label: "All", value: null },
   { label: "Dealer", value: "dealer" },
   { label: "Customer", value: "customer" },
   { label: "Rider", value: "rider" },
-  { label: "All", value: null },
+  { label: "IT", value: "it" },
+  { label: "Viewer", value: "viewer" },
 ];
 
 const onRoleChanged = async () => {

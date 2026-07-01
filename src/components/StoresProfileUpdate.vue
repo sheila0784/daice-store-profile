@@ -432,6 +432,9 @@ const roles = [
   { name: "Dealer", code: "dealer" },
   { name: "Customer", code: "customer" },
   { name: "Rider", code: "rider" },
+  { name: "IT", code: "it"},
+  { name: "Viewer", code: "viewer"},
+
 ];
 
 const statusOptions = [

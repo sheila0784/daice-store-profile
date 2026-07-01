@@ -7,19 +7,42 @@ export function useStoresProfileUpdate() {
   const success = ref(false);
   const storeList = ref([]);
 
+  // const deleteProfile = async (id) => {
+  //   loading.value = true;
+  //   error.value = null;
+  //   success.value = false;
+
+  //   try {
+  //     // const { data, error: err } = await supabase
+  //     //   .from("profiles_delete")
+  //     //   .delete()
+  //     //   .eq("id",id)
+  //     //   .select()
+
+  //     const { data, error: err } = await supabase.rpc("profiles_delete", { p_id: id });
+
+  //     if (err) throw err;
+
+  //     success.value = true;
+  //     return data;
+  //   } catch (err) {
+  //     error.value = err;
+  //     console.error("Delete profile error:", err);
+  //     throw err;
+  //   } finally {
+  //     loading.value = false;
+  //   }
+  // };
+
   const deleteProfile = async (id) => {
     loading.value = true;
     error.value = null;
     success.value = false;
 
     try {
-      // const { data, error: err } = await supabase
-      //   .from("profiles_delete")
-      //   .delete()
-      //   .eq("id",id)
-      //   .select()
-
-      const { data, error: err } = await supabase.rpc("profiles_delete", { p_id: id });
+      const { data, error: err } = await supabase.functions.invoke("admin-user-delete", {
+        body: { id },
+      });
 
       if (err) throw err;
 
@@ -72,8 +95,7 @@ export function useStoresProfileUpdate() {
   `,
       )
       .eq("active", true);
-      // .is("user_id", null);
-   
+    // .is("user_id", null);
 
     const { data, error } = await query.order("name", {
       ascending: true,

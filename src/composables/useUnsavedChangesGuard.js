@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
 import { useConfirm } from "primevue/useconfirm";
 
@@ -14,6 +14,21 @@ export function useUnsavedChangesGuard() {
     isDirty.value = false;
   };
 
+   const handleBeforeUnload = (event) => {
+    if (!isDirty.value) return;
+
+    event.preventDefault();
+    event.returnValue = "";
+  };
+
+  onMounted(() => {
+    window.addEventListener("beforeunload", handleBeforeUnload);
+  });
+
+  onBeforeUnmount(() => {
+    window.removeEventListener("beforeunload", handleBeforeUnload);
+  });
+  
   onBeforeRouteLeave((to, from, next) => {
     if (!isDirty.value) {
       next();
