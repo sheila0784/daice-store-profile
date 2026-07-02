@@ -45,7 +45,7 @@
               <i
                 v-if="errors.name"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.name"
+                @click="showError($event, errors.name)"
               ></i>
             </div>
 
@@ -67,7 +67,7 @@
               <i
                 v-if="errors.acctNo"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.acctNo"
+                @click="showError($event, errors.acctNo)"
               ></i>
             </div>
 
@@ -90,7 +90,7 @@
               <i
                 v-if="errors.address"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.address"
+                @click="showError($event, errors.address)"
               ></i>
             </div>
 
@@ -117,7 +117,7 @@
               <i
                 v-if="errors.province"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.province"
+                @click="showError($event, errors.province)"
               ></i>
             </div>
 
@@ -145,7 +145,7 @@
               <i
                 v-if="errors.city"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.city"
+                @click="showError($event, errors.city)"
               ></i>
             </div>
 
@@ -173,7 +173,7 @@
               <i
                 v-if="errors.barangay"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.barangay"
+                @click="showError($event, errors.barangay)"
               ></i>
             </div>
 
@@ -196,7 +196,7 @@
               <i
                 v-if="errors.lon"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.lon"
+                @click="showError($event, errors.lon)"
               ></i>
             </div>
 
@@ -216,7 +216,7 @@
               <i
                 v-if="errors.lat"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.lat"
+                @click="showError($event, errors.lat)"
               ></i>
             </div>
 
@@ -227,7 +227,7 @@
           <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
             <div class="daice-label"></div>
             <div>
-              <Checkbox inputId="active" v-model="activeModel" binary class="mr-2" />
+              <Checkbox inputId="active" v-model="activeModel" binary class="daice-checkbox mr-2" />
               <label for="active">Active</label>
             </div>
           </div>
@@ -242,6 +242,11 @@
               @click="onSave"
             />
           </div>
+          <Popover ref="errorPopover">
+            <div class="text-red-500 text-xs font-medium">
+              {{ currentError }}
+            </div>
+          </Popover>
         </template>
       </Card>
     </div>
@@ -270,8 +275,17 @@ import { useFocusNavigation } from "@/composables/useFocusNavigation";
 import { useStoresUpdate } from "@/composables/useStoresUpdate";
 const { saveStore, loading } = useStoresUpdate();
 
+import Popover from "primevue/popover";
+
 import { useUnsavedChangesGuard } from "@/composables/useUnsavedChangesGuard";
 const { markDirty, markClean } = useUnsavedChangesGuard();
+
+const errorPopover = ref();
+const currentError = ref("");
+const showError = (event, message) => {
+  currentError.value = message;
+  errorPopover.value.toggle(event);
+};
 
 const toast = useToast();
 
@@ -488,6 +502,5 @@ const onSave = handleSubmit(async () => {
   }
 });
 
-watch([name, acctNo, address, province, lon,lat], markDirty);
-
+watch([name, acctNo, address, province, lon, lat], markDirty);
 </script>

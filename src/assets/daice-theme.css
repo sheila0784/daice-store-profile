@@ -37,24 +37,6 @@
   }
 }
 
-/* .login-card {
-  width: 100%;
-  max-width: 390px;
-  border-radius: 24px;
-
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.92),
-    rgba(244, 251, 255, 0.9),
-    rgba(227, 245, 255, 0.88)
-  );
-
-  box-shadow:
-    0 12px 30px rgba(0, 80, 150, 0.1),
-    0 0 20px rgba(125, 211, 252, 0.18),
-    inset 0 1px rgba(255, 255, 255, 0.9);
-} */
-
 .login-card,
 .login-card.p-card {
   width: 100%;
@@ -79,12 +61,6 @@
   transition: all 0.25s ease;
   box-shadow: 0 6px 16px rgba(14, 165, 233, 0.3);
 }
-:deep(.login-btn .p-button-label) {
-  color: #ffffff;
-  font-weight: 700;
-  letter-spacing: 0.6px;
-  text-shadow: 0 1px 2px rgba(0, 70, 120, 0.25);
-}
 
 .login-btn:hover {
   transform: translateY(-1px);
@@ -97,46 +73,39 @@
   transform: translateY(0);
 }
 
-/* FOR EMAIL AND PASSWORD INTERFACE */
-:deep(.p-inputtext),
-:deep(.p-password-input) {
-  background: rgba(255, 255, 255, 0.82) !important;
-  color: #334155 !important; /* visible in light/dark browser theme */
-  caret-color: #0284c7;
-
-  border: 1px solid #cfefff;
-  border-radius: 12px;
-
-  backdrop-filter: blur(8px);
-  transition: all 0.25s ease;
-
-  box-shadow:
-    inset 0 1px 2px rgba(255, 255, 255, 0.8),
-    0 0 8px rgba(125, 211, 252, 0.08);
+/* PASSWORD - DA ICE THEME */
+.daice-password.p-password,
+.daice-password .p-password-input,
+.daice-password input {
+  width: 100% !important;
 }
 
-:deep(.p-inputtext::placeholder),
-:deep(.p-password-input::placeholder) {
-  color: #94a3b8 !important;
-}
-
-:deep(.p-inputtext:hover),
-:deep(.p-password-input:hover) {
-  border-color: #7dd3fc;
-}
-
-:deep(.p-inputtext:focus),
-:deep(.p-password-input:focus) {
+.daice-password .p-password-input,
+.daice-password input.daice-input {
+  background: rgba(255,255,255,.82) !important;
   color: #334155 !important;
-  background: rgba(255, 255, 255, 0.92) !important;
-
-  border-color: #38bdf8;
-
+  border: 1px solid #cfefff !important;
+  border-radius: 12px !important;
+  font-size: 0.875rem !important;
   box-shadow:
-    0 0 0 0.15rem rgba(56, 189, 248, 0.18),
-    0 0 14px rgba(125, 211, 252, 0.25);
+    inset 0 1px 2px rgba(255,255,255,.8),
+    0 0 8px rgba(125,211,252,.08) !important;
 }
-/* END OF EMAIL AND PASSWORD INTERFACE */
+
+.daice-password .p-password-input:focus,
+.daice-password input.daice-input:focus {
+  background: rgba(255,255,255,.96) !important;
+  color: #334155 !important;
+  border-color: #38bdf8 !important;
+  box-shadow:
+    0 0 0 .15rem rgba(56,189,248,.18),
+    0 0 14px rgba(125,211,252,.25) !important;
+}
+
+.daice-password .p-password-toggle-mask-icon,
+.daice-password .p-icon {
+  color: #0284c7 !important;
+}
 
 .portal-title {
   text-align: center;
@@ -377,19 +346,6 @@
     pointer-events:none;
 }
 
-/* .dashboard-title{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    font-size:1.45rem;
-    font-weight:800;
-
-    color:#0f4c81;
-
-    letter-spacing:.05em;
-} */
-
 .dashboard-title {
   display: flex;
   justify-content: center;
@@ -559,29 +515,6 @@ flex-wrap: wrap;
   background: #e0f7ff !important;
   color: #075985 !important;
 }
-
-/* 
-.daice-dialog .p-dialog {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.96),
-    rgba(235, 249, 255, 0.94)
-  ) !important;
-
-  color: #334155 !important;
-  border-radius: 20px;
-  border: 1px solid #d9f3ff;
-
-  box-shadow:
-    0 18px 40px rgba(0, 80, 150, 0.18),
-    0 0 24px rgba(125, 211, 252, 0.2);
-}
-
-.daice-dialog .p-dialog-header,
-.daice-dialog .p-dialog-content {
-  background: transparent !important;
-  color: #334155 !important;
-} */
 
 .daice-dialog .p-dialog {
   background: linear-gradient(
@@ -914,49 +847,39 @@ flex-wrap: wrap;
   }
 }
 
-/* Validation Error Icon */
-/* .daice-error-icon {
-  position: absolute;
-  right: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #ef4444;
-  cursor: help;
-  z-index: 10;
-
-  animation: daiceErrorPulse 1.8s ease-in-out infinite;
+/* FOR CHECKBOXES */
+.daice-checkbox .p-checkbox-box {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px;
 }
 
-@keyframes daiceErrorPulse {
-  0%, 100% {
-    transform: translateY(-50%) scale(1);
-    opacity: 1;
-    filter: drop-shadow(0 0 0 transparent);
-  }
-
-  50% {
-    transform: translateY(-50%) scale(1.18);
-    opacity: .8;
-    filter: drop-shadow(0 0 6px rgba(239,68,68,.45));
-  }
-} */
-
-
-/* Validation Error Icon */
-/* .daice-error-icon {
-  color: #ef4444;
-
-  animation: daiceIceError 2s ease-in-out infinite;
+.daice-checkbox.p-checkbox-checked .p-checkbox-box,
+.daice-checkbox .p-checkbox-box.p-highlight {
+  background: #0891b2 !important;
+  border-color: #0891b2 !important;
 }
 
-@keyframes daiceIceError {
-  0%,100% {
-    transform: translateY(-50%) scale(1);
-    filter: drop-shadow(0 0 0 transparent);
-  }
+.daice-checkbox .p-checkbox-icon {
+  color: #ffffff !important;
+}
 
-  50% {
-    transform: translateY(-50%) scale(1.15);
-    filter: drop-shadow(0 0 6px rgba(239,68,68,.6));
-  }
-} */
+.daice-checkbox .p-checkbox-box:hover {
+  border-color: #0891b2 !important;
+}
+
+/* Textarea */
+.p-textarea.daice-input,
+textarea.daice-input {
+  background: #ffffff !important;
+  color: #111827 !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 10px;
+  font-size: 0.875rem;
+}
+
+.p-textarea.daice-input:focus,
+textarea.daice-input:focus {
+  border-color: #0891b2 !important;
+  box-shadow: 0 0 0 1px #0891b2 !important;
+}

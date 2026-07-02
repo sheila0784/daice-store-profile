@@ -20,15 +20,16 @@
         <div class="flex flex-col gap-3 m-4">
           <div>
             <label class="text-xs block mb-2 text-gray-500">Email</label>
-            <InputText v-model="email" class="w-full text-sm text-gray-600" />
+            <InputText v-model="email" class="daice-input w-full" />
           </div>
 
           <div>
             <label class="text-xs block mb-2 text-gray-500">Password</label>
             <Password
               v-model="password"
-              class="w-full text-sm"
-              inputClass="w-full text-gray-700"
+               class="daice-password w-full"
+              
+              inputClass="daice-input w-full"
               :feedback="false"
               toggleMask
             />
