@@ -59,7 +59,6 @@
 
         <div class="footer-brand">
           <div class="company">Purified Tube Ice • Garantisadong LIMPYO!</div>
-
           <div class="copyright">© 2026 Da ICE · Powered by Mr. Freeze</div>
         </div>
       </template>
@@ -78,6 +77,9 @@ import InputText from "primevue/inputtext";
 import Password from "primevue/password";
 import Button from "primevue/button";
 import Divider from "primevue/divider";
+
+import { useAuthStore } from "@/stores/auth";
+const authStore = useAuthStore();
 
 const router = useRouter();
 
@@ -104,10 +106,38 @@ const login = async () => {
       return;
     }
 
+    // --------------Check for Role---------------------
+    const userId = data.user.id;
+
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("id, role, status")
+      .eq("id", userId)
+      .single();
+
+    if (profileError) {
+      errorMessage.value = "Unable to verify user role.";
+      await supabase.auth.signOut();
+      return;
+    }
+
+    const deniedRoles = ["dealer", "rider", "customer"];
+    // // const allowedRoles = ["admin", "superadmin"];
+
+    // if (!allowedRoles.includes(profile.role?.toLowerCase())) {
+    if (deniedRoles.includes(profile.role?.toLowerCase())) {
+      errorMessage.value = "Access denied!";
+      await supabase.auth.signOut();
+      return;
+    }
+    //--------------------------------------------------------
+
+    //---------------SAVE ROLE AFTER VALIDATION---------------
+    authStore.setUser(data.user);
+    authStore.setRole(profile.role);
+
     successMessage.value = "Login successful!";
-
     console.log(data);
-
     router.push("/dashboard");
   } catch (err) {
     errorMessage.value = err.message;
@@ -115,5 +145,4 @@ const login = async () => {
     loading.value = false;
   }
 };
-
 </script>

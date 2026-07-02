@@ -28,7 +28,9 @@ import { useRouter } from "vue-router";
 import { supabase } from "../supabase";
 import Button from "primevue/button";
 import Menubar from "primevue/menubar";
+import { useAuthStore } from "@/stores/auth";
 
+const authStore = useAuthStore();
 const router = useRouter();
 
 const items = [
@@ -47,7 +49,7 @@ const items = [
     icon: "pi pi-user-edit",
     command: () => router.push("/storesprofilelist"),
   },
-   {
+  {
     label: "Settings",
     icon: "pi pi-cog",
     items: [
@@ -72,6 +74,7 @@ const items = [
 
 const logout = async () => {
   await supabase.auth.signOut();
+  authStore.clear;
   router.push("/login");
 };
 </script>

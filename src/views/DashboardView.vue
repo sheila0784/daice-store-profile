@@ -11,7 +11,7 @@
         <template #subtitle>
           <div class="dashboard-subtitle mb-2">
             <i class="pi pi-mobile mr-2"></i>
-            Da ICE Mobile App Administration Portal
+            Mobile App Administration Portal
           </div>
 
           <Divider class="ice-divider" />
