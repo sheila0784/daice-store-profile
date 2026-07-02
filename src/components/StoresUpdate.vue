@@ -304,11 +304,13 @@ const {
 const schema = yup.object({
   name: yup.string().required("Store name is required").min(3, "Minimum 3 characters"),
 
-  // acctNo: yup
-  //     .string()
-  //     .required("Account No. is required")
-  //     .matches(/^\d+$/, "Account No. must be a number")
-  //     .length(13, "Account No. must be exactly 13 digits"),
+  acctNo: yup
+    .string()
+    .required("Account No. is required")
+    .matches(/^[0-9-]+$/, "Account No. may contain only numbers and hyphens (-)")
+    .min(13, "Account No. must be at least 13 characters"),
+
+  // .length(13, "Account No. must be exactly 13 digits"),
 
   address: yup
     .string()

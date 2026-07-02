@@ -572,8 +572,104 @@ flex-wrap: wrap;
   margin-right: 0.25rem;
 }
 
-.daice-dialog-table.p-datatable {
+/* .daice-dialog-table.p-datatable {
   margin-top: 0.5rem;
+} */
+
+/* DIALOG DATATABLE - FORCE DA ICE LIGHT THEME */
+.daice-dialog-table.p-datatable,
+.daice-dialog-table .p-datatable-wrapper,
+.daice-dialog-table .p-datatable-table,
+.daice-dialog-table .p-datatable-table-container {
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: #334155 !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+}
+
+.daice-dialog-table.p-datatable {
+  border: 1px solid #d9f3ff !important;
+  box-shadow:
+    0 10px 24px rgba(0, 80, 150, 0.08),
+    0 0 18px rgba(125, 211, 252, 0.15) !important;
+}
+
+/* Header */
+.daice-dialog-table .p-datatable-thead > tr > th {
+  background: linear-gradient(180deg, #38bdf8, #0ea5e9) !important;
+  color: #ffffff !important;
+  border-color: #bae6fd !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+}
+
+/* Body rows */
+.daice-dialog-table .p-datatable-tbody > tr {
+  background: rgba(255, 255, 255, 0.88) !important;
+  color: #334155 !important;
+}
+
+.daice-dialog-table .p-datatable-tbody > tr:nth-child(even) {
+  background: rgba(240, 249, 255, 0.95) !important;
+}
+
+.daice-dialog-table .p-datatable-tbody > tr:hover {
+  background: rgba(224, 247, 255, 0.98) !important;
+  color: #075985 !important;
+}
+
+/* Cells */
+.daice-dialog-table .p-datatable-tbody > tr > td {
+  background: transparent !important;
+  color: #334155 !important;
+  border-color: #e0f2fe !important;
+  font-size: 0.75rem !important;
+}
+
+/* Empty message */
+.daice-dialog-table .p-datatable-emptymessage > td {
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #64748b !important;
+}
+
+/* Paginator */
+.daice-dialog-table .p-paginator {
+  background: rgba(248, 252, 255, 0.95) !important;
+  color: #334155 !important;
+  border-color: #d9f3ff !important;
+  border-bottom-left-radius: 18px !important;
+  border-bottom-right-radius: 18px !important;
+}
+
+/* EXTRA FIX: Dialog DataTable dark mode override */
+.daice-dialog-table .p-datatable-wrapper,
+.daice-dialog-table .p-datatable-table-container,
+.daice-dialog-table table,
+.daice-dialog-table thead,
+.daice-dialog-table tbody,
+.daice-dialog-table tr,
+.daice-dialog-table td,
+.daice-dialog-table th {
+  color: #334155 !important;
+}
+
+.daice-dialog-table .p-datatable-thead > tr > th {
+  background: linear-gradient(180deg, #38bdf8, #0ea5e9) !important;
+  color: #ffffff !important;
+}
+
+.daice-dialog-table .p-datatable-tbody > tr > td {
+  background: rgba(255, 255, 255, 0.88) !important;
+  color: #334155 !important;
+}
+
+.daice-dialog-table .p-datatable-tbody > tr:nth-child(even) > td {
+  background: rgba(240, 249, 255, 0.95) !important;
+}
+
+.daice-dialog-table .p-datatable-tbody > tr:hover > td {
+  background: rgba(224, 247, 255, 0.98) !important;
+  color: #075985 !important;
 }
 
 /* ===== DA ICE Dialog ===== */

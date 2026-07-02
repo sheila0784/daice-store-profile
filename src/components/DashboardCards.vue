@@ -1,6 +1,6 @@
 <template>
   <div class="daice-page flex flex-col gap-6 mt-1 justify-center items-center p-1">
-    <div class="flex gap-2 flex-wrap mt-4 justify-center">
+    <div class="flex gap-2 flex-wrap justify-center">
       <Card
         v-for="card in dashboardCards"
         :key="card.title"
@@ -98,11 +98,12 @@
         />
       </div>
 
+      <!-- :style="{ width: '400px', maxWidth: '92vw' }" -->
       <Dialog
         v-model:visible="showDiaSalesPerDay"
         :modal="true"
         :closable="true"
-        :style="{ width: '400px', maxWidth: '92vw' }"
+        :style="{ width: '700px', maxWidth: '92vw' }"
         class="daice-dialog"
       >
         <template #header>
@@ -136,9 +137,10 @@
               </template>
             </Column>
             <Column field="recipient" header="Customer" v-bind="dialogColumnDefaults"></Column>
+            <Column field="order_time" header="Order Time" v-bind="dialogColumnDefaults"></Column>
             <Column
               field="product_quantity"
-              header="Product"
+              header="Product" 
               v-bind="dialogColumnDefaults"
             ></Column>
             <Column

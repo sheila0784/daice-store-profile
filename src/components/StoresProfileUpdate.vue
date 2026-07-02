@@ -69,7 +69,7 @@
               <i
                 v-if="errors.display_name"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.display_name"
+                @click="showError($event, errors.display_name)"
               ></i>
             </div>
           </div>
@@ -87,7 +87,7 @@
               <i
                 v-if="errors.contact"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.contact"
+                @click="showError($event, errors.contact)"
               ></i>
               <div />
             </div>
@@ -107,7 +107,7 @@
               <i
                 v-if="errors.role"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.role"
+                @click="showError($event, errors.role)"
               ></i>
             </div>
 
@@ -128,7 +128,7 @@
               <i
                 v-if="errors.email"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.email"
+                @click="showError($event, errors.email)"
               ></i>
             </div>
           </div>
@@ -150,7 +150,7 @@
               <i
                 v-if="errors.password"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.password"
+                @click="showError($event, errors.password)"
               ></i>
             </div>
             <div />
@@ -173,7 +173,7 @@
               <i
                 v-if="errors.confirmPassword"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.confirmPassword"
+                @click="showError($event, errors.confirmPassword)"
               ></i>
             </div>
 
@@ -214,7 +214,7 @@
               <i
                 v-if="errors.store_id"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.store_id"
+                @click="showError($event, errors.store_id)"
               ></i>
             </div>
 
@@ -235,7 +235,7 @@
               <i
                 v-if="errors.status"
                 class="pi pi-exclamation-circle daice-error-icon"
-                v-tooltip.bottom="errors.status"
+                @click="showError($event, errors.status)"
               ></i>
             </div>
 
@@ -252,6 +252,11 @@
               @click="onSave"
             />
           </div>
+          <Popover ref="errorPopover">
+            <div class="text-red-500 text-xs font-medium">
+              {{ currentError }}
+            </div>
+          </Popover>
         </template>
       </Card>
     </div>
@@ -278,6 +283,8 @@ import { useForm } from "vee-validate";
 import * as yup from "yup";
 import { supabase } from "../supabase";
 
+import Popover from "primevue/popover";
+
 import { useUnsavedChangesGuard } from "@/composables/useUnsavedChangesGuard";
 const { markDirty, markClean } = useUnsavedChangesGuard();
 
@@ -286,6 +293,13 @@ import { useStoresProfileUpdate } from "@/composables/useStoresProfileUpdate";
 const { saveProfile, loading, fetchStores, storeList } = useStoresProfileUpdate();
 
 const toast = useToast();
+
+const errorPopover = ref();
+const currentError = ref("");
+const showError = (event, message) => {
+  currentError.value = message;
+  errorPopover.value.toggle(event);
+};
 
 const schema = yup.object({
   display_name: yup.string().required("Profile name is required").min(3, "Minimum 3 characters"),
@@ -432,9 +446,8 @@ const roles = [
   { name: "Dealer", code: "dealer" },
   { name: "Customer", code: "customer" },
   { name: "Rider", code: "rider" },
-  { name: "IT", code: "it"},
-  { name: "Viewer", code: "viewer"},
-
+  { name: "IT", code: "it" },
+  { name: "Viewer", code: "viewer" },
 ];
 
 const statusOptions = [

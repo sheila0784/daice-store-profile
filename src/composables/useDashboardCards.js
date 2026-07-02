@@ -111,6 +111,7 @@ export function useDashboardCards(dateRange) {
     recipient,
     total_amount,
     created_at, 
+    order_time,
     product_quantity
   `,
       )
@@ -129,6 +130,7 @@ export function useDashboardCards(dateRange) {
     const formattedData = data.map((row) => ({
       dealer: row.stores?.name,
       order_date: row.created_at.split("T")[0],
+      order_time: row.order_time,
       recipient: row.recipient,
       total_amount: row.total_amount,
       product_quantity: row.product_quantity
