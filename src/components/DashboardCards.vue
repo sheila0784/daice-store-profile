@@ -137,7 +137,7 @@
               </template>
             </Column>
             <Column field="recipient" header="Customer" v-bind="dialogColumnDefaults"></Column>
-            <Column field="order_time" header="Order Time" v-bind="dialogColumnDefaults"></Column>
+            <Column field="order_time" header="Order Time" v-bind="dialogColumnDefaults" sortable></Column>
             <Column
               field="product_quantity"
               header="Product" 
