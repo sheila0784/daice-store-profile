@@ -293,14 +293,71 @@
   border-radius: 12px;
 }
 
+/* ==========================================================
+   Da ICE Form Wrapper
+   Responsive container for forms and input controls
+   ========================================================== */
 
+.daice-form-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .daice-form-wrapper {
+    width: fit-content;
+    min-width: 60vw;
+  }
+}
+/* Wrapper */
+.daice-table-wrapper {
+  min-width: 60%;
+  max-width: 100%;
+  overflow-x: auto;
+
+   /* Center when table is narrower than wrapper */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* DataTable */
 .daice-table.p-datatable {
+  display: inline-block;
+  min-width: 100%;
+  max-width: 100%;
   border-radius: 18px;
   overflow: hidden;
   background: rgba(255,255,255,.78);
   backdrop-filter: blur(12px);
   box-shadow: 0 10px 28px rgba(0,80,150,.10);
 }
+
+/* Let columns determine the width */
+.daice-table .p-datatable-table {
+  width: max-content;
+  min-width: 100%;
+  table-layout: auto;
+}
+
+/* Prevent text from wrapping unless desired */
+.daice-table .p-datatable-thead > tr > th,
+.daice-table .p-datatable-tbody > tr > td {
+  white-space: nowrap;
+}
+
+
+/* .daice-table.p-datatable {
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255,255,255,.78);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 28px rgba(0,80,150,.10);
+} */
 
 .daice-table-header {
   background: linear-gradient(180deg, #38bdf8, #0ea5e9) !important;

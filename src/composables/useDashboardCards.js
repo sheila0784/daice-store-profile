@@ -60,9 +60,9 @@ export function useDashboardCards(dateRange) {
     ] = await Promise.all([
       supabase.from("stores").select("*", { count: "exact", head: true }).eq("active", true),
 
-      supabase.from("profiles").select("*", { count: "exact", head: true }).eq("role", "customer"),
+      supabase.from("profiles").select("*", { count: "exact", head: true }).eq("role", "customer").eq("status","approved"),
 
-      supabase.from("profiles").select("*", { count: "exact", head: true }).eq("role", "rider"),
+      supabase.from("profiles").select("*", { count: "exact", head: true }).eq("role", "rider").eq("status","approved"),
     ]);
 
     // console.log("Fetched dealer count:", dealers);

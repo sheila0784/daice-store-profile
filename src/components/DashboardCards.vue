@@ -26,7 +26,7 @@
     </div>
 
     <div class="flex items-center flex-wrap justify-center w-full text-sm rounded-lg">
-      <div class="flex mb-3 mt-2 justify-center">
+      <div class="flex mb-3 mt-2 justify-center w-full">
         <DatePicker
           v-model="dateRange"
           selectionMode="range"
@@ -39,63 +39,66 @@
         />
       </div>
 
-      <Datatable
-        :value="salesData"
-        class="daice-table w-full"
-        :rows="rows"
-        :rowsPerPageOptions="rowsPerPageOptions"
-        paginator
-        stripedRows
-        selectionMode="single"
-        sortField="order_date"
-        :sortOrder="-1"
-        @row-click="onRowClick"
-      >
-        <Column
-          field="order_date"
-          header="Date"
-          :body="(data) => new Date(data.date).toLocaleDateString()"
-          sortable
-          v-bind="columnDefaults"
-        ></Column>
-        <Column field="dealer" header="Dealer" v-bind="columnDefaults"></Column>
-        <Column
-          field="no_of_served_customers"
-          header="Served Customers"
-          v-bind="columnDefaults"
-        ></Column>
-
-        <!-- insert here the product_quantity -->
-        <Column field="product_quantity" header="Products" v-bind="columnDefaults"></Column>
-
-        <Column
-          field="total_amount"
-          header="Total Sales"
-          v-bind="columnDefaults"
-          bodyClass="text-right text-sm"
-          sortable
+      <div class="daice-table-wrapper">
+        <Datatable
+          :value="salesData"
+          class="daice-table"
+          :rows="rows"
+          :rowsPerPageOptions="rowsPerPageOptions"
+          paginator
+          stripedRows
+          selectionMode="single"
+          sortField="order_date"
+          :sortOrder="-1"
+          @row-click="onRowClick"
         >
-          <template #body="{ data }">
-            {{ formatNumber(data.total_amount) }}
-          </template>
-        </Column>
-      </Datatable>
+          <Column
+            field="order_date"
+            header="Date"
+            :body="(data) => new Date(data.date).toLocaleDateString()"
+            sortable
+            v-bind="columnDefaults"
+          ></Column>
+          <Column field="dealer" header="Dealer" v-bind="columnDefaults"></Column>
+          <Column
+            field="no_of_served_customers"
+            header="Served Customers"
+            v-bind="columnDefaults"
+          ></Column>
 
-      <div v-if="!salesData.length" class="flex gap-4 mt-1">
-        <Message severity="secondary" variant="simple" size="small"
-          >No records found. Try searching again.</Message
-        >
-      </div>
-      <div v-else class="flex gap-4 mt-1 w-full">
-        <Button
-          variant="text"
-          severity="secondary"
-          label="Download CSV File"
-          icon="pi pi-download"
-          :loading="loading"
-          class="daice-link-btn text-xs"
-          @click="handleExport"
-        />
+          <!-- insert here the product_quantity -->
+          <Column field="product_quantity" header="Products" v-bind="columnDefaults"></Column>
+
+          <Column
+            field="total_amount"
+            header="Total Sales"
+            v-bind="columnDefaults"
+            bodyClass="text-right text-sm"
+            sortable
+          >
+            <template #body="{ data }">
+              {{ formatNumber(data.total_amount) }}
+            </template>
+          </Column>
+        </Datatable>
+        <div class="flex">
+          <div v-if="!salesData.length" class="flex gap-4 mt-1">
+            <Message severity="secondary" variant="simple" size="small"
+              >No records found. Try searching again.</Message
+            >
+          </div>
+          <div v-else class="flex gap-4 mt-1 w-full">
+            <Button
+              variant="text"
+              severity="secondary"
+              label="Download CSV File"
+              icon="pi pi-download"
+              :loading="loading"
+              class="daice-link-btn text-xs"
+              @click="handleExport"
+            />
+          </div>
+        </div>
       </div>
 
       <!-- :style="{ width: '400px', maxWidth: '92vw' }" -->
@@ -137,10 +140,15 @@
               </template>
             </Column>
             <Column field="recipient" header="Customer" v-bind="dialogColumnDefaults"></Column>
-            <Column field="order_time" header="Order Time" v-bind="dialogColumnDefaults" sortable></Column>
+            <Column
+              field="order_time"
+              header="Order Time"
+              v-bind="dialogColumnDefaults"
+              sortable
+            ></Column>
             <Column
               field="product_quantity"
-              header="Product" 
+              header="Product"
               v-bind="dialogColumnDefaults"
             ></Column>
             <Column
