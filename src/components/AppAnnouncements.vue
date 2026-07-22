@@ -12,7 +12,7 @@
           <div class="flex flex-col md:flex-row md:items-center gap-2">
             <div class="w-full md:flex-1">
               <div class="daice-toolbar flex flex-col md:flex-row md:items-center gap-2">
-                <IconField  class="daice-search w-full">
+                <IconField class="daice-search w-full">
                   <InputIcon class="pi pi-search" />
                   <InputText
                     v-model="searchValue"
@@ -37,8 +37,7 @@
             </div>
           </div>
 
-          <Divider />
-
+          <Divider class="ice-divider" />
           <DataTable
             :value="announcements"
             paginator
@@ -83,7 +82,6 @@
             />
           </div>
         </template>
-
       </Card>
     </div>
   </div>

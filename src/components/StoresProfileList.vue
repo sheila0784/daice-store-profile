@@ -107,7 +107,8 @@
             <Column field="status" header="Status" v-bind="columnDefaults">
               <template #body="{ data }">
                 <i v-if="data.status === 'approved'" class="pi pi-thumbs-up text-green-600"></i>
-
+                <i v-else-if="data.status === 'blocked'" class="pi pi-ban text-red-500"></i>
+                <i v-else-if="data.status === 'pending'" class="pi pi-clock text-orange-500"></i>
                 <span v-else>
                   {{ data.status }}
                 </span>
