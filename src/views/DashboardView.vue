@@ -21,8 +21,8 @@
           <Cards />
         </template>
         <template #footer>
-          <Divider class="ice-divider" />
-          <AppFooter />
+          <!-- <Divider class="ice-divider" /> -->
+          
         </template>
       </Card>
     </div>
@@ -33,5 +33,5 @@
 import MenuBar from "../components/Menubar.vue";
 import Card from "primevue/card";
 import Cards from "../components/DashboardCards.vue";
-import AppFooter from "@/components/AppFooter.vue";
+
 </script>

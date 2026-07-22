@@ -326,7 +326,7 @@
 }
 
 /* DataTable */
-.daice-table.p-datatable {
+/* .daice-table.p-datatable {
   display: inline-block;
   min-width: 100%;
   max-width: 100%;
@@ -335,7 +335,7 @@
   background: rgba(255,255,255,.78);
   backdrop-filter: blur(12px);
   box-shadow: 0 10px 28px rgba(0,80,150,.10);
-}
+} */
 
 /* Let columns determine the width */
 .daice-table .p-datatable-table {
@@ -782,14 +782,14 @@ flex-wrap: wrap;
   color: #0284c7 !important;
 }
 
-.daice-action-btn.p-button {
+/* .daice-action-btn.p-button {
   background: linear-gradient(180deg, #42b8ff, #0ea5e9) !important;
   border: none !important;
   color: #ffffff !important;
   border-radius: 12px !important;
   font-weight: 700;
   box-shadow: 0 6px 16px rgba(14, 165, 233, 0.25);
-}
+} */
 
 .daice-action-btn.p-button:hover {
   filter: brightness(1.05);
@@ -874,7 +874,9 @@ flex-wrap: wrap;
   box-shadow:
     0 6px 18px rgba(14, 165, 233, 0.25),
     0 0 20px rgba(125, 211, 252, 0.35);
-}.daice-avatar {
+}
+
+.daice-avatar {
   width: 96px;
   height: 96px;
 
@@ -928,7 +930,7 @@ flex-wrap: wrap;
 }
 
 
-/* PRIMARY BUTTONS */
+/* PRIMARY BUTTONS --*/
 .daice-action-btn.p-button {
   background: linear-gradient(180deg, #42b8ff, #0ea5e9) !important;
   border: none !important;
@@ -1035,4 +1037,75 @@ textarea.daice-input {
 textarea.daice-input:focus {
   border-color: #0891b2 !important;
   box-shadow: 0 0 0 1px #0891b2 !important;
+}
+
+/* ==========================================================
+   Da ICE Application Layout
+   ========================================================== */
+
+.daice-app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.daice-app-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* ==========================================================
+   Da ICE Footer
+   ========================================================== */
+
+.daice-footer {
+  width: 100%;
+  margin-top: auto;
+  padding: 0.9rem 1.5rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+
+  background: rgba(255, 255, 255, 0.82);
+  border-top: 1px solid rgba(0, 119, 190, 0.15);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  box-shadow: 0 -4px 12px rgba(0, 80, 150, 0.06);
+
+  box-sizing: border-box;
+}
+
+.daice-footer-company {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0369a1;
+}
+
+.daice-footer-copyright {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+@media (max-width: 768px) {
+  .daice-footer {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 0.75rem 1rem;
+  }
+
+  .daice-footer-company {
+    font-size: 0.8rem;
+  }
+
+  .daice-footer-copyright {
+    font-size: 0.7rem;
+  }
 }

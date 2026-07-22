@@ -116,13 +116,11 @@
           </div>
         </template>
       </Card>
-      <AppFooter/>
-    </div>
+      </div>
   </div>
 </template>
 
 <script setup>
-import AppFooter from "./AppFooter.vue";
 import MenuBar from "../components/Menubar.vue";
 import { ref } from "vue";
 import Card from "primevue/card";
@@ -141,13 +139,6 @@ import { useAppAnnouncements } from "@/composables/useAppAnnouncements";
 
 import { useForm } from "vee-validate";
 import * as yup from "yup";
-
-// import { useUnsavedChangesGuard } from "@/composables/useUnsavedChangesGuard";
-// const { markDirty, markClean } = useUnsavedChangesGuard();
-
-// const publishButtonLabel = computed(() =>
-//   id.value ? "Re-publish" : "Publish"
-// );
 
 const schema = yup.object({
   title: yup.string().required("Announcement title is required.").min(3, "Minimum 3 characters"),

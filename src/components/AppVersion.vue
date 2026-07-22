@@ -19,7 +19,6 @@
           </div>
         </template>
       </Card>
-      <AppFooter/>
     </div>
   </div>
 </template>
@@ -28,5 +27,4 @@
 import underConstruction from "@/assets/images/under-construction.png";
 import MenuBar from "../components/Menubar.vue";
 import Card from "primevue/card";
-import AppFooter from "./AppFooter.vue";
 </script>

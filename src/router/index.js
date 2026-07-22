@@ -3,48 +3,51 @@ import { createRouter, createWebHistory } from "vue-router";
 import StoresList from "../components/StoresList.vue";
 import StoresUpdate from "../components/StoresUpdate.vue";
 import StoresProfileList from "../components/StoresProfileList.vue";
-import StoresProfileUpdate from "../components/StoresProfileUpdate.vue"
+import StoresProfileUpdate from "../components/StoresProfileUpdate.vue";
 import AppAnnouncements from "../components/AppAnnouncements.vue";
 import AppAnnouncementsUpdate from "../components/AppAnnouncementsUpdate.vue";
-import AppVersion from "../components/AppVersion.vue"
-import AppMaintenance from "../components/AppMaintenance.vue"
+import AppVersion from "../components/AppVersion.vue";
+import AppMaintenance from "../components/AppMaintenance.vue";
 
-import LoginView from '@/views/LoginView.vue'
-import DashboardView from '@/views/DashboardView.vue'
+import LoginView from "@/views/LoginView.vue";
+import DashboardView from "@/views/DashboardView.vue";
 
 const routes = [
-   {
-    path: '/',
-    redirect: '/login',
+  {
+    path: "/",
+    redirect: "/login",
   },
   {
-    path: '/login',
+    path: "/login",
     component: LoginView,
+    meta: {
+      showFooter: false,
+    },
   },
   {
-    path: '/dashboard',
+    path: "/dashboard",
     component: DashboardView,
   },
-  
+
   {
     path: "/StoresList",
     name: "StoresList",
     component: StoresList,
   },
-  
+
   // {
   //   path: "/",
   //   name: "StoresList",
   //   component: StoresList,
   // },
-  
+
   {
     path: "/StoresUpdate",
     name: "StoresUpdate",
     component: StoresUpdate,
   },
 
-    {
+  {
     path: "/StoresProfileList",
     name: "StoresProfileList",
     component: StoresProfileList,
@@ -56,18 +59,18 @@ const routes = [
     component: StoresProfileUpdate,
   },
 
-   {
+  {
     path: "/AppAnnouncements",
     name: "AppAnnouncements",
     component: AppAnnouncements,
   },
-   {
+  {
     path: "/AppAnnouncementsUpdate",
     name: "AppAnnouncementsUpdate",
     component: AppAnnouncementsUpdate,
   },
 
-   {
+  {
     path: "/AppVersion",
     name: "AppVersion",
     component: AppVersion,
@@ -78,7 +81,6 @@ const routes = [
     component: AppMaintenance,
   },
 ];
-
 
 const router = createRouter({
   history: createWebHistory(),

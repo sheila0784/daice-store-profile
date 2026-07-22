@@ -1,0 +1,66 @@
+
+/* ==========================================================
+   Da ICE Footer
+   ========================================================== */
+
+.daice-footer {
+  width: 100%;
+  margin-top: auto;
+  padding: 0.75rem 1.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.94),
+    rgba(235, 249, 255, 0.92)
+  );
+
+  border-top: 1px solid rgba(125, 211, 252, 0.25);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  box-shadow: 0 -3px 14px rgba(14, 165, 233, 0.08);
+
+  box-sizing: border-box;
+}
+
+.daice-footer-company {
+  color: #0284c7;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.daice-footer-copyright {
+  color: #64748b;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+}
+
+.daice-footer-separator {
+  margin-inline: 0.3rem;
+  color: #38bdf8;
+}
+
+@media (max-width: 768px) {
+  .daice-footer {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.3rem;
+    padding: 0.7rem 1rem;
+    text-align: center;
+  }
+
+  .daice-footer-company {
+    font-size: 0.75rem;
+  }
+
+  .daice-footer-copyright {
+    font-size: 0.65rem;
+  }
+}

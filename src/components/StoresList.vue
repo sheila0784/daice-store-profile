@@ -127,7 +127,6 @@
               @click="handleExport"
             />
           </div>
-          <AppFooter />
         </template>
       
       </Card>
@@ -306,7 +305,6 @@ import { useConfirm } from "primevue/useconfirm";
 
 import Button from "primevue/button";
 import { exportCsv } from "@/utils/exportCsv";
-import AppFooter from "./AppFooter.vue";
 
 const columnDefaults = {
   headerClass: "daice-table-header",
