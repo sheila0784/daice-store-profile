@@ -83,11 +83,13 @@
           </div>
         </template>
       </Card>
+      <AppFooter/>
     </div>
   </div>
 </template>
 
 <script setup>
+
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
@@ -106,6 +108,7 @@ import Message from "primevue/message";
 import { exportCsv } from "@/utils/exportCsv";
 import { useAppAnnouncements } from "../composables/useAppAnnouncements";
 import { formatDate } from "@/utils/date";
+import AppFooter from "./AppFooter.vue";
 
 const columnDefaults = {
   headerClass: "bg-blue-400 text-xs text-gray-100",

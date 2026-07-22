@@ -256,11 +256,13 @@
           </div>
         </template>
       </Card>
+      <AppFooter/>
     </div>
   </div>
 </template>
 
 <script setup>
+import AppFooter from "./AppFooter.vue";
 import MenuBar from "../components/Menubar.vue";
 import { computed, ref, watch, onMounted } from "vue";
 import Card from "primevue/card";

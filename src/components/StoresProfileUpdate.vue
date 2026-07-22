@@ -261,12 +261,14 @@
           </div>
         </template>
       </Card>
+      <AppFooter />
     </div>
   </div>
 </template>
 
 <script setup>
 import MenuBar from "../components/Menubar.vue";
+import AppFooter from "./AppFooter.vue";
 import { onMounted, ref, watch } from "vue";
 import Card from "primevue/card";
 import Divider from "primevue/divider";

@@ -218,6 +218,7 @@
         </template>
       </Card>
     </div>
+    <AppFooter />
 
     <Dialog v-model:visible="showDialog" modal :style="{ width: '25rem', maxWidth: '92vw' }">
       <template #header>
@@ -311,7 +312,7 @@
 
 <script setup>
 import MenuBar from "../components/Menubar.vue";
-
+import AppFooter from "./AppFooter.vue";
 import { onMounted, ref } from "vue";
 import { useStoresProfileList } from "../composables/useStoresProfileList";
 import { useStoresProfileUpdate } from "../composables/useStoresProfileUpdate";

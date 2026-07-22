@@ -12,7 +12,7 @@
         <template #content>
           <div class="flex flex-col md:flex-row md:items-center gap-2">
             <div class="w-full md:flex-1">
-                <div class="daice-toolbar flex flex-col md:flex-row md:items-center gap-2">
+              <div class="daice-toolbar flex flex-col md:flex-row md:items-center gap-2">
                 <IconField class="daice-search w-full">
                   <InputIcon class="pi pi-search" />
                   <InputText
@@ -127,8 +127,11 @@
               @click="handleExport"
             />
           </div>
+          <AppFooter />
         </template>
+      
       </Card>
+      
     </div>
 
     <Dialog v-model:visible="showDialog" modal :style="{ width: '25rem', maxWidth: '92vw' }">
@@ -292,7 +295,7 @@ import IconField from "primevue/iconfield";
 import Message from "primevue/message";
 import Dialog from "primevue/dialog";
 import Select from "primevue/select";
-import Divider from "primevue/divider"
+import Divider from "primevue/divider";
 
 import Accordion from "primevue/accordion";
 import AccordionPanel from "primevue/accordionpanel";
@@ -303,6 +306,7 @@ import { useConfirm } from "primevue/useconfirm";
 
 import Button from "primevue/button";
 import { exportCsv } from "@/utils/exportCsv";
+import AppFooter from "./AppFooter.vue";
 
 const columnDefaults = {
   headerClass: "daice-table-header",
