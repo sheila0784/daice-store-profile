@@ -19,92 +19,100 @@
           <Divider class="ice-divider" />
         </template>
         <template #content>
-          <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-            <div class="daice-label">Id:</div>
-            <InputText
-              disabled
-              v-model="id"
-              class="daice-input w-full pr-10 bg-gray-200"
-              @keydown.enter="focusNext('titleRef')"
-            />
-          </div>
-
-          <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-            <div class="daice-label">Title:</div>
-            <InputText
-              autofocus
-              ref="titleRef"
-              v-model="title"
-              class="daice-input w-full pr-10"
-              @keydown.enter="focusNext('bodyRef')"
-            />
-            <div />
-            <small v-if="errors.title" class="flex text-red-500 items-center">{{
-              errors.title
-            }}</small>
-          </div>
-
-          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
-            <div class="daice-label">Body:</div>
-            <Textarea ref="bodyRef" v-model="body" rows="5" autoResize class="daice-input w-full" />
-            <div />
-            <small v-if="errors.body" class="flex text-red-500 items-center">{{
-              errors.body
-            }}</small>
-          </div>
-
-          <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-            <div class="daice-label">Target Role:</div>
-            <div class="flex flex-col md:flex-row gap-4">
-              <div class="flex items-center gap-2">
-                <Checkbox
-                  ref="targetRolesRef"
-                  v-model="target_roles"
-                  inputId="dealer"
-                  value="dealer"
-                  class="daice-checkbox"
-                />
-                <label for="dealer">Dealer</label>
-              </div>
-
-              <div class="flex items-center gap-2">
-                <Checkbox
-                  v-model="target_roles"
-                  inputId="customer"
-                  value="customer"
-                  class="daice-checkbox"
-                />
-                <label for="customer">Customer</label>
-              </div>
-
-              <div class="flex items-center gap-2">
-                <Checkbox
-                  v-model="target_roles"
-                  value="rider"
-                  @keydown.enter="focusNextButton('submitRef')"
-                  class="daice-checkbox"
-                />
-
-                <label for="rider">Rider</label>
-              </div>
+          <div class="daice-form-wrapper">
+            <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+              <div class="daice-label">Id:</div>
+              <InputText
+                disabled
+                v-model="id"
+                class="daice-input w-full pr-10 bg-gray-200"
+                @keydown.enter="focusNext('titleRef')"
+              />
             </div>
-            <div />
-            <small v-if="errors.target_roles" class="text-red-500">
-              {{ errors.target_roles }}
-            </small>
-          </div>
 
-          <div class="flex py-1 rounded relative gap-2 justify-end" role="alert">
-            <Button
-              ref="submitRef"
-              :label="!id ? 'Publish' : 'Re-publish'"
-              severity="primary"
-              variant="text"
-              class="daice-action-btn text-xs"
-              icon="pi pi-check"
-              :loading="loading"
-              @click="onSave"
-            />
+            <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+              <div class="daice-label">Title:</div>
+              <InputText
+                autofocus
+                ref="titleRef"
+                v-model="title"
+                class="daice-input w-full pr-10"
+                @keydown.enter="focusNext('bodyRef')"
+              />
+              <div />
+              <small v-if="errors.title" class="flex text-red-500 items-center">{{
+                errors.title
+              }}</small>
+            </div>
+
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
+              <div class="daice-label">Body:</div>
+              <Textarea
+                ref="bodyRef"
+                v-model="body"
+                rows="15"
+                autoResize
+                class="daice-input w-full"
+              />
+              <div />
+              <small v-if="errors.body" class="flex text-red-500 items-center">{{
+                errors.body
+              }}</small>
+            </div>
+
+            <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+              <div class="daice-label">Target Role:</div>
+              <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex items-center gap-2">
+                  <Checkbox
+                    ref="targetRolesRef"
+                    v-model="target_roles"
+                    inputId="dealer"
+                    value="dealer"
+                    class="daice-checkbox"
+                  />
+                  <label for="dealer">Dealer</label>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <Checkbox
+                    v-model="target_roles"
+                    inputId="customer"
+                    value="customer"
+                    class="daice-checkbox"
+                  />
+                  <label for="customer">Customer</label>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <Checkbox
+                    v-model="target_roles"
+                    value="rider"
+                    @keydown.enter="focusNextButton('submitRef')"
+                    class="daice-checkbox"
+                  />
+
+                  <label for="rider">Rider</label>
+                </div>
+              </div>
+              <div />
+              <small v-if="errors.target_roles" class="text-red-500">
+                {{ errors.target_roles }}
+              </small>
+            </div>
+
+            <div class="flex py-1 rounded relative gap-2 justify-end" role="alert">
+              <Button
+                ref="submitRef"
+                :label="!id ? 'Publish' : 'Re-publish'"
+                severity="primary"
+                variant="text"
+                class="daice-action-btn text-xs"
+                icon="pi pi-check"
+                :loading="loading"
+                @click="onSave"
+              />
+            </div>
           </div>
         </template>
       </Card>

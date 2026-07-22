@@ -21,9 +21,7 @@
         </template>
 
         <template #content>
-          <div
-            class="daice-form-wrapper"
-          >
+          <div class="daice-form-wrapper">
             <div class="grid grid-cols-[110px_1fr] gap-1 p-1">
               <div class="daice-label"></div>
               <div class="flex flex-col items-center">

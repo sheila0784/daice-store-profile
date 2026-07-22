@@ -19,234 +19,241 @@
           <Divider class="ice-divider" />
         </template>
         <template #content>
-          <div v-if="store.id" class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-            <div class="daice-label">Id:</div>
-            <div class="relative w-full">
-              <InputText
-                disabled
-                v-model="store.id"
-                class="daice-input w-full bg-gray-200 text-sm"
-                @keydown.enter="focusNext('storeRef')"
-              />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-            <div class="daice-label">Store:</div>
-            <div class="relative w-full">
-              <InputText
-                autofocus
-                ref="storeRef"
-                v-model="name"
-                class="daice-input w-full pr-10"
-                :invalid="!!errors.name"
-                @keydown.enter="focusNext('acctNoRef')"
-              />
-              <i
-                v-if="errors.name"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.name)"
-              ></i>
+          <div class="daice-form-wrapper">
+            <div v-if="store.id" class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+              <div class="daice-label">Id:</div>
+              <div class="relative w-full">
+                <InputText
+                  disabled
+                  v-model="store.id"
+                  class="daice-input w-full bg-gray-200 text-sm"
+                  @keydown.enter="focusNext('storeRef')"
+                />
+              </div>
             </div>
 
-            <div />
-            <!-- <small v-if="errors.name" class="flex text-red-500 items-center">{{
+            <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+              <div class="daice-label">Store:</div>
+              <div class="relative w-full">
+                <InputText
+                  autofocus
+                  ref="storeRef"
+                  v-model="name"
+                  class="daice-input w-full pr-10"
+                  :invalid="!!errors.name"
+                  @keydown.enter="focusNext('acctNoRef')"
+                />
+                <i
+                  v-if="errors.name"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.name)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.name" class="flex text-red-500 items-center">{{
               errors.name
             }}</small> -->
-          </div>
-
-          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
-            <div class="daice-label">Account No.:</div>
-            <div class="relative w-full">
-              <InputText
-                ref="acctNoRef"
-                v-model="acctNo"
-                class="daice-input w-full pr-10"
-                @keydown.enter="focusNext('addressRef')"
-              />
-              <i
-                v-if="errors.acctNo"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.acctNo)"
-              ></i>
             </div>
 
-            <div />
-            <!-- <small v-if="errors.acctNo" class="flex text-red-500 items-center">{{
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
+              <div class="daice-label">Account No.:</div>
+              <div class="relative w-full">
+                <InputText
+                  ref="acctNoRef"
+                  v-model="acctNo"
+                  class="daice-input w-full pr-10"
+                  @keydown.enter="focusNext('addressRef')"
+                />
+                <i
+                  v-if="errors.acctNo"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.acctNo)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.acctNo" class="flex text-red-500 items-center">{{
               errors.acctNo
             }}</small> -->
-          </div>
-
-          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-            <div class="daice-label">Address:</div>
-            <div class="relative w-full">
-              <InputText
-                ref="addressRef"
-                v-model="address"
-                class="daice-input w-full pr-10"
-                :invalid="!!errors.address"
-                @keydown.enter.prevent="focusNextSel('provinceRef')"
-              />
-              <i
-                v-if="errors.address"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.address)"
-              ></i>
             </div>
 
-            <div />
-            <!-- <small v-if="errors.address" class="flex text-red-500 items-center">{{
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+              <div class="daice-label">Address:</div>
+              <div class="relative w-full">
+                <InputText
+                  ref="addressRef"
+                  v-model="address"
+                  class="daice-input w-full pr-10"
+                  :invalid="!!errors.address"
+                  @keydown.enter.prevent="focusNextSel('provinceRef')"
+                />
+                <i
+                  v-if="errors.address"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.address)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.address" class="flex text-red-500 items-center">{{
               errors.address
             }}</small> -->
-          </div>
-
-          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-            <div class="daice-label">Province:</div>
-            <div class="relative w-full mb-1">
-              <Select
-                ref="provinceRef"
-                v-model="province"
-                :options="provinces"
-                optionLabel="name"
-                optionValue="code"
-                :loading="loadingProvinces"
-                inputId="province"
-                class="daice-select w-full"
-                :invalid="!!errors.province"
-              />
-              <i
-                v-if="errors.province"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.province)"
-              ></i>
             </div>
 
-            <div />
-            <!-- <small v-if="errors.province" class="flex text-red-500 items-center">{{
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+              <div class="daice-label">Province:</div>
+              <div class="relative w-full mb-1">
+                <Select
+                  ref="provinceRef"
+                  v-model="province"
+                  :options="provinces"
+                  optionLabel="name"
+                  optionValue="code"
+                  :loading="loadingProvinces"
+                  inputId="province"
+                  class="daice-select w-full"
+                  :invalid="!!errors.province"
+                />
+                <i
+                  v-if="errors.province"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.province)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.province" class="flex text-red-500 items-center">{{
               errors.province
             }}</small> -->
-          </div>
-
-          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
-            <div class="daice-label">City / Municipality:</div>
-            <div class="relative w-full mb-1">
-              <Select
-                ref="cityRef"
-                v-model="city"
-                :options="cities"
-                optionLabel="name"
-                optionValue="code"
-                :loading="loadingCities"
-                :disabled="!province"
-                inputId="city"
-                class="daice-select w-full"
-                :invalid="!!errors.city"
-              />
-              <i
-                v-if="errors.city"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.city)"
-              ></i>
             </div>
 
-            <div />
-            <!-- <small v-if="errors.city" class="flex text-red-500 items-center">{{
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
+              <div class="daice-label">City / Municipality:</div>
+              <div class="relative w-full mb-1">
+                <Select
+                  ref="cityRef"
+                  v-model="city"
+                  :options="cities"
+                  optionLabel="name"
+                  optionValue="code"
+                  :loading="loadingCities"
+                  :disabled="!province"
+                  inputId="city"
+                  class="daice-select w-full"
+                  :invalid="!!errors.city"
+                />
+                <i
+                  v-if="errors.city"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.city)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.city" class="flex text-red-500 items-center">{{
               errors.city
             }}</small> -->
-          </div>
-
-          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
-            <div class="daice-label">Barangay:</div>
-            <div class="relative w-full">
-              <Select
-                ref="barangayRef"
-                v-model="barangay"
-                :options="barangays"
-                optionLabel="name"
-                optionValue="code"
-                :loading="loadingBarangays"
-                :disabled="!city"
-                inputId="barangay"
-                class="daice-select w-full"
-                :invalid="!!errors.barangay"
-              />
-              <i
-                v-if="errors.barangay"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.barangay)"
-              ></i>
             </div>
 
-            <div />
-            <!-- <small v-if="errors.barangay" class="flex text-red-500 items-center">{{
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
+              <div class="daice-label">Barangay:</div>
+              <div class="relative w-full">
+                <Select
+                  ref="barangayRef"
+                  v-model="barangay"
+                  :options="barangays"
+                  optionLabel="name"
+                  optionValue="code"
+                  :loading="loadingBarangays"
+                  :disabled="!city"
+                  inputId="barangay"
+                  class="daice-select w-full"
+                  :invalid="!!errors.barangay"
+                />
+                <i
+                  v-if="errors.barangay"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.barangay)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.barangay" class="flex text-red-500 items-center">{{
               errors.barangay
             }}</small> -->
-          </div>
+            </div>
 
-          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-            <div class="daice-label">Longitude:</div>
-            <div class="relative w-full">
-              <InputText
-                ref="lonRef"
-                v-model="lon"
-                class="daice-input w-full pr-10"
-                :invalid="!!errors.lon"
-                @keydown.enter="focusNext('latRef')"
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+              <div class="daice-label">Longitude:</div>
+              <div class="relative w-full">
+                <InputText
+                  ref="lonRef"
+                  v-model="lon"
+                  class="daice-input w-full pr-10"
+                  :invalid="!!errors.lon"
+                  @keydown.enter="focusNext('latRef')"
+                />
+                <i
+                  v-if="errors.lon"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.lon)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.lon" class="flex text-red-500 items-center">{{ errors.lon }}</small> -->
+            </div>
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+              <div class="daice-label">Latitude:</div>
+              <div class="relative w-full">
+                <InputText
+                  ref="latRef"
+                  v-model="lat"
+                  class="daice-input w-full pr-10"
+                  :invalid="!!errors.lat"
+                  @keydown.enter="focusNextButton('submitRef')"
+                />
+                <i
+                  v-if="errors.lat"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.lat)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.lat" class="flex text-red-500 items-center">{{ errors.lat }}</small> -->
+            </div>
+
+            <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+              <div class="daice-label"></div>
+              <div>
+                <Checkbox
+                  inputId="active"
+                  v-model="activeModel"
+                  binary
+                  class="daice-checkbox mr-2"
+                />
+                <label for="active">Active</label>
+              </div>
+            </div>
+
+            <div class="flex py-1 rounded relative gap-2 justify-end" role="alert">
+              <Button
+                ref="submitRef"
+                class="daice-action-btn text-xs"
+                label="Save Dealer"
+                icon="pi pi-check"
+                :loading="loading"
+                @click="onSave"
               />
-              <i
-                v-if="errors.lon"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.lon)"
-              ></i>
             </div>
-
-            <div />
-            <!-- <small v-if="errors.lon" class="flex text-red-500 items-center">{{ errors.lon }}</small> -->
+            <Popover ref="errorPopover">
+              <div class="text-red-500 text-xs font-medium">
+                {{ currentError }}
+              </div>
+            </Popover>
           </div>
-          <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
-            <div class="daice-label">Latitude:</div>
-            <div class="relative w-full">
-              <InputText
-                ref="latRef"
-                v-model="lat"
-                class="daice-input w-full pr-10"
-                :invalid="!!errors.lat"
-                @keydown.enter="focusNextButton('submitRef')"
-              />
-              <i
-                v-if="errors.lat"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.lat)"
-              ></i>
-            </div>
-
-            <div />
-            <!-- <small v-if="errors.lat" class="flex text-red-500 items-center">{{ errors.lat }}</small> -->
-          </div>
-
-          <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
-            <div class="daice-label"></div>
-            <div>
-              <Checkbox inputId="active" v-model="activeModel" binary class="daice-checkbox mr-2" />
-              <label for="active">Active</label>
-            </div>
-          </div>
-
-          <div class="flex py-1 rounded relative gap-2 justify-end" role="alert">
-            <Button
-              ref="submitRef"
-              class="daice-action-btn text-xs"
-              label="Save Dealer"
-              icon="pi pi-check"
-              :loading="loading"
-              @click="onSave"
-            />
-          </div>
-          <Popover ref="errorPopover">
-            <div class="text-red-500 text-xs font-medium">
-              {{ currentError }}
-            </div>
-          </Popover>
         </template>
       </Card>
     </div>
