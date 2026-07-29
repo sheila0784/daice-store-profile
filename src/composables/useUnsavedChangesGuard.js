@@ -14,7 +14,7 @@ export function useUnsavedChangesGuard() {
     isDirty.value = false;
   };
 
-   const handleBeforeUnload = (event) => {
+  const handleBeforeUnload = (event) => {
     if (!isDirty.value) return;
 
     event.preventDefault();
@@ -28,28 +28,35 @@ export function useUnsavedChangesGuard() {
   onBeforeUnmount(() => {
     window.removeEventListener("beforeunload", handleBeforeUnload);
   });
-  
-  onBeforeRouteLeave((to, from, next) => {
+
+  onBeforeRouteLeave(() => {
     if (!isDirty.value) {
-      next();
-      return;
+      return true;
     }
 
-    confirm.require({
-      header: "Unsaved Changes",
-      message: "You have unsaved changes. Leave this page?",
-      icon: "pi pi-exclamation-triangle",
-      rejectLabel: "Stay",
-      acceptLabel: "Leave",
-      rejectClass: "p-button-text",
-      acceptClass: "p-button-danger",
+    return new Promise((resolve) => {
+      confirm.require({
+        header: "Unsaved Changes",
+        message: "You have unsaved changes. Leave this page?",
+        icon: "pi pi-exclamation-triangle",
+        rejectLabel: "Stay",
+        acceptLabel: "Leave",
+        rejectClass: "p-button-text",
+        acceptClass: "p-button-danger",
 
-      accept: () => {
-        isDirty.value = false;
-        next();
-      },
+        accept: () => {
+          isDirty.value = false;
+          resolve(true);
+        },
 
-      reject: () => next(false),
+        reject: () => {
+          resolve(false);
+        },
+
+        onHide: () => {
+          resolve(false);
+        },
+      });
     });
   });
 

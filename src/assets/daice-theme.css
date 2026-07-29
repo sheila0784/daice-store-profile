@@ -978,6 +978,9 @@ flex-wrap: wrap;
       0 0 14px rgba(125,211,252,.25);
 }
 
+.daice-input {
+  resize: vertical;
+}
 
 /* FOR ERROR ICONS */
 .daice-error-icon {

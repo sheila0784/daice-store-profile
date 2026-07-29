@@ -64,8 +64,14 @@ const routes = [
     name: "AppAnnouncements",
     component: AppAnnouncements,
   },
+  // {
+  //   path: "/AppAnnouncementsUpdate",
+  //   name: "AppAnnouncementsUpdate",
+  //   component: AppAnnouncementsUpdate,
+  // },
+
   {
-    path: "/AppAnnouncementsUpdate",
+    path: "/AppAnnouncementsUpdate/:id?",
     name: "AppAnnouncementsUpdate",
     component: AppAnnouncementsUpdate,
   },

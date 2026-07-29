@@ -32,7 +32,7 @@
                 icon="pi pi-plus"
                 :loading="loading"
                 class="daice-action-btn text-xs"
-                @click="handleUpdate"
+                @click="handleCreate"
               />
             </div>
           </div>
@@ -47,6 +47,9 @@
             :loading="loading"
             selectionMode="single"
             class="daice-table w-full text-xs"
+            v-model:selection="selectedAnnouncement"
+            dataKey="id"
+            @row-click="handleRowClick"
           >
             <Column field="title" header="Title" sortable v-bind="columnDefaults"></Column>
             <Column field="body" header="Content" v-bind="columnDefaults"></Column>
@@ -88,14 +91,12 @@
 </template>
 
 <script setup>
-
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 import Card from "primevue/card";
 import MenuBar from "../components/Menubar.vue";
 import Button from "primevue/button";
-
 import Divider from "primevue/divider";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
@@ -115,14 +116,40 @@ const columnDefaults = {
 
 const router = useRouter();
 
-const { rows, rowsPerPageOptions, announcements, loading, fetchAnnouncements, searchValue } =
-  useAppAnnouncements();
+const {
+  rows,
+  rowsPerPageOptions,
+  announcements,
+  selectedAnnouncement,
+  loading,
+  searchValue,
+  fetchAnnouncements,
+} = useAppAnnouncements();
 
-const handleUpdate = (announcement) => {
+const handleCreate = (announcement) => {
   console.log("Edit announcement:", announcement);
+
+  selectedAnnouncement.value = null;
 
   // 👇 then navigate
   router.push({ name: "AppAnnouncementsUpdate" });
+};
+
+const handleRowClick = (event) => {
+  const announcement = event?.data;
+
+  if (!announcement?.id) {
+    return;
+  }
+
+  selectedAnnouncement.value = announcement;
+
+  router.push({
+    name: "AppAnnouncementsUpdate",
+    params: {
+      id: announcement.id,
+    },
+  });
 };
 
 const handleExport = () => {

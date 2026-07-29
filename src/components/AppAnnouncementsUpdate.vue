@@ -38,6 +38,7 @@
                 v-model="title"
                 class="daice-input w-full pr-10"
                 @keydown.enter="focusNext('bodyRef')"
+       
               />
               <div />
               <small v-if="errors.title" class="flex text-red-500 items-center">{{
@@ -47,12 +48,13 @@
 
             <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
               <div class="daice-label">Body:</div>
+              <!-- autoResize -->
               <Textarea
                 ref="bodyRef"
                 v-model="body"
                 rows="15"
-                autoResize
                 class="daice-input w-full"
+    
               />
               <div />
               <small v-if="errors.body" class="flex text-red-500 items-center">{{
@@ -87,9 +89,10 @@
                 <div class="flex items-center gap-2">
                   <Checkbox
                     v-model="target_roles"
+                    inputId="rider"
                     value="rider"
-                    @keydown.enter="focusNextButton('submitRef')"
                     class="daice-checkbox"
+                    @keydown.enter="focusNextButton('submitRef')"
                   />
 
                   <label for="rider">Rider</label>
@@ -116,20 +119,21 @@
           </div>
         </template>
       </Card>
-      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { ref, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+
 import MenuBar from "../components/Menubar.vue";
-import { ref } from "vue";
 import Card from "primevue/card";
-import { useRouter } from "vue-router";
 import Toast from "primevue/toast";
+import ConfirmDialog from "primevue/confirmdialog";
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import Checkbox from "primevue/checkbox";
-
 import Divider from "primevue/divider";
 import Textarea from "primevue/textarea";
 
@@ -148,19 +152,29 @@ const schema = yup.object({
   target_roles: yup.array().min(1, "At least one role is required").required(),
 });
 
-const { defineField, errors, handleSubmit } = useForm({
+const router = useRouter();
+const route = useRoute();
+const toast = useToast();
+
+const { createAnnouncement, fetchAnnouncementById, loading } = useAppAnnouncements();
+
+// const id = ref(route.params.id || null);
+const id = ref(route.params.id ?? null);
+// const loading = ref(false);
+
+const { defineField, errors, handleSubmit, setValues } = useForm({
   validationSchema: schema,
+  initialValues: {
+    title: "",
+    body: "",
+    target_roles: [],
+  },
 });
 
 const [title] = defineField("title");
 const [body] = defineField("body");
 const [target_roles] = defineField("target_roles");
 
-const { createAnnouncement } = useAppAnnouncements();
-
-const toast = useToast();
-
-const loading = ref(false);
 const titleRef = ref(null);
 const bodyRef = ref(null);
 const targetRolesRef = ref(null);
@@ -172,11 +186,12 @@ const refs = {
   targetRolesRef,
   submitRef,
 };
+
 const { focusNext, focusNextButton } = useFocusNavigation(refs); //focusNextButton
 
-const router = useRouter();
-
 const onSave = handleSubmit(async (values) => {
+  // loading.value = true;
+
   try {
     // await createAnnouncement(title.value, body.value, target_roles.value);
 
@@ -185,18 +200,45 @@ const onSave = handleSubmit(async (values) => {
     toast.add({
       severity: "success",
       summary: "Saved",
-      detail: "User saved successfully",
+      detail: "Announcement published successfully",
       life: 3000,
     });
 
-    router.push("/appannouncements");
+    await router.push("/appannouncements");
   } catch (err) {
     toast.add({
       severity: "error",
       summary: "Error",
-      detail: err.message,
+      detail: err?.message || "Unable to publish announcement.",
       life: 3000,
     });
+  } finally {
+    loading.value = false;
+  }
+});
+
+onMounted(async () => {
+  if (!id.value) {
+    return;
+  }
+
+  try {
+    const announcement = await fetchAnnouncementById(id.value);
+
+    setValues({
+      title: announcement?.title ?? "",
+      body: announcement?.body ?? "",
+      target_roles: Array.isArray(announcement?.target_roles) ? announcement.target_roles : [],
+    });
+  } catch (err) {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: err?.message || "Unable to load the announcement.",
+      life: 3000,
+    });
+
+    router.push("/appannouncements");
   }
 });
 </script>
