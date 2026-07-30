@@ -26,6 +26,7 @@
 
             <div class="w-full md:w-auto md:ml-auto">
               <Button
+                v-if="showCreateNew"
                 type="button"
                 severity="secondary"
                 label="Create New"
@@ -108,6 +109,9 @@ import Message from "primevue/message";
 import { exportCsv } from "@/utils/exportCsv";
 import { useAppAnnouncements } from "../composables/useAppAnnouncements";
 import { formatDate } from "@/utils/date";
+
+import { usePermissions } from "@/composables/usePermissions.js";
+const { showCreateNew } = usePermissions();
 
 const columnDefaults = {
   headerClass: "bg-blue-400 text-xs text-gray-100",

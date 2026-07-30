@@ -23,9 +23,9 @@
             <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
               <div class="daice-label">Id:</div>
               <InputText
-                disabled
+                readonly
                 v-model="id"
-                class="daice-input w-full pr-10 bg-gray-200"
+                class="daice-input w-full pr-10 bg-gray-200 text-xs"
                 @keydown.enter="focusNext('titleRef')"
               />
             </div>
@@ -33,12 +33,12 @@
             <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
               <div class="daice-label">Title:</div>
               <InputText
+                :readonly="!showCreateNew"
                 autofocus
                 ref="titleRef"
                 v-model="title"
                 class="daice-input w-full pr-10"
                 @keydown.enter="focusNext('bodyRef')"
-       
               />
               <div />
               <small v-if="errors.title" class="flex text-red-500 items-center">{{
@@ -50,11 +50,11 @@
               <div class="daice-label">Body:</div>
               <!-- autoResize -->
               <Textarea
+                :readonly="!showCreateNew"
                 ref="bodyRef"
                 v-model="body"
                 rows="15"
                 class="daice-input w-full"
-    
               />
               <div />
               <small v-if="errors.body" class="flex text-red-500 items-center">{{
@@ -67,6 +67,7 @@
               <div class="flex flex-col md:flex-row gap-4">
                 <div class="flex items-center gap-2">
                   <Checkbox
+                    :readonly="!showCreateNew"
                     ref="targetRolesRef"
                     v-model="target_roles"
                     inputId="dealer"
@@ -78,6 +79,7 @@
 
                 <div class="flex items-center gap-2">
                   <Checkbox
+                    :readonly="!showCreateNew"
                     v-model="target_roles"
                     inputId="customer"
                     value="customer"
@@ -88,6 +90,7 @@
 
                 <div class="flex items-center gap-2">
                   <Checkbox
+                    :readonly="!showCreateNew"
                     v-model="target_roles"
                     inputId="rider"
                     value="rider"
@@ -106,6 +109,7 @@
 
             <div class="flex py-1 rounded relative gap-2 justify-end" role="alert">
               <Button
+                v-if="showCreateNew"
                 ref="submitRef"
                 :label="!id ? 'Publish' : 'Re-publish'"
                 severity="primary"
@@ -143,6 +147,9 @@ import { useAppAnnouncements } from "@/composables/useAppAnnouncements";
 
 import { useForm } from "vee-validate";
 import * as yup from "yup";
+
+import { usePermissions } from "@/composables/usePermissions.js";
+const { showCreateNew } = usePermissions();
 
 const schema = yup.object({
   title: yup.string().required("Announcement title is required.").min(3, "Minimum 3 characters"),

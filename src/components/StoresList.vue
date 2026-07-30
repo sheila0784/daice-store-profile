@@ -39,6 +39,7 @@
 
             <div class="w-full md:w-auto md:ml-auto">
               <Button
+                v-if="showCreateNew"
                 type="button"
                 label="Create New"
                 icon="pi pi-plus"
@@ -88,6 +89,7 @@
               <template #body="slotProps">
                 <div class="flex gap-2">
                   <Button
+                    v-if="showActionBtnEdit"
                     icon="pi pi-pencil"
                     severity="info"
                     size="small"
@@ -97,6 +99,7 @@
                   />
 
                   <Button
+                    v-if="showActionBtnDelete"
                     icon="pi pi-trash"
                     severity="danger"
                     size="small"
@@ -128,9 +131,7 @@
             />
           </div>
         </template>
-      
       </Card>
-      
     </div>
 
     <Dialog v-model:visible="showDialog" modal :style="{ width: '25rem', maxWidth: '92vw' }">
@@ -305,6 +306,9 @@ import { useConfirm } from "primevue/useconfirm";
 
 import Button from "primevue/button";
 import { exportCsv } from "@/utils/exportCsv";
+
+import { usePermissions } from "@/composables/usePermissions.js";
+const { showCreateNew, showActionBtnEdit, showActionBtnDelete } = usePermissions();
 
 const columnDefaults = {
   headerClass: "daice-table-header",
