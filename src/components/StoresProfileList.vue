@@ -3,6 +3,10 @@
     <MenuBar />
     <Toast />
     <ConfirmDialog />
+
+    <!-- <p>Current role: {{ role }}</p>
+    <p>Show Create New : {{ showCreateNew }}</p> -->
+
     <div class="dashboard-inner p-3 md:p-5">
       <Card class="dashboard-shell">
         <template #title><span class="dashboard-title"> Profiles </span></template>
@@ -35,6 +39,7 @@
 
             <div class="w-full md:w-auto md:ml-auto">
               <Button
+                v-if="showCreateNew"
                 type="button"
                 severity="secondary"
                 label="Create New"
@@ -168,6 +173,7 @@
               <template #body="slotProps">
                 <div class="flex gap-2">
                   <Button
+                    v-if="showActionBtnEdit"
                     icon="pi pi-pencil"
                     severity="info"
                     size="small"
@@ -176,14 +182,15 @@
                     @click.stop="handleUpdate(slotProps.data)"
                   />
 
-                  <!-- v-if="
-                      slotProps.data.last_sign_in_at === null ||
-                      slotProps.data.last_sign_in_at === ''
+                  <!--  v-if="
+                      slotProps.data.last_order_placed === null ||
+                      slotProps.data.last_order_placed === ''
                     " -->
                   <Button
                     v-if="
-                      slotProps.data.last_order_placed === null ||
-                      slotProps.data.last_order_placed === ''
+                      showActionBtnDelete &&
+                      (slotProps.data.last_order_placed === null ||
+                        slotProps.data.last_order_placed === '')
                     "
                     icon="pi pi-trash"
                     severity="danger"
@@ -339,6 +346,24 @@ import Dialog from "primevue/dialog";
 import Button from "primevue/button";
 
 import { exportCsv } from "@/utils/exportCsv";
+import { usePermissions } from "@/composables/usePermissions.js";
+
+const { showCreateNew, showActionBtnEdit, showActionBtnDelete } = usePermissions();
+
+//-----------------------------------------------------------
+
+// import { storeToRefs } from "pinia";
+// import { useAuthStore } from "@/stores/auth";
+
+// const authStore = useAuthStore();
+// const { role } = storeToRefs(authStore);
+
+// // for button access
+// const showCreateNew = computed(() => role.value === "it");
+// const showActionBtnEdit = computed(() => role.value === "it");
+// const showActionBtnDelete = computed(() => role.value === "it");
+
+//-----------------------------------------------------------
 
 const columnDefaults = {
   headerClass: "bg-blue-400 text-xs text-gray-100",
@@ -356,6 +381,7 @@ const toast = useToast();
 
 const handleUpdate = (store) => {
   console.log("pass value to update page: ", store);
+  console.log("user role: ");
 
   // 👇 store selected here
   storesProfile.setProfile(store);
