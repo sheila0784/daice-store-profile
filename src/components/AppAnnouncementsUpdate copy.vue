@@ -20,17 +20,18 @@
         </template>
         <template #content>
           <div class="daice-form-wrapper">
-            <IftaLabel v-if="id" class="mb-2">
+            <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+              <div class="daice-label">Id:</div>
               <InputText
                 readonly
                 v-model="id"
                 class="daice-input w-full pr-10 bg-gray-200 text-xs"
                 @keydown.enter="focusNext('titleRef')"
               />
-              <label for="id">Id</label>
-            </IftaLabel>
+            </div>
 
-            <IftaLabel class="mb-2">
+            <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+              <div class="daice-label">Title:</div>
               <InputText
                 :readonly="!showCreateNew"
                 autofocus
@@ -43,10 +44,11 @@
               <small v-if="errors.title" class="flex text-red-500 items-center">{{
                 errors.title
               }}</small>
-              <label for="title">Title</label>
-            </IftaLabel>
+            </div>
 
-            <IftaLabel class="mb-2">
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
+              <div class="daice-label">Body:</div>
+              <!-- autoResize -->
               <Textarea
                 :readonly="!showCreateNew"
                 ref="bodyRef"
@@ -58,12 +60,11 @@
               <small v-if="errors.body" class="flex text-red-500 items-center">{{
                 errors.body
               }}</small>
-              <label for="body">Body</label>
-            </IftaLabel>
+            </div>
 
             <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
               <div class="daice-label">Target Role:</div>
-              <div class="flex flex-col md:flex-row gap-2">
+              <div class="flex flex-col md:flex-row gap-4">
                 <div class="flex items-center gap-2">
                   <Checkbox
                     :readonly="!showCreateNew"
@@ -100,13 +101,10 @@
                   <label for="rider">Rider</label>
                 </div>
               </div>
+              <div />
               <small v-if="errors.target_roles" class="text-red-500">
                 {{ errors.target_roles }}
               </small>
-              <div />
-              <!-- <small v-if="errors.target_roles" class="text-red-500">
-                {{ errors.target_roles }}
-              </small> -->
             </div>
 
             <div class="flex py-1 rounded relative gap-2 justify-end" role="alert">
@@ -142,7 +140,6 @@ import Button from "primevue/button";
 import Checkbox from "primevue/checkbox";
 import Divider from "primevue/divider";
 import Textarea from "primevue/textarea";
-import IftaLabel from "primevue/iftalabel";
 
 import { useFocusNavigation } from "@/composables/useFocusNavigation";
 import { useToast } from "primevue/usetoast";
@@ -168,7 +165,9 @@ const toast = useToast();
 
 const { createAnnouncement, fetchAnnouncementById, loading } = useAppAnnouncements();
 
+// const id = ref(route.params.id || null);
 const id = ref(route.params.id ?? null);
+// const loading = ref(false);
 
 const { defineField, errors, handleSubmit, setValues } = useForm({
   validationSchema: schema,
@@ -198,7 +197,11 @@ const refs = {
 const { focusNext, focusNextButton } = useFocusNavigation(refs); //focusNextButton
 
 const onSave = handleSubmit(async (values) => {
+  // loading.value = true;
+
   try {
+    // await createAnnouncement(title.value, body.value, target_roles.value);
+
     await createAnnouncement(values.title, values.body, values.target_roles);
 
     toast.add({
