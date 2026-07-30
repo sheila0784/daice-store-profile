@@ -45,7 +45,7 @@
               </div>
             </div>
 
-            <iftaLabel class="mb-2">
+            <iftaLabel v-if="profile.id" class="mb-2">
               <InputText
                 disabled
                 v-model="profile.id"
