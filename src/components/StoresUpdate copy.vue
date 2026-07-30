@@ -20,159 +20,213 @@
         </template>
         <template #content>
           <div class="daice-form-wrapper">
-            <iftaLabel v-if="store.id" class="mb-2">
-              <InputText
-                disabled
-                v-model="store.id"
-                class="daice-input w-full bg-gray-200 text-sm"
-                @keydown.enter="focusNext('storeRef')"
-              />
-              <label for="store.id">Id</label>
-            </iftaLabel>
-
-            <iftaLabel class="mb-2">
-              <InputText
-                autofocus
-                ref="storeRef"
-                v-model="name"
-                class="daice-input w-full pr-10"
-                :invalid="!!errors.name"
-                @keydown.enter="focusNext('acctNoRef')"
-              />
-              <label for="name">Store</label>
-              <i
-                v-if="errors.name"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.name)"
-              ></i>
-            </iftaLabel>
-
-            <iftaLabel class="mb-2">
-              <InputText
-                ref="acctNoRef"
-                v-model="acctNo"
-                class="daice-input w-full pr-10"
-                @keydown.enter="focusNext('addressRef')"
-              />
-              <label for="acctNo">Account No.</label>
-              <i
-                v-if="errors.acctNo"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.acctNo)"
-              ></i>
-            </iftaLabel>
-
-            <iftaLabel class="mb-2">
-              <InputText
-                ref="addressRef"
-                v-model="address"
-                class="daice-input w-full pr-10"
-                :invalid="!!errors.address"
-                @keydown.enter.prevent="focusNextSel('provinceRef')"
-              />
-              <label for="address">Address</label>
-              <i
-                v-if="errors.address"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.address)"
-              ></i>
-            </iftaLabel>
-
-            <iftaLabel class="mb-2">
-              <Select
-                ref="provinceRef"
-                v-model="province"
-                :options="provinces"
-                optionLabel="name"
-                optionValue="code"
-                :loading="loadingProvinces"
-                inputId="province"
-                class="daice-select w-full"
-                :invalid="!!errors.province"
-              />
-              <label for="province">Province</label>
-              <i
-                v-if="errors.province"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.province)"
-              ></i>
-            </iftaLabel>
-
-            <iftaLabel class="mb-2">
-              <Select
-                ref="cityRef"
-                v-model="city"
-                :options="cities"
-                optionLabel="name"
-                optionValue="code"
-                :loading="loadingCities"
-                :disabled="!province"
-                inputId="city"
-                class="daice-select w-full"
-                :invalid="!!errors.city"
-              />
-              <label for="city">City / Municipality:</label>
-              <i
-                v-if="errors.city"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.city)"
-              ></i>
-            </iftaLabel>
-
-            <iftaLabel class="mb-2">
-              <Select
-                ref="barangayRef"
-                v-model="barangay"
-                :options="barangays"
-                optionLabel="name"
-                optionValue="code"
-                :loading="loadingBarangays"
-                :disabled="!city"
-                inputId="barangay"
-                class="daice-select w-full"
-                :invalid="!!errors.barangay"
-              />
-              <label for="barangay">Barangay</label>
-              <i
-                v-if="errors.barangay"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.barangay)"
-              ></i>
-            </iftaLabel>
-
-            <iftaLabel class="mb-2">
-              <InputText
-                ref="lonRef"
-                v-model="lon"
-                class="daice-input w-full pr-10"
-                :invalid="!!errors.lon"
-                @keydown.enter="focusNext('latRef')"
-              />
-              <label for="lon">Longitude</label>
-              <i
-                v-if="errors.lon"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.lon)"
-              ></i>
-            </iftaLabel>
-
-            <iftaLabel class="mb-2">
-              <InputText
-                ref="latRef"
-                v-model="lat"
-                class="daice-input w-full pr-10"
-                :invalid="!!errors.lat"
-                @keydown.enter="focusNextButton('submitRef')"
-              />
-              <label for="lat">Latitude</label>
-              <i
-                v-if="errors.lat"
-                class="pi pi-exclamation-circle daice-error-icon"
-                @click="showError($event, errors.lat)"
-              ></i>
-            </iftaLabel>
+            <div v-if="store.id" class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+              <div class="daice-label">Id:</div>
+              <div class="relative w-full">
+                <InputText
+                  disabled
+                  v-model="store.id"
+                  class="daice-input w-full bg-gray-200 text-sm"
+                  @keydown.enter="focusNext('storeRef')"
+                />
+              </div>
+            </div>
 
             <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+              <div class="daice-label">Store:</div>
+              <div class="relative w-full">
+                <InputText
+                  autofocus
+                  ref="storeRef"
+                  v-model="name"
+                  class="daice-input w-full pr-10"
+                  :invalid="!!errors.name"
+                  @keydown.enter="focusNext('acctNoRef')"
+                />
+                <i
+                  v-if="errors.name"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.name)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.name" class="flex text-red-500 items-center">{{
+              errors.name
+            }}</small> -->
+            </div>
+
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
+              <div class="daice-label">Account No.:</div>
+              <div class="relative w-full">
+                <InputText
+                  ref="acctNoRef"
+                  v-model="acctNo"
+                  class="daice-input w-full pr-10"
+                  @keydown.enter="focusNext('addressRef')"
+                />
+                <i
+                  v-if="errors.acctNo"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.acctNo)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.acctNo" class="flex text-red-500 items-center">{{
+              errors.acctNo
+            }}</small> -->
+            </div>
+
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+              <div class="daice-label">Address:</div>
+              <div class="relative w-full">
+                <InputText
+                  ref="addressRef"
+                  v-model="address"
+                  class="daice-input w-full pr-10"
+                  :invalid="!!errors.address"
+                  @keydown.enter.prevent="focusNextSel('provinceRef')"
+                />
+                <i
+                  v-if="errors.address"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.address)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.address" class="flex text-red-500 items-center">{{
+              errors.address
+            }}</small> -->
+            </div>
+
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+              <div class="daice-label">Province:</div>
+              <div class="relative w-full mb-1">
+                <Select
+                  ref="provinceRef"
+                  v-model="province"
+                  :options="provinces"
+                  optionLabel="name"
+                  optionValue="code"
+                  :loading="loadingProvinces"
+                  inputId="province"
+                  class="daice-select w-full"
+                  :invalid="!!errors.province"
+                />
+                <i
+                  v-if="errors.province"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.province)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.province" class="flex text-red-500 items-center">{{
+              errors.province
+            }}</small> -->
+            </div>
+
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
+              <div class="daice-label">City / Municipality:</div>
+              <div class="relative w-full mb-1">
+                <Select
+                  ref="cityRef"
+                  v-model="city"
+                  :options="cities"
+                  optionLabel="name"
+                  optionValue="code"
+                  :loading="loadingCities"
+                  :disabled="!province"
+                  inputId="city"
+                  class="daice-select w-full"
+                  :invalid="!!errors.city"
+                />
+                <i
+                  v-if="errors.city"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.city)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.city" class="flex text-red-500 items-center">{{
+              errors.city
+            }}</small> -->
+            </div>
+
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 items-center">
+              <div class="daice-label">Barangay:</div>
+              <div class="relative w-full">
+                <Select
+                  ref="barangayRef"
+                  v-model="barangay"
+                  :options="barangays"
+                  optionLabel="name"
+                  optionValue="code"
+                  :loading="loadingBarangays"
+                  :disabled="!city"
+                  inputId="barangay"
+                  class="daice-select w-full"
+                  :invalid="!!errors.barangay"
+                />
+                <i
+                  v-if="errors.barangay"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.barangay)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.barangay" class="flex text-red-500 items-center">{{
+              errors.barangay
+            }}</small> -->
+            </div>
+
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+              <div class="daice-label">Longitude:</div>
+              <div class="relative w-full">
+                <InputText
+                  ref="lonRef"
+                  v-model="lon"
+                  class="daice-input w-full pr-10"
+                  :invalid="!!errors.lon"
+                  @keydown.enter="focusNext('latRef')"
+                />
+                <i
+                  v-if="errors.lon"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.lon)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.lon" class="flex text-red-500 items-center">{{ errors.lon }}</small> -->
+            </div>
+            <div class="grid grid-cols-[110px_1fr] gap-2 pl-2 pr-2 pt-2 items-center">
+              <div class="daice-label">Latitude:</div>
+              <div class="relative w-full">
+                <InputText
+                  ref="latRef"
+                  v-model="lat"
+                  class="daice-input w-full pr-10"
+                  :invalid="!!errors.lat"
+                  @keydown.enter="focusNextButton('submitRef')"
+                />
+                <i
+                  v-if="errors.lat"
+                  class="pi pi-exclamation-circle daice-error-icon"
+                  @click="showError($event, errors.lat)"
+                ></i>
+              </div>
+
+              <div />
+              <!-- <small v-if="errors.lat" class="flex text-red-500 items-center">{{ errors.lat }}</small> -->
+            </div>
+
+            <div class="grid grid-cols-[110px_1fr] gap-2 p-2 items-center">
+              <div class="daice-label"></div>
               <div>
                 <Checkbox
                   inputId="active"
@@ -214,7 +268,6 @@ import Divider from "primevue/divider";
 import { useStoreStore } from "@/stores/storeStore";
 import { storeToRefs } from "pinia";
 import InputText from "primevue/inputtext";
-import iftaLabel from "primevue/iftalabel";
 import Checkbox from "primevue/checkbox";
 import Button from "primevue/button";
 import Select from "primevue/select";
