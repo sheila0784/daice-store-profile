@@ -127,12 +127,25 @@
           </div>
         </template>
 
-        <div>
-          <Datatable
+        <div class="daice-table-wrapper">
+          <!-- <Datatable
             :value="salesPerDay"
             class="daice-table daice-dialog-table w-full text-xs"
             size="small"
             stripedRows
+          > -->
+
+          <Datatable
+            :value="salesPerDay"
+            class="daice-table w-full text-xs"
+            :rows="rows"
+            :rowsPerPageOptions="rowsPerPageOptions"
+            paginator
+            stripedRows
+            selectionMode="single"
+            sortField="order_time"
+            :sortOrder="1"
+            size="small"
           >
             <Column header="#" style="width: 60px" v-bind="dialogColumnDefaults">
               <template #body="slotProps">
