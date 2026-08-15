@@ -8,6 +8,8 @@ import AppAnnouncements from "../components/AppAnnouncements.vue";
 import AppAnnouncementsUpdate from "../components/AppAnnouncementsUpdate.vue";
 import AppVersion from "../components/AppVersion.vue";
 import AppMaintenance from "../components/AppMaintenance.vue";
+import RptOrdersStatus from "../components/RptOrdersStatus.vue";
+
 
 import LoginView from "@/views/LoginView.vue";
 import DashboardView from "@/views/DashboardView.vue";
@@ -57,6 +59,12 @@ const routes = [
     path: "/StoresProfileUpdate",
     name: "StoresProfileUpdate",
     component: StoresProfileUpdate,
+  },
+
+   {
+    path: "/RptOrdersStatus",
+    name: "RptOrdersStatus",
+    component: RptOrdersStatus,
   },
 
   {

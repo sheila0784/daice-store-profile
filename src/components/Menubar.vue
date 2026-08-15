@@ -72,6 +72,24 @@ const items = [
     command: () => router.push("/storesprofilelist"),
   },
   {
+    label: "Reports",
+    icon: "pi pi-chart-bar",
+    items: [
+      {
+        label: "Orders and Status",
+        icon: "pi pi-chart-line",
+        command: () => router.push("/rptOrdersStatus"),
+      },
+      // {
+      //   label: "Dealers'Inventory",
+      //   icon: "pi pi-chart-bar",
+      //   command: () => router.push("/inventoryreport"),
+      // },
+    ],
+
+  },
+
+  {
     label: "Settings",
     icon: "pi pi-cog",
     items: [
