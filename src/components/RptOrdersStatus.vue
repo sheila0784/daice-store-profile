@@ -10,9 +10,21 @@
         </template>
 
         <template #content>
+          
           <div class="flex flex-col md:flex-row md:items-center gap-2">
             <div class="w-full md:flex-1">
               <div class="daice-toolbar flex flex-col md:flex-row md:items-center gap-2">
+                <DatePicker
+                  v-model="dateRange"
+                  selectionMode="range"
+                  showIcon
+                  iconDisplay="input"
+                  placeholder="Select date range"
+                  inputClass="text-sm py-2 font-semibold text-slate-600"
+                  dateFormat="M d, yy"
+                  class="daice-datepicker w-full"
+                />
+
                 <IconField class="daice-search w-full">
                   <InputIcon class="pi pi-search" />
                   <InputText
@@ -32,6 +44,7 @@
                     placeholder="Select status"
                     class="daice-select"
                     @change="fetchRpt"
+
                   />
                 </div>
               </div>
@@ -95,13 +108,6 @@
             <Column field="final_price" header="Net Price" v-bind="columnDefaults"></Column>
             <Column field="amount" header="Net Amount" v-bind="columnDefaults"></Column>
 
-            <!-- <Column field="active" header="Active" v-bind="columnDefaults">
-              <template #body="slotProps">
-                <i v-if="slotProps.data.active" class="pi pi-check-square text-gray-500"></i>
-                <i v-else class="pi pi-stop text-gray-500"></i>
-              </template>
-            </Column> -->
-
             <!-- Actions Column -->
             <Column style="width: 140px" v-bind="columnDefaults">
               <template #body="slotProps">
@@ -157,7 +163,7 @@
 <script setup>
 import MenuBar from "../components/Menubar.vue";
 
-import { onMounted } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRpt } from "../composables/useRpt.js";
 // import { useRouter } from "vue-router";
 
@@ -174,7 +180,7 @@ import Message from "primevue/message";
 
 import Select from "primevue/select";
 import Divider from "primevue/divider";
-// import DatePicker from "primevue/datepicker";
+import DatePicker from "primevue/datepicker";
 
 import { useToast } from "primevue/usetoast";
 import { useConfirm } from "primevue/useconfirm";
@@ -184,6 +190,9 @@ import { exportCsv } from "@/utils/exportCsv";
 
 import { usePermissions } from "@/composables/usePermissions.js";
 const { showActionBtnEdit, showActionBtnDelete } = usePermissions();
+
+const dateRange = ref(null);
+const today = new Date();
 
 const columnDefaults = {
   headerClass: "daice-table-header",
@@ -205,7 +214,6 @@ const handleUpdate = (order) => {
   // // 👇 then navigate
   // router.push({ name: "StoresUpdate" });
   console.log("Edit order:", order);
-
 };
 
 const handleDelete = (order) => {
@@ -265,7 +273,7 @@ const {
   searchValue,
   filterStatus,
   fetchRpt,
-} = useRpt();
+} = useRpt(dateRange);
 
 const statusOptions = [
   { label: "Order Placed", value: "Order Placed" },
@@ -303,11 +311,15 @@ const handleExport = () => {
   });
 };
 
-// watch(filterStatus, () => {
-//   fetchRpt();
-// }, { deep: true });
+watch(dateRange, (newVal) => {
+  dateRange.value = newVal;
+  fetchRpt();
+});
 
 onMounted(() => {
+  const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  dateRange.value = [firstDayOfMonth, today];
+
   fetchRpt();
 });
 </script>
