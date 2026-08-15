@@ -10,7 +10,6 @@
         </template>
 
         <template #content>
-          
           <div class="flex flex-col md:flex-row md:items-center gap-2">
             <div class="w-full md:flex-1">
               <div class="daice-toolbar flex flex-col md:flex-row md:items-center gap-2">
@@ -44,7 +43,6 @@
                     placeholder="Select status"
                     class="daice-select"
                     @change="fetchRpt"
-
                   />
                 </div>
               </div>
@@ -95,7 +93,23 @@
               sortable
               v-bind="columnDefaults"
             ></Column>
-            <Column field="status" header="Status" v-bind="columnDefaults"></Column>
+            <!-- <Column field="status" header="Status" v-bind="columnDefaults"></Column> -->
+
+            <Column field="status" header="Status" v-bind="columnDefaults">
+              <template #body="{ data }">
+                <span
+                  :class="[
+                    'px-2 py-1 border-round text-xs font-semibold',
+                    data.status === 'Cancelled' ? 'bg-red-100 text-red-700' : 'text-color',
+                    data.status === 'Delivered' ? 'bg-green-100 text-green-700' : 'text-color',
+                    data.status === 'Out for delivery' ? 'bg-blue-100 text-blue-700' : 'text-color',
+                  ]"
+                >
+                  {{ data.status }}
+                </span>
+              </template>
+            </Column>
+
             <Column field="recipient" header="Recipient" sortable v-bind="columnDefaults"></Column>
             <Column field="contact" header="Contact No." v-bind="columnDefaults"></Column>
             <Column field="address" header="Address" v-bind="columnDefaults"></Column>
