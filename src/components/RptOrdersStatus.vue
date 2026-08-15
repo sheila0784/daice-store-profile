@@ -159,10 +159,10 @@ import MenuBar from "../components/Menubar.vue";
 
 import { onMounted } from "vue";
 import { useRpt } from "../composables/useRpt.js";
-import { useRouter } from "vue-router";
+// import { useRouter } from "vue-router";
 
-import { useStoreStore } from "@/stores/storeStore";
-import { useStoresUpdate } from "../composables/useStoresUpdate.js";
+// import { useStoreStore } from "@/stores/storeStore";
+// import { useStoresUpdate } from "../composables/useStoresUpdate.js";
 
 import Card from "primevue/card";
 import DataTable from "primevue/datatable";
@@ -193,22 +193,24 @@ const columnDefaults = {
 const toast = useToast();
 const confirm = useConfirm();
 
-const router = useRouter();
-const storeStore = useStoreStore();
+// const router = useRouter();
+// const storeStore = useStoreStore();
 
-const { deleteStore } = useStoresUpdate();
+// const { deleteStore } = useStoresUpdate();
 
-const handleUpdate = (store) => {
-  // 👇 store selected here
-  storeStore.selectedStore = store;
+const handleUpdate = (order) => {
+  // // 👇 store selected here
+  // storeStore.selectedStore = store;
 
-  // 👇 then navigate
-  router.push({ name: "StoresUpdate" });
+  // // 👇 then navigate
+  // router.push({ name: "StoresUpdate" });
+  console.log("Edit order:", order);
+
 };
 
-const handleDelete = (store) => {
+const handleDelete = (order) => {
   confirm.require({
-    message: `Delete ${store.name}?`,
+    message: `Delete ${order.recipient}?`,
     header: "Confirm Delete",
     icon: "pi pi-exclamation-triangle",
     rejectLabel: "Cancel",
@@ -218,14 +220,14 @@ const handleDelete = (store) => {
 
     accept: async () => {
       try {
-        const result = await deleteStore(store.id);
+        // const result = await deleteStore(order.id);
 
-        console.log("Deleted successfully:", result);
+        // console.log("Deleted successfully:", result);
 
         toast.add({
           severity: "success",
           summary: "Deleted",
-          detail: "Store deleted successfully",
+          detail: "Order deleted successfully",
           life: 3000,
         });
 
