@@ -100,9 +100,10 @@
                 <span
                   :class="[
                     'px-2 py-1 border-round text-xs font-semibold',
-                    data.status === 'Cancelled' ? 'bg-red-100 text-red-700' : 'text-color',
-                    data.status === 'Delivered' ? 'bg-green-100 text-green-700' : 'text-color',
-                    data.status === 'Out for delivery' ? 'bg-blue-100 text-blue-700' : 'text-color',
+                    data.status?.toLowerCase() === 'order placed' ? 'bg-yellow-100 text-blue-700' : 'text-color',
+                    data.status?.toLowerCase() === 'cancelled' ? 'bg-red-100 text-red-700' : 'text-color',
+                    data.status?.toLowerCase() === 'delivered' ? 'bg-green-100 text-green-700' : 'text-color',
+                    data.status?.toLowerCase() === 'out for delivery' ? 'bg-blue-100 text-blue-700' : 'text-color',
                   ]"
                 >
                   {{ data.status }}
