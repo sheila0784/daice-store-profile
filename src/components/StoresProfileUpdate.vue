@@ -112,6 +112,7 @@
                 class="daice-input w-full"
                 :invalid="!!errors.email"
                 @keydown.enter.prevent="focusNext('passwordRef')"
+                autocomplete="off"
               />
               <div />
               <label for="email">Email</label>
@@ -130,6 +131,7 @@
                 class="daice-input w-full"
                 :invalid="!!errors.password"
                 @keydown.enter.prevent="focusNext('confirmPasswordRef')"
+                autocomplete="new-password"
               />
               <label for="password">Password</label>
               <i
@@ -147,6 +149,7 @@
                 class="daice-input w-full"
                 :invalid="!!errors.confirmPassword"
                 @keydown.enter.prevent="focusNextSel('storeNameRef')"
+                autocomplete="new-password"
               />
               <label for="confirmPassword">Confirm Password</label>
               <i
@@ -172,7 +175,7 @@
               />
             </div>
 
-            <iftaLabel v-if="['dealer', 'rider'].includes(role)" class="mb-2">
+            <iftaLabel v-if="['dealer', 'rider', 'customer'].includes(role)" class="mb-2">
               <Select
                 ref="storeNameRef"
                 v-model="store_id"
@@ -294,7 +297,7 @@ const schema = yup.object({
   }),
 
   store_id: yup.string().when("role", ([role], schema) => {
-    return ["dealer", "rider"].includes(role)
+    return ["dealer", "rider", "customer"].includes(role)
       ? schema.required("Store is required")
       : schema.notRequired().nullable();
   }),
@@ -423,26 +426,67 @@ const statusOptions = [
   { name: "Blocked", code: "blocked" },
 ];
 
+// watch(
+//   profile,
+//   (value) => {
+//     if (!value) return;
+
+//     resetForm({
+//       values: {
+//         display_name: value.display_name,
+//         role: value.role,
+//         avatar_url: value.avatar_url,
+//         contact: value.contact,
+//         email: value.email,
+//         password: value.password,
+//         store_id: value.store_id ?? value.store?.id ?? null,
+//         status: value.status,
+//       },
+//     });
+//   },
+//   { immediate: true },
+// );
+
 watch(
   profile,
   (value) => {
-    if (!value) return;
+    // Create mode
+    if (!value?.id) {
+      resetForm({
+        values: {
+          display_name: "",
+          contact: "",
+          role: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          store_id: null,
+          status: "",
+          avatar_url: null,
+        },
+      });
 
+      return;
+    }
+
+    // Edit mode
     resetForm({
       values: {
-        display_name: value.display_name,
-        role: value.role,
-        avatar_url: value.avatar_url,
-        contact: value.contact,
-        email: value.email,
-        password: value.password,
+        display_name: value.display_name ?? "",
+        contact: value.contact ?? "",
+        role: value.role ?? "",
+        email: value.email ?? "",
+        password: "",
+        confirmPassword: "",
         store_id: value.store_id ?? value.store?.id ?? null,
-        status: value.status,
+        status: value.status ?? "",
+        avatar_url: value.avatar_url ?? null,
       },
     });
   },
   { immediate: true },
 );
+
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
@@ -543,7 +587,7 @@ const uploadProfileImage = async () => {
 watch(
   () => role.value,
   (role) => {
-    if (!["dealer", "rider"].includes(role)) {
+    if (!["dealer", "rider", "customer"].includes(role)) {
       store_id.value = null;
       console.log("check here: ", role);
     }

@@ -57,7 +57,7 @@ export function useStoresProfileList() {
     // AND display_name LIKE '%sv%'
     if (sv) {
       // query = query.ilike("display_name", `%${sv}%`);
-      query = query.or(`display_name.ilike.%${sv}%,email.ilike.%${sv}%,contact.ilike.%${sv}%`);
+      query = query.or(`display_name.ilike.%${sv}%,email.ilike.%${sv}%,contact.ilike.%${sv}%,store.ilike.%${sv}%`);
     }
 
     const { data, error } = await query.order("updated_at", {
