@@ -86,7 +86,6 @@ const items = [
       //   command: () => router.push("/inventoryreport"),
       // },
     ],
-
   },
 
   {
@@ -98,6 +97,19 @@ const items = [
         icon: "pi pi-megaphone",
         command: () => router.push("/appannouncements"),
       },
+      {
+        separator: true,
+      },
+      {
+        label: "Products",
+        icon: "pi pi-box",
+        command: () => router.push("/productslist"),
+      },
+
+      {
+        separator: true,
+      },
+
       {
         label: "App Version",
         icon: "pi pi-tag",

@@ -80,6 +80,9 @@
               </template>
             </Column>
 
+            <!-- <Column field="id" header="Order Id" sortable v-bind="columnDefaults"></Column>
+            <Column field="trip_id" header="Trip Id" sortable v-bind="columnDefaults"></Column> -->
+
             <Column field="dealer" header="Dealer" sortable v-bind="columnDefaults"></Column>
             <Column
               field="order_date"
@@ -101,6 +104,8 @@
                   :class="[
                     'px-2 py-1 border-round text-xs font-semibold',
                     data.status?.toLowerCase() === 'order placed' ? 'bg-yellow-100 text-blue-700' : 'text-color',
+                    data.status?.toLowerCase() === 'confirmed' ? 'bg-orange-100 text-blue-700' : 'text-color',
+                    data.status?.toLowerCase() === 'preparing' ? 'bg-purple-100 text-blue-700' : 'text-color',
                     data.status?.toLowerCase() === 'cancelled' ? 'bg-red-100 text-red-700' : 'text-color',
                     data.status?.toLowerCase() === 'delivered' ? 'bg-green-100 text-green-700' : 'text-color',
                     data.status?.toLowerCase() === 'out for delivery' ? 'bg-blue-100 text-blue-700' : 'text-color',
@@ -127,7 +132,7 @@
             <Column style="width: 140px" v-bind="columnDefaults">
               <template #body="slotProps">
                 <div class="flex gap-2">
-                  <Button
+                  <!-- <Button
                     v-if="showActionBtnEdit"
                     icon="pi pi-pencil"
                     severity="info"
@@ -135,7 +140,7 @@
                     variant="text"
                     v-tooltip.bottom="'Edit Record'"
                     @click.stop="handleUpdate(slotProps.data)"
-                  />
+                  /> -->
 
                   <Button
                     v-if="showActionBtnDelete"
@@ -204,7 +209,7 @@ import Button from "primevue/button";
 import { exportCsv } from "@/utils/exportCsv";
 
 import { usePermissions } from "@/composables/usePermissions.js";
-const { showActionBtnEdit, showActionBtnDelete } = usePermissions();
+const { showActionBtnDelete } = usePermissions();
 
 const dateRange = ref(null);
 const today = new Date();
@@ -222,16 +227,18 @@ const confirm = useConfirm();
 
 // const { deleteStore } = useStoresUpdate();
 
-const handleUpdate = (order) => {
-  // // 👇 store selected here
-  // storeStore.selectedStore = store;
+// const handleUpdate = (order) => {
+//   // // 👇 store selected here
+//   // storeStore.selectedStore = store;
 
-  // // 👇 then navigate
-  // router.push({ name: "StoresUpdate" });
-  console.log("Edit order:", order);
-};
+//   // // 👇 then navigate
+//   // router.push({ name: "StoresUpdate" });
+//   console.log("Edit order:", order);
+// };
 
 const handleDelete = (order) => {
+  console.log("Delete order:", order);
+
   confirm.require({
     message: `Delete ${order.recipient}?`,
     header: "Confirm Delete",
@@ -243,9 +250,9 @@ const handleDelete = (order) => {
 
     accept: async () => {
       try {
-        // const result = await deleteStore(order.id);
+        const result = await deleteOrder(order);
 
-        // console.log("Deleted successfully:", result);
+        console.log("Deleted successfully:", result);
 
         toast.add({
           severity: "success",
@@ -288,6 +295,7 @@ const {
   searchValue,
   filterStatus,
   fetchRpt,
+  deleteOrder,
 } = useRpt(dateRange);
 
 const statusOptions = [
@@ -304,6 +312,7 @@ const handleExport = () => {
   exportCsv({
     filename: `ordersstatus_${new Date().toISOString().slice(0, 10)}.csv`,
     headers: [
+      { label: "Order Id", key: "id" },
       { label: "Dealer", key: "dealer" },
       { label: "Order Date", key: "order_date" },
       { label: "Order Time", key: "order_time" },

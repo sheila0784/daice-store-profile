@@ -10,9 +10,12 @@ import AppVersion from "../components/AppVersion.vue";
 import AppMaintenance from "../components/AppMaintenance.vue";
 import RptOrdersStatus from "../components/RptOrdersStatus.vue";
 
-
 import LoginView from "@/views/LoginView.vue";
 import DashboardView from "@/views/DashboardView.vue";
+
+import ProductsList from "@/components/ProductsList.vue";
+import ProductUpdate from "@/components/ProductUpdate.vue";
+
 
 const routes = [
   {
@@ -37,12 +40,6 @@ const routes = [
     component: StoresList,
   },
 
-  // {
-  //   path: "/",
-  //   name: "StoresList",
-  //   component: StoresList,
-  // },
-
   {
     path: "/StoresUpdate",
     name: "StoresUpdate",
@@ -61,7 +58,7 @@ const routes = [
     component: StoresProfileUpdate,
   },
 
-   {
+  {
     path: "/RptOrdersStatus",
     name: "RptOrdersStatus",
     component: RptOrdersStatus,
@@ -72,11 +69,6 @@ const routes = [
     name: "AppAnnouncements",
     component: AppAnnouncements,
   },
-  // {
-  //   path: "/AppAnnouncementsUpdate",
-  //   name: "AppAnnouncementsUpdate",
-  //   component: AppAnnouncementsUpdate,
-  // },
 
   {
     path: "/AppAnnouncementsUpdate/:id?",
@@ -94,6 +86,18 @@ const routes = [
     name: "AppMaintenance",
     component: AppMaintenance,
   },
+
+  {
+    path: "/ProductsList",
+    name: "ProductsList",
+    component: ProductsList,
+  },
+   {
+    path: "/ProductUpdate/:id?",
+    name: "ProductUpdate",
+    component: ProductUpdate,
+  },
+
 ];
 
 const router = createRouter({
