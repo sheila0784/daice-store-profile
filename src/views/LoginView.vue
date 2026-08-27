@@ -20,18 +20,19 @@
         <div class="flex flex-col gap-3 m-4">
           <div>
             <label class="text-xs block mb-2 text-gray-500">Email</label>
-            <InputText v-model="email" class="daice-input w-full" />
+            <InputText v-model="email" class="daice-input w-full" @keydown.enter.prevent="focusPassword" />
           </div>
 
           <div>
             <label class="text-xs block mb-2 text-gray-500">Password</label>
             <Password
+              ref="passwordField"
               v-model="password"
-               class="daice-password w-full"
-              
+              class="daice-password w-full"
               inputClass="daice-input w-full"
               :feedback="false"
               toggleMask
+              @keydown.enter.prevent="login"
             />
           </div>
 
@@ -89,6 +90,12 @@ const password = ref("");
 const loading = ref(false);
 const errorMessage = ref("");
 const successMessage = ref("");
+
+const passwordField = ref(null);
+
+const focusPassword = () => {
+  passwordField.value?.$el?.querySelector("input")?.focus();
+};
 
 const login = async () => {
   errorMessage.value = "";

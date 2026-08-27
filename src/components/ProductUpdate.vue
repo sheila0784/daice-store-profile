@@ -37,12 +37,9 @@
                 ref="codeRef"
                 v-model="code"
                 class="daice-input w-full pr-10"
-                @keydown.enter="focusNext('categoryRef')"
+                @keydown.enter="focusNextSel('categoryRef')"
               />
               <div />
-              <!-- <small v-if="errors.code" class="flex text-red-500 items-center">{{
-                errors.code
-              }}</small> -->
               <label for="code">Code</label>
                <i
                 v-if="errors.code"
@@ -103,7 +100,7 @@
                 ref="priceRef"
                 v-model="price"
                 class="daice-input w-full pr-10"
-                @keydown.enter="focusNext('unitRef')"
+                @keydown.enter="focusNextSel('unitRef')"
               />
               <div />
               <!-- <small v-if="errors.price" class="flex text-red-500 items-center">{{
@@ -126,7 +123,7 @@
                 optionLabel="name"
                 optionValue="code"
                 class="daice-select w-full"
-                @keydown.enter.prevent="focusNextButton('submitRef')"
+                @keydown.enter.prevent="focusNext('urlRef')"
               />
 
               <div />
@@ -140,6 +137,28 @@
                 @click="showError($event, errors.unit)"
               ></i>
             </IftaLabel>
+
+
+               <IftaLabel class="mb-2">
+              <InputText
+                :readonly="!showCreateNew"
+                autofocus
+                ref="urlRef"
+                v-model="image_url"
+                class="daice-input w-full pr-10"
+                @keydown.enter="focusNextButton('submitRef')"
+              />
+              <div />
+
+              <label for="code">Image URL</label>
+               <i
+                v-if="errors.code"
+                class="pi pi-exclamation-circle daice-error-icon"
+                @click="showError($event, errors.code)"
+              ></i>
+
+            </IftaLabel>
+
 
             <div class="flex py-1 rounded relative gap-2 justify-end" role="alert">
               <Button
@@ -227,7 +246,9 @@ const schema = yup.object({
     .number()
     .typeError("Price must be a number.")
     .required("Price is required.")
+    .integer("Price must be a whole number.")
     .min(0, "Price cannot be negative."),
+
 
   unit: yup.string().required("Unit is required.").min(2, "Minimum 2 characters"),
 });
@@ -236,13 +257,14 @@ const router = useRouter();
 const route = useRoute();
 const toast = useToast();
 
-const { createProduct, fetchProductById, loading } = useProductsList();
+const { saveProduct, fetchProductById, loading } = useProductsList();
 
 const id = ref(route.params.id ?? null);
 
 const { defineField, errors, handleSubmit, setValues } = useForm({
   validationSchema: schema,
   initialValues: {
+    id: "",
     category: "",
     code: "",
     weight: "",
@@ -252,12 +274,14 @@ const { defineField, errors, handleSubmit, setValues } = useForm({
   },
 });
 
+
+
 const [category] = defineField("category");
 const [code] = defineField("code");
 const [weight] = defineField("weight");
 const [price] = defineField("price");
 const [unit] = defineField("unit");
-// const [image_url] = defineField("image_url");
+const [image_url] = defineField("image_url");
 
 const categoryRef = ref(null);
 const codeRef = ref(null);
@@ -278,26 +302,26 @@ const refs = {
   submitRef,
 };
 
-const { focusNext, focusNextButton } = useFocusNavigation(refs); //focusNextButton
+const { focusNext, focusNextButton, focusNextSel } = useFocusNavigation(refs); //focusNextButton
 
 const onSave = handleSubmit(async (values) => {
   try {
     console.log("Form values:", values);
 
-    // await createProduct(
-    //   values.id,
-    //   values.category,
-    //   values.code,
-    //   values.weight,
-    //   values.price,
-    //   values.unit,
-    //   values.image_url,
-    // );
+    await saveProduct(
+      values.id,
+      values.category,
+      values.code,
+      values.weight,
+      values.price,
+      values.unit,
+      values.image_url,
+    );
 
     toast.add({
       severity: "success",
       summary: "Saved",
-      detail: "Product created successfully",
+      detail: "Product saved successfully",
       life: 3000,
     });
 
@@ -306,7 +330,7 @@ const onSave = handleSubmit(async (values) => {
     toast.add({
       severity: "error",
       summary: "Error",
-      detail: err?.message || "Unable to create product.",
+      detail: err?.message || "Unable to save product.",
       life: 3000,
     });
   } finally {
@@ -323,6 +347,7 @@ onMounted(async () => {
     const product = await fetchProductById(id.value);
 
     setValues({
+      id: product?.id ?? "",
       category: product?.category ?? "",
       code: product?.code ?? "",
       weight: product?.weight ?? "",

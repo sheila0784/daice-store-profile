@@ -152,7 +152,7 @@ const columnDefaults = {
 
 const router = useRouter();
 
-const { rows, rowsPerPageOptions, products, selectedProduct, loading, searchValue, fetchProducts } =
+const { rows, rowsPerPageOptions, products, selectedProduct, loading, searchValue, fetchProducts , deleteProduct} =
   useProductsList();
 
 const handleCreate = (product) => {
@@ -204,7 +204,7 @@ const handleExport = () => {
 
 const handleDelete = (product) => {
   confirm.require({
-    message: `Delete ${product.id} ${product.code}?`,
+    message: `Delete ${product.code}?`,
     header: "Confirm Delete",
     icon: "pi pi-exclamation-triangle",
     rejectLabel: "Cancel",
@@ -214,8 +214,8 @@ const handleDelete = (product) => {
 
     accept: async () => {
       try {
-        // const result = await deleteProduct(product.id);
-        // console.log("Deleted successfully:", result);
+        const result = await deleteProduct(product.id);
+        console.log("Deleted successfully:", result);
         
         toast.add({
           severity: "success",
