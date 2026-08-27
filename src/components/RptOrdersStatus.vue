@@ -103,12 +103,24 @@
                 <span
                   :class="[
                     'px-2 py-1 border-round text-xs font-semibold',
-                    data.status?.toLowerCase() === 'order placed' ? 'bg-yellow-100 text-blue-700' : 'text-color',
-                    data.status?.toLowerCase() === 'confirmed' ? 'bg-orange-100 text-blue-700' : 'text-color',
-                    data.status?.toLowerCase() === 'preparing' ? 'bg-purple-100 text-blue-700' : 'text-color',
-                    data.status?.toLowerCase() === 'cancelled' ? 'bg-red-100 text-red-700' : 'text-color',
-                    data.status?.toLowerCase() === 'delivered' ? 'bg-green-100 text-green-700' : 'text-color',
-                    data.status?.toLowerCase() === 'out for delivery' ? 'bg-blue-100 text-blue-700' : 'text-color',
+                    data.status?.toLowerCase() === 'order placed'
+                      ? 'bg-yellow-100 text-blue-700'
+                      : 'text-color',
+                    data.status?.toLowerCase() === 'confirmed'
+                      ? 'bg-orange-100 text-blue-700'
+                      : 'text-color',
+                    data.status?.toLowerCase() === 'preparing'
+                      ? 'bg-purple-100 text-blue-700'
+                      : 'text-color',
+                    data.status?.toLowerCase() === 'cancelled'
+                      ? 'bg-red-100 text-red-700'
+                      : 'text-color',
+                    data.status?.toLowerCase() === 'delivered'
+                      ? 'bg-green-100 text-green-700'
+                      : 'text-color',
+                    data.status?.toLowerCase() === 'out for delivery'
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'text-color',
                   ]"
                 >
                   {{ data.status }}
@@ -120,13 +132,21 @@
             <Column field="contact" header="Contact No." v-bind="columnDefaults"></Column>
             <Column field="address" header="Address" v-bind="columnDefaults"></Column>
 
-            <Column field="code" header="Product" v-bind="columnDefaults"></Column>
+            <!-- <Column field="code" header="Product" v-bind="columnDefaults"></Column> -->
+            <!-- <Column field="quantity" header="Quantity" v-bind="columnDefaults"></Column> -->
+            <!-- <Column field="unit_price" header="Unit Price" v-bind="columnDefaults"></Column> -->
+            <!-- <Column field="discount" header="Discount" v-bind="columnDefaults"></Column>
+            <Column field="final_price" header="Net Price" v-bind="columnDefaults"></Column> -->
 
-            <Column field="quantity" header="Quantity" v-bind="columnDefaults"></Column>
-            <Column field="unit_price" header="Unit Price" v-bind="columnDefaults"></Column>
-            <Column field="discount" header="Discount" v-bind="columnDefaults"></Column>
-            <Column field="final_price" header="Net Price" v-bind="columnDefaults"></Column>
-            <Column field="amount" header="Net Amount" v-bind="columnDefaults"></Column>
+            <Column
+              field="product_quantity"
+              header="Product & Qty"
+              v-bind="columnDefaults"
+            ></Column>
+            <Column field="total_gross" header="Total Gross" v-bind="columnDefaults"></Column>
+            <Column field="total_disc" header="Total Discount" v-bind="columnDefaults"></Column>
+
+            <Column field="total_amount" header="Net Amount" v-bind="columnDefaults"></Column>
 
             <!-- Actions Column -->
             <Column style="width: 140px" v-bind="columnDefaults">
@@ -320,14 +340,11 @@ const handleExport = () => {
       { label: "Recipient", key: "recipient" },
       { label: "Contact No.", key: "contact" },
       { label: "Address", key: "address" },
-      { label: "Product", key: "code" },
+      { label: "Product and Qty", key: "product_quantity" },
 
-      { label: "Quantity", key: "quantity" },
-      { label: "Unit Price", key: "unit_price" },
-      { label: "Discount", key: "discount" },
-      { label: "Net Price", key: "final_price" },
-
-      { label: "Net Amount", key: "amount" },
+      { label: "Total Gross", key: "total_gross" },
+      { label: "Total Discount", key: "total_disc" },
+       { label: "Net Amount", key: "total_amount" },
     ],
     data: items.value.map((item) => ({
       ...item,
