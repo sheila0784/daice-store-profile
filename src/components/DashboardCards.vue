@@ -40,6 +40,21 @@
       </div>
 
       <div class="daice-table-wrapper">
+        <ChartServedCustomers :date-range="dateRange" />
+      </div>
+
+      <div class="daice-table-wrapper">
+        <div class="daice-chart-header">
+          <div class="daice-chart-icon">
+            <i class="pi pi-chart-bar"></i>
+          </div>
+
+          <div>
+            <h3 class="daice-chart-title">Daily Dealer Sales and Delivery Summary</h3>
+            <p class="daice-chart-subtitle">Daily totals for served customers, products delivered, and sales amount by dealer</p>
+          </div>
+        </div>
+
         <Datatable
           :value="salesData"
           class="daice-table"
@@ -195,6 +210,7 @@ import { useRouter } from "vue-router";
 import Message from "primevue/message";
 import Button from "primevue/button";
 import { exportCsv } from "@/utils/exportCsv";
+import ChartServedCustomers from "@/components/ChartServedCustomers.vue";
 
 const columnDefaults = {
   headerClass: "daice-table-header",

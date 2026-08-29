@@ -1,0 +1,67 @@
+.daice-chart-card {
+  width: 100%;
+  max-width: none;
+  overflow: hidden;
+  border: 1px solid rgba(125, 211, 252, 0.55);
+  border-radius: 14px;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(186, 230, 253, 0.45),
+      transparent 38%
+    ),
+    linear-gradient(145deg, #ffffff 0%, #f0f9ff 55%, #e0f2fe 100%);
+  box-shadow:
+    0 10px 25px rgba(14, 165, 233, 0.1),
+    0 3px 8px rgba(15, 23, 42, 0.05);
+}
+
+.daice-chart-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(125, 211, 252, 0.4);
+}
+
+.daice-chart-icon {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 9px;
+  color: #0284c7;
+  background: linear-gradient(145deg, #e0f2fe, #bae6fd);
+}
+
+.daice-chart-icon i {
+  font-size: 0.9rem;
+}
+
+.daice-chart-title {
+  margin: 0;
+  color: #0c4a6e;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.daice-chart-subtitle {
+  margin: 1px 0 0;
+  color: #64748b;
+  font-size: 0.65rem;
+}
+
+.daice-chart-content {
+  min-height: 18rem;
+  padding: 8px 12px 12px;
+}
+
+.daice-chart {
+  width: 100%;
+  height: 18rem;
+}
+
+.daice-chart-empty {
+  min-height: 18rem;
+}

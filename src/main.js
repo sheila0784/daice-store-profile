@@ -20,6 +20,7 @@ import 'primeflex/primeflex.css'
 import './style.css'
 import "./assets/daice-theme.css";
 import "./assets/daice-theme-app-footer.css";
+import "./assets/daice-theme-chart.css";
 
 const app = createApp(App)
 

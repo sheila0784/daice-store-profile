@@ -7,7 +7,7 @@ export function useDashboardCards(dateRange) {
 
   const salesData = ref([]);
   const selRowDate = ref(null);
-  const selRowDealer  = ref(null);
+  const selRowDealer = ref(null);
 
   const loading = ref(false);
 
@@ -60,9 +60,17 @@ export function useDashboardCards(dateRange) {
     ] = await Promise.all([
       supabase.from("stores").select("*", { count: "exact", head: true }).eq("active", true),
 
-      supabase.from("profiles").select("*", { count: "exact", head: true }).eq("role", "customer").eq("status","approved"),
+      supabase
+        .from("profiles")
+        .select("*", { count: "exact", head: true })
+        .eq("role", "customer")
+        .eq("status", "approved"),
 
-      supabase.from("profiles").select("*", { count: "exact", head: true }).eq("role", "rider").eq("status","approved"),
+      supabase
+        .from("profiles")
+        .select("*", { count: "exact", head: true })
+        .eq("role", "rider")
+        .eq("status", "approved"),
     ]);
 
     // console.log("Fetched dealer count:", dealers);
@@ -133,7 +141,7 @@ export function useDashboardCards(dateRange) {
       order_time: row.order_time,
       recipient: row.recipient,
       total_amount: row.total_amount,
-      product_quantity: row.product_quantity
+      product_quantity: row.product_quantity,
     }));
 
     salesPerDay.value = formattedData;
@@ -143,11 +151,42 @@ export function useDashboardCards(dateRange) {
     loading.value = false;
   };
 
+  const fetchRegCustPerDealer = async ({ start_date, end_date }) => {
+  loading.value = true;
+
+console.log("start date: ", start_date);
+console.log("end date: ", end_date);
+
+
+  try {
+    const { data, error } = await supabase.rpc(
+      "get_registered_customers_by_dealer",
+      {
+        p_start_date: start_date,
+        p_end_date: end_date,
+      },
+    );
+
+    if (error) throw error;
+
+    console.log("Registered customers by dealer:", data);
+
+    return data ?? [];
+  } catch (error) {
+    console.error("Unable to fetch customers by dealer:", error);
+    return [];
+  } finally {
+    loading.value = false;
+  }
+};
+
+
   return {
     rows,
     rowsPerPageOptions,
     loading,
     fetchDashboardCards,
+    fetchRegCustPerDealer,
     salesData,
     fetchCounts,
     dealerCount,
