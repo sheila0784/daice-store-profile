@@ -1,0 +1,277 @@
+<template>
+  <div class="daice-chart-card mb-4">
+    <div class="daice-chart-header">
+      <div class="daice-chart-icon">
+        <i class="pi pi-chart-bar"></i>
+      </div>
+
+      <div>
+        <h3 class="daice-chart-title">{{ selectedStatus }} Orders by Dealer</h3>
+
+        <p class="daice-chart-subtitle">
+          Dealers ranked by total
+          {{
+            selectedStatus === "Delivered" ? "successfully delivered" : selectedStatus.toLowerCase()
+          }}
+          orders within the selected period
+        </p>
+      </div>
+    </div>
+
+    <div class="flex w-full items-center">
+      <!-- Other header content -->
+
+      <div class="daice-status-filter ml-auto mr-2">
+        <Select
+          v-model="selectedStatus"
+          :options="statusOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Status"
+          class="daice-status-select"
+          size="small"
+        />
+      </div>
+    </div>
+
+    <div class="daice-chart-content">
+      <Chart
+        v-if="hasChartData"
+        type="bar"
+        :data="chartData"
+        :options="chartOptions"
+        class="daice-chart"
+      />
+
+      <div v-else class="daice-chart-empty">
+        <i class="pi pi-chart-bar"></i>
+        <p>No transaction data found</p>
+        <span>Try another status or date range.</span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { computed, ref, watch } from "vue";
+import Chart from "primevue/chart";
+import { useDashboardCards } from "@/composables/useDashboardCards";
+import Select from "primevue/select";
+
+const selectedStatus = ref("Delivered");
+
+const statusOptions = [
+  { label: "Delivered", value: "Delivered" },
+  { label: "Cancelled", value: "Cancelled" },
+];
+
+const props = defineProps({
+  dateRange: {
+    type: Array,
+    default: () => [],
+  },
+});
+
+const { fetchTransactionsByDealer } = useDashboardCards();
+
+const chartData = ref({
+  labels: [],
+  datasets: [
+    {
+      label: "No. of Orders",
+      data: [],
+      backgroundColor: "#38BDF8",
+      hoverBackgroundColor: "#0284C7",
+      borderColor: "#0EA5E9",
+      borderWidth: 1,
+      borderRadius: 8,
+      borderSkipped: false,
+      barThickness: 24,
+      maxBarThickness: 32,
+    },
+  ],
+});
+
+const hasChartData = computed(() => {
+  return chartData.value.datasets[0]?.data?.length > 0;
+});
+
+const chartOptions = ref({
+  indexAxis: "y",
+  responsive: true,
+  maintainAspectRatio: false,
+
+  animation: {
+    duration: 700,
+    easing: "easeOutQuart",
+  },
+
+  interaction: {
+    mode: "nearest",
+    intersect: false,
+  },
+
+  layout: {
+    padding: {
+      top: 8,
+      right: 18,
+      bottom: 8,
+      left: 8,
+    },
+  },
+
+  plugins: {
+    legend: {
+      display: false,
+    },
+
+    tooltip: {
+      displayColors: false,
+      backgroundColor: "#0F172A",
+      titleColor: "#E0F2FE",
+      bodyColor: "#FFFFFF",
+      borderColor: "#38BDF8",
+      borderWidth: 1,
+      padding: 12,
+      cornerRadius: 8,
+      callbacks: {
+        label(context) {
+          return ` ${context.parsed.x.toLocaleString()} orders`;
+        },
+      },
+    },
+  },
+
+  scales: {
+    x: {
+      beginAtZero: true,
+
+      grid: {
+        color: "rgba(148, 163, 184, 0.18)",
+        drawBorder: false,
+      },
+
+      border: {
+        display: false,
+      },
+
+      ticks: {
+        color: "#64748B",
+        precision: 0,
+        font: {
+          size: 11,
+          weight: "600",
+        },
+      },
+
+      title: {
+        display: true,
+        text: "No. of Orders",
+        color: "#0369A1",
+        font: {
+          size: 12,
+          weight: "700",
+        },
+        padding: {
+          top: 12,
+        },
+      },
+    },
+
+    y: {
+      grid: {
+        display: false,
+      },
+
+      border: {
+        display: false,
+      },
+
+      ticks: {
+        color: "#334155",
+        font: {
+          size: 12,
+          weight: "600",
+        },
+        padding: 8,
+      },
+
+      title: {
+        display: true,
+        text: "Dealer",
+        color: "#0369A1",
+        font: {
+          size: 12,
+          weight: "700",
+        },
+      },
+    },
+  },
+});
+
+function formatApiDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+async function loadChart(startDate, endDate, status) {
+  const records = await fetchTransactionsByDealer({
+    status,
+    start_date: formatApiDate(startDate),
+    end_date: formatApiDate(endDate),
+  });
+
+  chartData.value = {
+    labels: records.map((row) => row.dealer_name ?? row.dealer ?? "Unknown dealer"),
+    datasets: [
+      {
+        label: `${status} Orders`,
+        data: records.map((row) => Number(row.transaction_count) || 0),
+        backgroundColor: "#38BDF8",
+        hoverBackgroundColor: "#0284C7",
+        borderColor: "#0EA5E9",
+        borderWidth: 1,
+        borderRadius: 8,
+        borderSkipped: false,
+        barThickness: 24,
+        maxBarThickness: 32,
+      },
+    ],
+  };
+}
+
+// watch(
+//   () => props.dateRange,
+//   (range) => {
+//     const startDate = range?.[0];
+//     const endDate = range?.[1];
+
+//     if (!startDate || !endDate) return;
+
+//     loadChart(startDate, endDate);
+//   },
+//   {
+//     immediate: true,
+//     deep: true,
+//   },
+// );
+
+watch(
+  [() => props.dateRange, selectedStatus],
+  ([range, status]) => {
+    const startDate = range?.[0];
+    const endDate = range?.[1];
+
+    if (!startDate || !endDate || !status) return;
+
+    loadChart(startDate, endDate, status);
+  },
+  {
+    immediate: true,
+    deep: true,
+  },
+);
+</script>

@@ -65,3 +65,62 @@
 .daice-chart-empty {
   min-height: 18rem;
 }
+
+
+/* ---------------------------------------------------- */
+
+.daice-status-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 145px;
+  padding: 3px 5px;
+  border: 1px solid rgba(125, 211, 252, 0.65);
+  border-radius: 9px;
+  background: linear-gradient(145deg, #ffffff, #f0f9ff);
+  box-shadow: 0 3px 8px rgba(14, 165, 233, 0.08);
+}
+
+.daice-status-filter-icon {
+  flex-shrink: 0;
+  margin-left: 3px;
+  color: #0284c7;
+  font-size: 0.7rem;
+}
+
+.daice-status-select {
+  width: 115px;
+  min-width: 115px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.daice-status-select:deep(.p-select-label) {
+  min-width: 0;
+  padding: 4px 2px 4px 5px;
+  overflow: visible;
+  color: #334155;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1rem;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.daice-status-select:deep(.p-select-dropdown) {
+  width: 1.35rem;
+  min-width: 1.35rem;
+  flex-shrink: 0;
+  color: #0284c7;
+}
+
+.daice-status-filter {
+  display: inline-flex;
+  width: 120px;
+  padding: 2px;
+}
+
+.daice-status-select {
+  width: 100%;
+}

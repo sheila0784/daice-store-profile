@@ -29,7 +29,7 @@ export function useDashboardCards(dateRange) {
       end = end.toISOString();
     }
 
-    console.log("Fetching sales data with date range:", { start, end });
+    // console.log("Fetching sales data with date range:", { start, end });
 
     const { data, error } = await supabase.rpc("get_sales_summary", {
       start_date: start,
@@ -42,7 +42,7 @@ export function useDashboardCards(dateRange) {
     }
 
     salesData.value = data;
-    console.log("Fetched sales data:", salesData.value);
+    // console.log("Fetched sales data:", salesData.value);
     // console.log("Date range in composable:", dateRange.value);
 
     loading.value = false;
@@ -152,34 +152,54 @@ export function useDashboardCards(dateRange) {
   };
 
   const fetchRegCustPerDealer = async ({ start_date, end_date }) => {
-  loading.value = true;
+    loading.value = true;
 
-console.log("start date: ", start_date);
-console.log("end date: ", end_date);
+    // console.log("start date: ", start_date);
+    // console.log("end date: ", end_date);
 
-
-  try {
-    const { data, error } = await supabase.rpc(
-      "get_registered_customers_by_dealer",
-      {
+    try {
+      const { data, error } = await supabase.rpc("get_registered_customers_by_dealer", {
         p_start_date: start_date,
         p_end_date: end_date,
-      },
-    );
+      });
 
-    if (error) throw error;
+      if (error) throw error;
 
-    console.log("Registered customers by dealer:", data);
+      // console.log("Registered customers by dealer:", data);
 
-    return data ?? [];
-  } catch (error) {
-    console.error("Unable to fetch customers by dealer:", error);
-    return [];
-  } finally {
-    loading.value = false;
-  }
-};
+      return data ?? [];
+    } catch (error) {
+      console.error("Unable to fetch customers by dealer:", error);
+      return [];
+    } finally {
+      loading.value = false;
+    }
+  };
 
+  const fetchTransactionsByDealer = async ({ start_date, end_date, status }) => {
+    loading.value = true;
+
+    // console.log("Transaction status:", status);
+
+    try {
+      const { data, error } = await supabase.rpc("get_transactions_by_dealer", {
+        p_status: status,
+        p_start_date: start_date,
+        p_end_date: end_date,
+      });
+
+      if (error) throw error;
+
+      // console.log("Transaction count by dealer:", data);
+
+      return data ?? [];
+    } catch (error) {
+      console.error("Unable to fetch transactions by dealer:", error);
+      return [];
+    } finally {
+      loading.value = false;
+    }
+  };
 
   return {
     rows,
@@ -187,6 +207,7 @@ console.log("end date: ", end_date);
     loading,
     fetchDashboardCards,
     fetchRegCustPerDealer,
+    fetchTransactionsByDealer,
     salesData,
     fetchCounts,
     dealerCount,

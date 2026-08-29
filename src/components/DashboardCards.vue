@@ -40,7 +40,11 @@
       </div>
 
       <div class="daice-table-wrapper">
-        <ChartServedCustomers :date-range="dateRange" />
+        <ChartRegisteredCustomers :date-range="dateRange" />
+      </div>
+
+      <div class="daice-table-wrapper">
+        <ChartTransactionsByDealer :date-range="dateRange" />
       </div>
 
       <div class="daice-table-wrapper">
@@ -210,7 +214,8 @@ import { useRouter } from "vue-router";
 import Message from "primevue/message";
 import Button from "primevue/button";
 import { exportCsv } from "@/utils/exportCsv";
-import ChartServedCustomers from "@/components/ChartServedCustomers.vue";
+import ChartRegisteredCustomers from "@/components/ChartRegisteredCustomers.vue";
+import ChartTransactionsByDealer from "@/components/ChartTransactionsByDealer.vue";
 
 const columnDefaults = {
   headerClass: "daice-table-header",
