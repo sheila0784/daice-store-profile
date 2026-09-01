@@ -3,13 +3,13 @@
 
     <div class="daice-chart-header">
       <div class="daice-chart-icon">
-        <i class="pi pi-chart-bar"></i>
+        <i class="pi pi-users"></i>
       </div>
 
       <div>
         <h3 class="daice-chart-title">Registered Customers by Dealer</h3>
         <p class="daice-chart-subtitle">
-          Registered customers within the selected date range
+          Dealers ranked by customers registered through the Da ICE Customer app from {{ formatDateLabel(props.dateRange) }} 
         </p>
       </div>
     </div>
@@ -36,6 +36,7 @@
 import { computed, ref, watch } from "vue";
 import Chart from "primevue/chart";
 import { useDashboardCards } from "@/composables/useDashboardCards";
+import { formatDateLabel } from "@/utils/date";
 
 const props = defineProps({
   dateRange: {

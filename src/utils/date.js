@@ -27,7 +27,7 @@ export const formatDateLabel = (range) => {
 
   const fullOptions = {
     timeZone: "Asia/Manila",
-    weekday: "short", // ✅ adds Mon, Tue, etc.
+    //weekday: "short", // ✅ adds Mon, Tue, etc.
     year: "numeric",
     month: "short",
     day: "2-digit",
@@ -35,7 +35,7 @@ export const formatDateLabel = (range) => {
 
   const shortOptions = {
     timeZone: "Asia/Manila",
-    weekday: "short", // ✅ adds Mon, Tue, etc.
+    //weekday: "short", // ✅ adds Mon, Tue, etc.
     month: "short",
     day: "2-digit",
   };

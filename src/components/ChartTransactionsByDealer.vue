@@ -2,7 +2,7 @@
   <div class="daice-chart-card mb-4">
     <div class="daice-chart-header">
       <div class="daice-chart-icon">
-        <i class="pi pi-chart-bar"></i>
+        <i class="pi pi-car"></i>
       </div>
 
       <div>
@@ -13,7 +13,7 @@
           {{
             selectedStatus === "Delivered" ? "successfully delivered" : selectedStatus.toLowerCase()
           }}
-          orders within the selected period
+          orders from {{ formatDateLabel(props.dateRange) }} 
         </p>
       </div>
     </div>
@@ -43,12 +43,13 @@
         class="daice-chart"
       />
 
-      <div v-else class="daice-chart-empty">
-        <i class="pi pi-chart-bar"></i>
+      <div v-else class="daice-chart-empty text-xs text-gray-500">
+        <i class="pi pi-chart-bar text-gray-500"></i>
         <p>No transaction data found</p>
         <span>Try another status or date range.</span>
       </div>
     </div>
+       
   </div>
 </template>
 
@@ -57,6 +58,7 @@ import { computed, ref, watch } from "vue";
 import Chart from "primevue/chart";
 import { useDashboardCards } from "@/composables/useDashboardCards";
 import Select from "primevue/select";
+import { formatDateLabel } from "@/utils/date";
 
 const selectedStatus = ref("Delivered");
 
