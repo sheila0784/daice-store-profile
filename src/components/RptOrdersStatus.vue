@@ -129,8 +129,8 @@
             </Column>
 
             <Column field="recipient" header="Recipient" sortable v-bind="columnDefaults"></Column>
-            <Column field="contact" header="Contact No." v-bind="columnDefaults"></Column>
-            <Column field="address" header="Address" v-bind="columnDefaults"></Column>
+            <!-- <Column field="contact" header="Contact No." v-bind="columnDefaults"></Column> -->
+            <!-- <Column field="address" header="Address" v-bind="columnDefaults"></Column> -->
 
             <!-- <Column field="code" header="Product" v-bind="columnDefaults"></Column> -->
             <!-- <Column field="quantity" header="Quantity" v-bind="columnDefaults"></Column> -->

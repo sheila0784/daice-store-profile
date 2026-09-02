@@ -48,6 +48,11 @@
       </div>
 
       <div class="daice-table-wrapper">
+        <ChartActiveCustomersByDealer :date-range="dateRange" />
+      </div>
+
+
+      <div class="daice-table-wrapper">
         <div class="daice-chart-header">
           <div class="daice-chart-icon">
             <i class="pi pi-chart-bar"></i>
@@ -216,6 +221,7 @@ import Button from "primevue/button";
 import { exportCsv } from "@/utils/exportCsv";
 import ChartRegisteredCustomers from "@/components/ChartRegisteredCustomers.vue";
 import ChartTransactionsByDealer from "@/components/ChartTransactionsByDealer.vue";
+import ChartActiveCustomersByDealer from "@/components/ChartActiveCustomersByDealer.vue";
 
 const columnDefaults = {
   headerClass: "daice-table-header",

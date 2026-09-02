@@ -2,35 +2,15 @@
   <div class="daice-chart-card mb-4">
     <div class="daice-chart-header">
       <div class="daice-chart-icon">
-        <i class="pi pi-car"></i>
+        <i class="pi pi-users"></i>
       </div>
 
       <div>
-        <h3 class="daice-chart-title">{{ selectedStatus }} Orders by Dealer</h3>
-
+        <h3 class="daice-chart-title">Active Customers by Dealer</h3>
         <p class="daice-chart-subtitle">
-          Dealers ranked by total
-          {{
-            selectedStatus === "Delivered" ? "successfully delivered" : selectedStatus.toLowerCase()
-          }}
-          orders from {{ formatDateLabel(props.dateRange) }}
+          Dealers ranked by active Da ICE Customer app users from
+          {{ formatDateLabel(props.dateRange) }}
         </p>
-      </div>
-    </div>
-
-    <div class="flex w-full items-center">
-      <!-- Other header content -->
-
-      <div class="daice-status-filter ml-auto mr-2">
-        <Select
-          v-model="selectedStatus"
-          :options="statusOptions"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Status"
-          class="daice-status-select"
-          size="small"
-        />
       </div>
     </div>
 
@@ -43,10 +23,10 @@
         class="daice-chart"
       />
 
-      <div v-else class="daice-chart-empty text-xs text-gray-500">
-        <i class="pi pi-chart-bar text-gray-500"></i>
-        <p>No transaction data found</p>
-        <span>Try another status or date range.</span>
+      <div v-else class="daice-chart-empty">
+        <i class="pi pi-chart-bar"></i>
+        <p>No customer data found</p>
+        <span>Try selecting a different date range.</span>
       </div>
     </div>
   </div>
@@ -56,15 +36,7 @@
 import { computed, ref, watch } from "vue";
 import Chart from "primevue/chart";
 import { useDashboardCards } from "@/composables/useDashboardCards";
-import Select from "primevue/select";
 import { formatDateLabel } from "@/utils/date";
-
-const selectedStatus = ref("Delivered");
-
-const statusOptions = [
-  { label: "Delivered", value: "Delivered" },
-  { label: "Cancelled", value: "Cancelled" },
-];
 
 const props = defineProps({
   dateRange: {
@@ -73,13 +45,13 @@ const props = defineProps({
   },
 });
 
-const { fetchTransactionsByDealer } = useDashboardCards();
+const { fetchActiveCustPerDealer } = useDashboardCards();
 
 const chartData = ref({
   labels: [],
   datasets: [
     {
-      label: "No. of Orders",
+      label: "Active Customers",
       data: [],
       backgroundColor: "#38BDF8",
       hoverBackgroundColor: "#0284C7",
@@ -137,15 +109,14 @@ const chartOptions = ref({
       cornerRadius: 8,
       // callbacks: {
       //   label(context) {
-      //     return ` ${context.parsed.x.toLocaleString()} orders`;
+      //     return ` ${context.parsed.x.toLocaleString()} customers`;
       //   },
-      // },
 
       callbacks: {
         label(context) {
           const count = context.parsed.x;
 
-          return ` ${context.parsed.x.toLocaleString()} ${count <= 1 ? "order" : "orders"}`;
+          return ` ${count.toLocaleString()} ${count <= 1 ? "customer" : "customers"}`;
         },
       },
     },
@@ -175,7 +146,7 @@ const chartOptions = ref({
 
       title: {
         display: true,
-        text: "No. of Orders",
+        text: "Active Customers",
         color: "#0369A1",
         font: {
           size: 12,
@@ -226,19 +197,18 @@ function formatApiDate(date) {
   return `${year}-${month}-${day}`;
 }
 
-async function loadChart(startDate, endDate, status) {
-  const records = await fetchTransactionsByDealer({
-    status,
+async function loadChart(startDate, endDate) {
+  const records = await fetchActiveCustPerDealer({
     start_date: formatApiDate(startDate),
     end_date: formatApiDate(endDate),
   });
 
   chartData.value = {
-    labels: records.map((row) => row.dealer_name ?? row.dealer ?? "Unknown dealer"),
+    labels: records.map((row) => row.dealer ?? "Unknown dealer"),
     datasets: [
       {
-        label: `${status} Orders`,
-        data: records.map((row) => Number(row.transaction_count) || 0),
+        label: "Active Customers",
+        data: records.map((row) => Number(row.active_customers) || 0),
         backgroundColor: "#38BDF8",
         hoverBackgroundColor: "#0284C7",
         borderColor: "#0EA5E9",
@@ -252,31 +222,15 @@ async function loadChart(startDate, endDate, status) {
   };
 }
 
-// watch(
-//   () => props.dateRange,
-//   (range) => {
-//     const startDate = range?.[0];
-//     const endDate = range?.[1];
-
-//     if (!startDate || !endDate) return;
-
-//     loadChart(startDate, endDate);
-//   },
-//   {
-//     immediate: true,
-//     deep: true,
-//   },
-// );
-
 watch(
-  [() => props.dateRange, selectedStatus],
-  ([range, status]) => {
+  () => props.dateRange,
+  (range) => {
     const startDate = range?.[0];
     const endDate = range?.[1];
 
-    if (!startDate || !endDate || !status) return;
+    if (!startDate || !endDate) return;
 
-    loadChart(startDate, endDate, status);
+    loadChart(startDate, endDate);
   },
   {
     immediate: true,

@@ -1,6 +1,5 @@
 <template>
   <div class="daice-chart-card mb-4">
-
     <div class="daice-chart-header">
       <div class="daice-chart-icon">
         <i class="pi pi-users"></i>
@@ -9,7 +8,8 @@
       <div>
         <h3 class="daice-chart-title">Registered Customers by Dealer</h3>
         <p class="daice-chart-subtitle">
-          Dealers ranked by customers registered through the Da ICE Customer app from {{ formatDateLabel(props.dateRange) }} 
+          Dealers ranked by customers registered through the Da ICE Customer app from
+          {{ formatDateLabel(props.dateRange) }}
         </p>
       </div>
     </div>
@@ -107,9 +107,17 @@ const chartOptions = ref({
       borderWidth: 1,
       padding: 12,
       cornerRadius: 8,
+      // callbacks: {
+      //   label(context) {
+      //     return ` ${context.parsed.x.toLocaleString()} customers`;
+      //   },
+      // },
+
       callbacks: {
         label(context) {
-          return ` ${context.parsed.x.toLocaleString()} customers`;
+          const count = context.parsed.x;
+
+          return ` ${context.parsed.x.toLocaleString()} ${count <= 1 ? "customer" : "customers"}`;
         },
       },
     },
@@ -197,9 +205,7 @@ async function loadChart(startDate, endDate) {
   });
 
   chartData.value = {
-    labels: records.map(
-      (row) => row.dealer_name ?? row.dealer ?? "Unknown dealer",
-    ),
+    labels: records.map((row) => row.dealer_name ?? row.dealer ?? "Unknown dealer"),
     datasets: [
       {
         label: "Registered Customers",

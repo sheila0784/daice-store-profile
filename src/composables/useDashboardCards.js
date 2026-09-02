@@ -169,7 +169,7 @@ export function useDashboardCards(dateRange) {
 
       return data ?? [];
     } catch (error) {
-      console.error("Unable to fetch customers by dealer:", error);
+      console.error("Unable to fetch registered customers by dealer:", error);
       return [];
     } finally {
       loading.value = false;
@@ -201,6 +201,28 @@ export function useDashboardCards(dateRange) {
     }
   };
 
+  const fetchActiveCustPerDealer = async ({ start_date, end_date }) => {
+    loading.value = true;
+
+    try {
+      const { data, error } = await supabase.rpc("get_active_customers_by_dealer", {
+        p_start_date: start_date,
+        p_end_date: end_date,
+      });
+
+      if (error) throw error;
+
+      // console.log("Active customers by dealer:", data);
+
+      return data ?? [];
+    } catch (error) {
+      console.error("Unable to fetch active customers by dealer:", error);
+      return [];
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
     rows,
     rowsPerPageOptions,
@@ -208,6 +230,7 @@ export function useDashboardCards(dateRange) {
     fetchDashboardCards,
     fetchRegCustPerDealer,
     fetchTransactionsByDealer,
+    fetchActiveCustPerDealer,
     salesData,
     fetchCounts,
     dealerCount,
