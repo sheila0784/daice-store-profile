@@ -33,15 +33,6 @@ export function useRpt(dateRange) {
 
       const sv = searchValue.value?.trim() || "";
 
-      // console.log("Fetching report with parameters:", {
-      //   dateRange: dateRange.value,
-      //   start,
-
-      //   end,
-      //   searchValue: sv,
-      //   filterStatus: filterStatus.value,
-      // });
-
       const selectedStatus = Array.isArray(filterStatus.value)
         ? filterStatus.value[0]
         : filterStatus.value;

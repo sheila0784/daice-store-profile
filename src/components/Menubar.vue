@@ -80,11 +80,11 @@ const items = [
         icon: "pi pi-chart-line",
         command: () => router.push("/rptOrdersStatus"),
       },
-      // {
-      //   label: "Dealers'Inventory",
-      //   icon: "pi pi-chart-bar",
-      //   command: () => router.push("/inventoryreport"),
-      // },
+      {
+        label: "Dealer Sales and Delivery",
+        icon: "pi pi-chart-bar",
+        command: () => router.push("/rptdealersalesanddelivery"),
+      },
     ],
   },
 
