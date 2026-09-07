@@ -182,6 +182,8 @@
                 :options="storeList"
                 optionLabel="label"
                 optionValue="value"
+                showClear
+                @clear="store_id = null"
                 class="daice-select w-full"
                 @keydown.enter.prevent="focusNextSel('statusRef')"
               />
@@ -297,7 +299,7 @@ const schema = yup.object({
   }),
 
   store_id: yup.string().when("role", ([role], schema) => {
-    return ["dealer", "rider", "customer"].includes(role)
+    return ["dealer", "rider"].includes(role)
       ? schema.required("Store is required")
       : schema.notRequired().nullable();
   }),
