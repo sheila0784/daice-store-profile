@@ -12,6 +12,13 @@ export function useRpt(dateRange) {
   const selectedItem = ref(null);
   const searchValue = ref("");
   const filterStatus = ref([]);
+  const salesData = ref([]);
+  const selRowDate = ref(null);
+  const selRowDealer = ref(null);
+  const store_id = ref(null);
+
+  const salesPerDay = ref([]);
+  const showDiaSalesPerDay = ref(false);
 
   const formatDate = (date) => {
     if (!date) return null;
@@ -50,7 +57,9 @@ export function useRpt(dateRange) {
       }
 
       if (sv) {
-        query = query.or(`dealer.ilike.%${sv}%,recipient.ilike.%${sv}%,product_quantity.ilike.%${sv}%`);
+        query = query.or(
+          `dealer.ilike.%${sv}%,recipient.ilike.%${sv}%,product_quantity-.ilike.%${sv}%`,
+        );
       }
 
       if (selectedStatus != null && selectedStatus !== "") {
@@ -70,6 +79,46 @@ export function useRpt(dateRange) {
     } finally {
       loading.value = false;
     }
+  };
+
+  const fetchSalesData = async () => {
+    loading.value = true;
+
+    let start = null;
+    let end = null;
+
+    if (dateRange.value?.[0] && dateRange.value?.[1]) {
+      start = dateRange.value[0];
+      // start.setHours(0, 0, 0, 0);
+      start.setHours(23, 59, 59, 999);
+
+      end = dateRange.value[1];
+      end.setHours(23, 59, 59, 999);
+
+      start = start.toISOString();
+      end = end.toISOString();
+    }
+
+    // console.log("Fetching sales data with date range:", { start, end });
+
+    const { data, error } = await supabase.rpc("get_sales_summary", {
+      start_date: start,
+      end_date: end,
+    });
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    salesData.value = data;
+    // console.log("Fetched sales data:", salesData.value);
+    // console.log("Date range in composable:", dateRange.value);
+
+    console.log("store_id in composable:", store_id.value);
+
+    // showDiaSalesPerDay.value = true;
+    loading.value = false;
   };
 
   const deleteOrder = async (order) => {
@@ -162,6 +211,48 @@ export function useRpt(dateRange) {
     };
   };
 
+  const fetchSalesPerDay = async () => {
+    loading.value = true;
+  
+    const { data, error } = await supabase
+      .from("order_items_summary")
+      .select(
+        `
+    recipient,
+    total_amount,
+    created_at, 
+    order_time,
+    product_quantity
+  `,
+      )
+      .eq("status", "Delivered")
+      .eq("dealer", selRowDealer.value)
+      .gte("created_at", selRowDate.value.split("T")[0] + "T00:00:00.000Z")
+      .lt("created_at", selRowDate.value.split("T")[0] + "T23:59:59.999Z");
+
+    // console.log("Supabase query result:", { data, error });
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    const formattedData = data.map((row) => ({
+      dealer: row.stores?.name,
+      order_date: row.created_at.split("T")[0],
+      order_time: row.order_time,
+      recipient: row.recipient,
+      total_amount: row.total_amount,
+      product_quantity: row.product_quantity,
+    }));
+
+    salesPerDay.value = formattedData;
+    // console.log("Fetched sales data:", salesPerDay.value);
+    showDiaSalesPerDay.value = true;
+
+    loading.value = false;
+  };
+
   return {
     rows,
     rowsPerPageOptions,
@@ -174,5 +265,15 @@ export function useRpt(dateRange) {
     fetchRpt,
     dateRange,
     deleteOrder,
+
+    salesData,
+    fetchSalesData,
+    selRowDate,
+    selRowDealer,
+    showDiaSalesPerDay,
+
+    salesPerDay,
+    fetchSalesPerDay,
+    store_id,
   };
 }

@@ -24,7 +24,7 @@
                   class="daice-datepicker w-full"
                 />
 
-                <IconField class="daice-search w-full">
+                <!-- <IconField class="daice-search w-full">
                   <InputIcon class="pi pi-search" />
                   <InputText
                     v-model="searchValue"
@@ -32,153 +32,72 @@
                     class="w-full"
                     @keyup.enter="fetchRpt"
                   />
-                </IconField>
+                </IconField> -->
 
-                <div>
-                  <Select
-                    v-model="filterStatus"
-                    :options="statusOptions"
+                 <Select
+                    ref="storeNameRef"
+                    v-model="store_id"
+                    :options="storeList"
                     optionLabel="label"
                     optionValue="value"
-                    placeholder="Select status"
-                    class="daice-select"
-                    @change="fetchRpt"
+                    showClear
+                    placeholder="Select Dealer"
+                    @clear="store_id = null"
+                    class="daice-select w-full"
+                    @keydown.enter.prevent="focusNextSel('statusRef')"
                   />
-                </div>
+             
               </div>
             </div>
-
-            <!-- <div class="w-full md:w-auto md:ml-auto">
-              <Button
-                v-if="showCreateNew"
-                type="button"
-                label="Create New"
-                icon="pi pi-plus"
-                :loading="loading"
-                class="daice-action-btn text-xs"
-                @click="handleUpdate"
-              />
-            </div> -->
           </div>
 
           <Divider class="ice-divider" />
 
           <DataTable
-            :value="items"
-            stripedRows
-            :loading="loading"
-            paginator
+            :value="salesData"
+            class="daice-table"
             :rows="rows"
             :rowsPerPageOptions="rowsPerPageOptions"
+            paginator
+            stripedRows
             selectionMode="single"
-            dataKey="id"
-            class="daice-table w-full text-xs"
+            sortField="order_date"
+            :sortOrder="-1"
+            @row-click="onRowClick"
           >
-            <Column header="#" style="width: 60px" v-bind="columnDefaults">
-              <template #body="slotProps">
-                {{ slotProps.index + 1 }}
-              </template>
-            </Column>
-
-            <!-- <Column field="id" header="Order Id" sortable v-bind="columnDefaults"></Column>
-            <Column field="trip_id" header="Trip Id" sortable v-bind="columnDefaults"></Column> -->
-
-            <Column field="dealer" header="Dealer" sortable v-bind="columnDefaults"></Column>
             <Column
               field="order_date"
-              header="Order Date"
+              header="Date"
+              :body="(data) => new Date(data.date).toLocaleDateString()"
               sortable
               v-bind="columnDefaults"
             ></Column>
+            <Column field="dealer" header="Dealer" v-bind="columnDefaults"></Column>
             <Column
-              field="order_time"
-              header="Order Time"
-              sortable
+              field="no_of_served_customers"
+              header="Served Customers"
               v-bind="columnDefaults"
             ></Column>
-            <!-- <Column field="status" header="Status" v-bind="columnDefaults"></Column> -->
 
-            <Column field="status" header="Status" v-bind="columnDefaults">
+            <!-- insert here the product_quantity -->
+            <Column field="product_quantity" header="Products" v-bind="columnDefaults"></Column>
+
+            <Column
+              field="total_amount"
+              header="Total Sales"
+              v-bind="columnDefaults"
+              bodyClass="text-right text-sm"
+              sortable
+            >
               <template #body="{ data }">
-                <span
-                  :class="[
-                    'px-2 py-1 border-round text-xs font-semibold',
-                    data.status?.toLowerCase() === 'order placed'
-                      ? 'bg-yellow-100 text-blue-700'
-                      : 'text-color',
-                    data.status?.toLowerCase() === 'confirmed'
-                      ? 'bg-orange-100 text-blue-700'
-                      : 'text-color',
-                    data.status?.toLowerCase() === 'preparing'
-                      ? 'bg-purple-100 text-blue-700'
-                      : 'text-color',
-                    data.status?.toLowerCase() === 'cancelled'
-                      ? 'bg-red-100 text-red-700'
-                      : 'text-color',
-                    data.status?.toLowerCase() === 'delivered'
-                      ? 'bg-green-100 text-green-700'
-                      : 'text-color',
-                    data.status?.toLowerCase() === 'out for delivery'
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-color',
-                  ]"
-                >
-                  {{ data.status }}
-                </span>
-              </template>
-            </Column>
-
-            <Column field="recipient" header="Recipient" sortable v-bind="columnDefaults"></Column>
-            <!-- <Column field="contact" header="Contact No." v-bind="columnDefaults"></Column> -->
-            <!-- <Column field="address" header="Address" v-bind="columnDefaults"></Column> -->
-
-            <!-- <Column field="code" header="Product" v-bind="columnDefaults"></Column> -->
-            <!-- <Column field="quantity" header="Quantity" v-bind="columnDefaults"></Column> -->
-            <!-- <Column field="unit_price" header="Unit Price" v-bind="columnDefaults"></Column> -->
-            <!-- <Column field="discount" header="Discount" v-bind="columnDefaults"></Column>
-            <Column field="final_price" header="Net Price" v-bind="columnDefaults"></Column> -->
-
-            <Column
-              field="product_quantity"
-              header="Product & Qty"
-              v-bind="columnDefaults"
-            ></Column>
-            <Column field="total_gross" header="Total Gross" v-bind="columnDefaults"></Column>
-            <Column field="total_disc" header="Total Discount" v-bind="columnDefaults"></Column>
-
-            <Column field="total_amount" header="Net Amount" v-bind="columnDefaults"></Column>
-
-            <!-- Actions Column -->
-            <Column style="width: 140px" v-bind="columnDefaults">
-              <template #body="slotProps">
-                <div class="flex gap-2">
-                  <!-- <Button
-                    v-if="showActionBtnEdit"
-                    icon="pi pi-pencil"
-                    severity="info"
-                    size="small"
-                    variant="text"
-                    v-tooltip.bottom="'Edit Record'"
-                    @click.stop="handleUpdate(slotProps.data)"
-                  /> -->
-
-                  <Button
-                    v-if="showActionBtnDelete"
-                    icon="pi pi-trash"
-                    severity="danger"
-                    size="small"
-                    variant="text"
-                    v-tooltip.bottom="'Delete Record'"
-                    @click="handleDelete(slotProps.data)"
-                  />
-                </div>
+                {{ formatNumber(data.total_amount) }}
               </template>
             </Column>
           </DataTable>
         </template>
 
         <template #footer>
-          <div v-if="!items.length" class="flex gap-4 mt-1">
+          <div v-if="!salesData.length" class="flex gap-4 mt-1">
             <Message severity="secondary" variant="simple" size="small"
               >No records found. Try searching again.</Message
             >
@@ -196,6 +115,76 @@
           </div>
         </template>
       </Card>
+
+      <Dialog
+        v-model:visible="showDiaSalesPerDay"
+        :modal="true"
+        :closable="true"
+        :style="{ width: '700px', maxWidth: '92vw' }"
+        class="daice-dialog"
+      >
+        <template #header>
+          <div class="dialog-header-info">
+            <p>
+              Dealer: <span>{{ selRowDealer }}</span>
+            </p>
+            <p>
+              Sales Date: <span>{{ selRowDate }}</span>
+            </p>
+            <p>
+              Total Sales:
+              <span>
+                <i class="pi pi-money-bill"></i>
+                {{ formatNumber(selRowTotal) }}
+              </span>
+            </p>
+          </div>
+        </template>
+
+        <div class="daice-table-wrapper">
+          <DataTable
+            :value="salesPerDay"
+            class="daice-table w-full text-xs"
+            :rows="rows"
+            :rowsPerPageOptions="rowsPerPageOptions"
+            paginator
+            stripedRows
+            selectionMode="single"
+            sortField="order_time"
+            :sortOrder="1"
+            size="small"
+          >
+            <Column header="#" style="width: 60px" v-bind="dialogColumnDefaults">
+              <template #body="slotProps">
+                {{ slotProps.index + 1 }}
+              </template>
+            </Column>
+            <Column field="recipient" header="Customer" v-bind="dialogColumnDefaults"></Column>
+            <Column
+              field="order_time"
+              header="Order Time"
+              v-bind="dialogColumnDefaults"
+              sortable
+            ></Column>
+            <Column
+              field="product_quantity"
+              header="Product"
+              v-bind="dialogColumnDefaults"
+            ></Column>
+            <Column
+              field="total_amount"
+              header="Amount"
+              v-bind="dialogColumnDefaults"
+              sortable
+              bodyClass="flex justify-end"
+            >
+              <template #body="{ data }">
+                {{ formatNumber(data.total_amount) }}
+              </template>
+            </Column>
+          </DataTable>
+        </div>
+      </Dialog>
     </div>
   </div>
 </template>
@@ -205,162 +194,108 @@ import MenuBar from "../components/Menubar.vue";
 
 import { onMounted, ref, watch } from "vue";
 import { useRpt } from "../composables/useRpt.js";
-// import { useRouter } from "vue-router";
-
-// import { useStoreStore } from "@/stores/storeStore";
-// import { useStoresUpdate } from "../composables/useStoresUpdate.js";
 
 import Card from "primevue/card";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
-import InputText from "primevue/inputtext";
-import InputIcon from "primevue/inputicon";
-import IconField from "primevue/iconfield";
 import Message from "primevue/message";
 
 import Select from "primevue/select";
 import Divider from "primevue/divider";
 import DatePicker from "primevue/datepicker";
-
-import { useToast } from "primevue/usetoast";
-import { useConfirm } from "primevue/useconfirm";
+import Dialog from "primevue/dialog";
 
 import Button from "primevue/button";
 import { exportCsv } from "@/utils/exportCsv";
 
-import { usePermissions } from "@/composables/usePermissions.js";
-const { showActionBtnDelete } = usePermissions();
+import { useStoresProfileUpdate } from "@/composables/useStoresProfileUpdate";
+const { storeList, fetchStores } = useStoresProfileUpdate();
 
 const dateRange = ref(null);
 const today = new Date();
+
+const formatNumber = (value) => {
+  if (value == null) return "0";
+
+  return new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+};
 
 const columnDefaults = {
   headerClass: "daice-table-header",
   bodyClass: "text-xs whitespace-pre-line",
 };
 
-const toast = useToast();
-const confirm = useConfirm();
-
-// const router = useRouter();
-// const storeStore = useStoreStore();
-
-// const { deleteStore } = useStoresUpdate();
-
-// const handleUpdate = (order) => {
-//   // // 👇 store selected here
-//   // storeStore.selectedStore = store;
-
-//   // // 👇 then navigate
-//   // router.push({ name: "StoresUpdate" });
-//   console.log("Edit order:", order);
-// };
-
-const handleDelete = (order) => {
-  console.log("Delete order:", order);
-
-  confirm.require({
-    message: `Delete ${order.recipient}?`,
-    header: "Confirm Delete",
-    icon: "pi pi-exclamation-triangle",
-    rejectLabel: "Cancel",
-    acceptLabel: "Delete",
-    rejectClass: "p-button-secondary p-button-text",
-    acceptClass: "p-button-danger",
-
-    accept: async () => {
-      try {
-        const result = await deleteOrder(order);
-
-        console.log("Deleted successfully:", result);
-
-        toast.add({
-          severity: "success",
-          summary: "Deleted",
-          detail: "Order deleted successfully",
-          life: 3000,
-        });
-
-        await fetchRpt();
-      } catch (err) {
-        console.error("Delete failed:", err);
-
-        toast.add({
-          severity: "error",
-          summary: "Delete Failed",
-          detail: err.message || "Something went wrong",
-          life: 4000,
-        });
-      }
-    },
-
-    reject: () => {
-      toast.add({
-        severity: "info",
-        summary: "Cancelled",
-        detail: "Delete cancelled",
-        life: 2000,
-      });
-    },
-  });
+const dialogColumnDefaults = {
+  headerClass: "daice-table-header-light",
+  bodyClass: "text-xs",
 };
 
 const {
   rows,
   rowsPerPageOptions,
-  items,
-
   loading,
-
-  searchValue,
-  filterStatus,
-  fetchRpt,
-  deleteOrder,
+  fetchSalesData,
+  salesData,
+  selRowDate,
+  selRowDealer,
+  showDiaSalesPerDay,
+  salesPerDay,
+  fetchSalesPerDay,
+  store_id,
 } = useRpt(dateRange);
-
-const statusOptions = [
-  { label: "Order Placed", value: "Order Placed" },
-  { label: "Confirmed", value: "Confirmed" },
-  { label: "Preparing", value: "Preparing" },
-  { label: "Out for Delivery", value: "Out for delivery" },
-  { label: "Delivered", value: "Delivered" },
-  { label: "Cancelled", value: "Cancelled" },
-  { label: "All", value: null },
-];
 
 const handleExport = () => {
   exportCsv({
-    filename: `ordersstatus_${new Date().toISOString().slice(0, 10)}.csv`,
+    filename: `sales_${new Date().toISOString().slice(0, 10)}.csv`,
     headers: [
-      { label: "Order Id", key: "id" },
+      { label: "Date", key: "order_date" },
       { label: "Dealer", key: "dealer" },
-      { label: "Order Date", key: "order_date" },
-      { label: "Order Time", key: "order_time" },
-      { label: "Status", key: "status" },
-      { label: "Recipient", key: "recipient" },
-      { label: "Contact No.", key: "contact" },
-      { label: "Address", key: "address" },
-      { label: "Product and Qty", key: "product_quantity" },
-
-      { label: "Total Gross", key: "total_gross" },
-      { label: "Total Discount", key: "total_disc" },
-       { label: "Net Amount", key: "total_amount" },
+      { label: "Served Customers", key: "no_of_served_customers" },
+      { label: "Products", key: "product_quantity" },
+      { label: "Total Sales", key: "total_amount" },
     ],
-    data: items.value.map((item) => ({
+    data: salesData.value.map((item) => ({
       ...item,
     })),
   });
 };
 
-watch(dateRange, (newVal) => {
-  dateRange.value = newVal;
-  fetchRpt();
+const selRowTotal = ref(0);
+const selRowProds = ref("");
+
+const onRowClick = (event) => {
+  selRowDate.value = event.data.order_date;
+  selRowDealer.value = event.data.dealer;
+  selRowTotal.value = event.data.total_amount;
+  selRowProds.value = event.data.product_quantity;
+
+  // console.log("Row clicked:", selRowDate.value, selRowDealer.value, selRowTotal.value);
+  fetchSalesPerDay();
+};
+
+// watch(dateRange, (newVal) => {
+//   dateRange.value = newVal;
+//   // console.log("Date range changed:", newVal);
+
+//   fetchSalesData();
+// });
+
+watch([dateRange, store_id], () => {
+  fetchSalesData();
+  console.log("Date range or store_id changed:", store_id.value);
+
 });
+
 
 onMounted(() => {
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   dateRange.value = [firstDayOfMonth, today];
 
-  fetchRpt();
+  fetchSalesData();
+  fetchStores();
 });
 </script>
+
