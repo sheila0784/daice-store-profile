@@ -50,158 +50,6 @@
       <div class="daice-table-wrapper">
         <ChartActiveCustomersByDealer :date-range="dateRange" />
       </div>
-
-
-      <div class="daice-table-wrapper">
-        <div class="daice-chart-header">
-          <div class="daice-chart-icon">
-            <i class="pi pi-chart-bar"></i>
-          </div>
-
-          <div>
-            <h3 class="daice-chart-title">Daily Dealer Sales and Delivery Summary</h3>
-            <p class="daice-chart-subtitle">Daily totals for served customers, products delivered, and sales amount by dealer</p>
-          </div>
-        </div>
-
-        <Datatable
-          :value="salesData"
-          class="daice-table"
-          :rows="rows"
-          :rowsPerPageOptions="rowsPerPageOptions"
-          paginator
-          stripedRows
-          selectionMode="single"
-          sortField="order_date"
-          :sortOrder="-1"
-          @row-click="onRowClick"
-        >
-          <Column
-            field="order_date"
-            header="Date"
-            :body="(data) => new Date(data.date).toLocaleDateString()"
-            sortable
-            v-bind="columnDefaults"
-          ></Column>
-          <Column field="dealer" header="Dealer" v-bind="columnDefaults"></Column>
-          <Column
-            field="no_of_served_customers"
-            header="Served Customers"
-            v-bind="columnDefaults"
-          ></Column>
-
-          <!-- insert here the product_quantity -->
-          <Column field="product_quantity" header="Products" v-bind="columnDefaults"></Column>
-
-          <Column
-            field="total_amount"
-            header="Total Sales"
-            v-bind="columnDefaults"
-            bodyClass="text-right text-sm"
-            sortable
-          >
-            <template #body="{ data }">
-              {{ formatNumber(data.total_amount) }}
-            </template>
-          </Column>
-        </Datatable>
-        <div class="flex">
-          <div v-if="!salesData.length" class="flex gap-4 mt-1">
-            <Message severity="secondary" variant="simple" size="small"
-              >No records found. Try searching again.</Message
-            >
-          </div>
-          <div v-else class="flex gap-4 mt-1 w-full">
-            <Button
-              variant="text"
-              severity="secondary"
-              label="Download CSV File"
-              icon="pi pi-download"
-              :loading="loading"
-              class="daice-link-btn text-xs"
-              @click="handleExport"
-            />
-          </div>
-        </div>
-      </div>
-
-      <!-- :style="{ width: '400px', maxWidth: '92vw' }" -->
-      <Dialog
-        v-model:visible="showDiaSalesPerDay"
-        :modal="true"
-        :closable="true"
-        :style="{ width: '700px', maxWidth: '92vw' }"
-        class="daice-dialog"
-      >
-        <template #header>
-          <div class="dialog-header-info">
-            <p>
-              Dealer: <span>{{ selRowDealer }}</span>
-            </p>
-            <p>
-              Sales Date: <span>{{ selRowDate }}</span>
-            </p>
-            <p>
-              Total Sales:
-              <span>
-                <i class="pi pi-money-bill"></i>
-                {{ formatNumber(selRowTotal) }}
-              </span>
-            </p>
-          </div>
-        </template>
-
-        <div class="daice-table-wrapper">
-          <!-- <Datatable
-            :value="salesPerDay"
-            class="daice-table daice-dialog-table w-full text-xs"
-            size="small"
-            stripedRows
-          > -->
-
-          <Datatable
-            :value="salesPerDay"
-            class="daice-table w-full text-xs"
-            :rows="rows"
-            :rowsPerPageOptions="rowsPerPageOptions"
-            paginator
-            stripedRows
-            selectionMode="single"
-            sortField="order_time"
-            :sortOrder="1"
-            size="small"
-          >
-            <Column header="#" style="width: 60px" v-bind="dialogColumnDefaults">
-              <template #body="slotProps">
-                {{ slotProps.index + 1 }}
-              </template>
-            </Column>
-            <Column field="recipient" header="Customer" v-bind="dialogColumnDefaults"></Column>
-            <Column
-              field="order_time"
-              header="Order Time"
-              v-bind="dialogColumnDefaults"
-              sortable
-            ></Column>
-            <Column
-              field="product_quantity"
-              header="Product"
-              v-bind="dialogColumnDefaults"
-            ></Column>
-            <Column
-              field="total_amount"
-              header="Amount"
-              v-bind="dialogColumnDefaults"
-              sortable
-              bodyClass="flex justify-end"
-            >
-              <template #body="{ data }">
-                {{ formatNumber(data.total_amount) }}
-              </template>
-            </Column>
-          </Datatable>
-        </div>
-      </Dialog>
     </div>
   </div>
 </template>
@@ -212,72 +60,28 @@ import DatePicker from "primevue/datepicker";
 import { ref, watch, onMounted } from "vue";
 import { formatDateLabel } from "@/utils/date";
 import { useDashboardCards } from "@/composables/useDashboardCards";
-import Datatable from "primevue/datatable";
-import Column from "primevue/column";
-import Dialog from "primevue/dialog";
 import { useRouter } from "vue-router";
-import Message from "primevue/message";
-import Button from "primevue/button";
-import { exportCsv } from "@/utils/exportCsv";
+
 import ChartRegisteredCustomers from "@/components/ChartRegisteredCustomers.vue";
 import ChartTransactionsByDealer from "@/components/ChartTransactionsByDealer.vue";
 import ChartActiveCustomersByDealer from "@/components/ChartActiveCustomersByDealer.vue";
-
-const columnDefaults = {
-  headerClass: "daice-table-header",
-  bodyClass: "text-xs whitespace-pre-line",
-};
-
-const dialogColumnDefaults = {
-  headerClass: "daice-table-header-light",
-  bodyClass: "text-xs",
-};
 
 const router = useRouter();
 
 const dateRange = ref(null);
 const dateDisplay = ref("");
-const selRowTotal = ref(0);
-const selRowProds = ref("");
 
 const today = new Date();
 
-const onRowClick = (event) => {
-  selRowDate.value = event.data.order_date;
-  selRowDealer.value = event.data.dealer;
-  selRowTotal.value = event.data.total_amount;
-  selRowProds.value = event.data.product_quantity;
-
-  console.log("Row clicked:", selRowDate.value, selRowDealer.value, selRowTotal.value);
-
-  fetchSalesPerDay();
-};
 
 const {
-  salesData,
   fetchDashboardCards,
   fetchCounts,
   dealerCount,
   customerCount,
   riderCount,
-  rows,
-  rowsPerPageOptions,
-  fetchSalesPerDay,
-  showDiaSalesPerDay,
-  salesPerDay,
-  selRowDate,
-  selRowDealer,
-  loading,
 } = useDashboardCards(dateRange);
 
-const formatNumber = (value) => {
-  if (value == null) return "0";
-
-  return new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
-};
 
 const handleDealerClick = () => {
   router.push("/storeslist");
@@ -329,22 +133,6 @@ const dashboardCards = [
     click: handleRiderClick,
   },
 ];
-
-const handleExport = () => {
-  exportCsv({
-    filename: `sales_${new Date().toISOString().slice(0, 10)}.csv`,
-    headers: [
-      { label: "Date", key: "order_date" },
-      { label: "Dealer", key: "dealer" },
-      { label: "Served Customers", key: "no_of_served_customers" },
-      { label: "Products", key: "product_quantity" },
-      { label: "Total Sales", key: "total_amount" },
-    ],
-    data: salesData.value.map((item) => ({
-      ...item,
-    })),
-  });
-};
 
 watch(dateRange, (newVal) => {
   dateRange.value = newVal;

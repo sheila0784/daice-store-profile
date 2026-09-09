@@ -15,7 +15,7 @@ export function useRpt(dateRange) {
   const salesData = ref([]);
   const selRowDate = ref(null);
   const selRowDealer = ref(null);
-  const store_id = ref(null);
+  const store_id = ref([]);
 
   const salesPerDay = ref([]);
   const showDiaSalesPerDay = ref(false);
@@ -44,13 +44,7 @@ export function useRpt(dateRange) {
         ? filterStatus.value[0]
         : filterStatus.value;
 
-      // console.log("Filtering by date range:", {
-      //   dateRange: dateRange.value,
-      //   start,
-      //   end,
-      // });
-
-      let query = supabase.from("report_ordersstatus").select("*");
+       let query = supabase.from("report_ordersstatus").select("*");
 
       if (start && end) {
         query = query.gte("order_date", start).lte("order_date", end);
@@ -82,44 +76,48 @@ export function useRpt(dateRange) {
   };
 
   const fetchSalesData = async () => {
-    loading.value = true;
+  loading.value = true;
 
+  try {
     let start = null;
     let end = null;
 
     if (dateRange.value?.[0] && dateRange.value?.[1]) {
-      start = dateRange.value[0];
-      // start.setHours(0, 0, 0, 0);
-      start.setHours(23, 59, 59, 999);
+      const startDate = new Date(dateRange.value[0]);
+      const endDate = new Date(dateRange.value[1]);
 
-      end = dateRange.value[1];
-      end.setHours(23, 59, 59, 999);
+      startDate.setHours(0, 0, 0, 0);
 
-      start = start.toISOString();
-      end = end.toISOString();
+      // Include the entire final day using an exclusive end.
+      endDate.setHours(0, 0, 0, 0);
+      endDate.setDate(endDate.getDate() + 1);
+
+      start = startDate.toISOString();
+      end = endDate.toISOString();
     }
 
-    // console.log("Fetching sales data with date range:", { start, end });
+    const { data, error } = await supabase.rpc(
+      "get_dealer_salesanddelivery",
+      {
+        start_date: start,
+        end_date: end,
+        p_store_ids: store_id.value?.length
+          ? store_id.value.map(String)
+          : null,
+      },
+    );
 
-    const { data, error } = await supabase.rpc("get_sales_summary", {
-      start_date: start,
-      end_date: end,
-    });
+    if (error) throw error;
 
-    if (error) {
-      console.error(error);
-      return;
-    }
-
-    salesData.value = data;
-    // console.log("Fetched sales data:", salesData.value);
-    // console.log("Date range in composable:", dateRange.value);
-
-    console.log("store_id in composable:", store_id.value);
-
-    // showDiaSalesPerDay.value = true;
+    salesData.value = data ?? [];
+  } catch (error) {
+    console.error("Failed to fetch dealer sales:", error);
+    salesData.value = [];
+  } finally {
     loading.value = false;
-  };
+  }
+};
+
 
   const deleteOrder = async (order) => {
     if (!order?.id) {
@@ -141,13 +139,7 @@ export function useRpt(dateRange) {
       throw new Error(`Failed to delete order statuses: ${statusError.message}`);
     }
 
-    // console.log("Order ID used:", orderId);
-    // console.log("Deleted statuses:", deletedStatuses);
-
-    // if (!deletedStatuses?.length) {
-    //   throw new Error(`No order_status records matched order_id ${orderId}.`);
-    // }
-
+  
     // Delete order items
     const { data: deletedItems, error: itemsError } = await supabase
       .from("order_items")
@@ -158,17 +150,6 @@ export function useRpt(dateRange) {
     if (itemsError) {
       throw new Error(`Failed to delete order items: ${itemsError.message}`);
     }
-
-    // // Delete status history
-    // const { data: deletedStatuses, error: statusError } = await supabase
-    //   .from("order_status")
-    //   .delete()
-    //   .eq("order_id", orderId)
-    //   .select();
-
-    // if (statusError) {
-    //   throw new Error(`Failed to delete order statuses: ${statusError.message}`);
-    // }
 
     // Delete parent order
     const { data: deletedOrder, error: orderError } = await supabase
@@ -213,7 +194,7 @@ export function useRpt(dateRange) {
 
   const fetchSalesPerDay = async () => {
     loading.value = true;
-  
+
     const { data, error } = await supabase
       .from("order_items_summary")
       .select(
@@ -230,8 +211,6 @@ export function useRpt(dateRange) {
       .gte("created_at", selRowDate.value.split("T")[0] + "T00:00:00.000Z")
       .lt("created_at", selRowDate.value.split("T")[0] + "T23:59:59.999Z");
 
-    // console.log("Supabase query result:", { data, error });
-
     if (error) {
       console.error(error);
       return;
@@ -247,7 +226,6 @@ export function useRpt(dateRange) {
     }));
 
     salesPerDay.value = formattedData;
-    // console.log("Fetched sales data:", salesPerDay.value);
     showDiaSalesPerDay.value = true;
 
     loading.value = false;

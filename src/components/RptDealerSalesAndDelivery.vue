@@ -6,7 +6,7 @@
     <div class="dashboard-inner p-3 md:p-5">
       <Card class="dashboard-shell">
         <template #title>
-          <div class="dashboard-title">Dealer Sales and Delivery</div>
+          <div class="dashboard-title">Daily Dealer Sales and Delivery Summary</div>
         </template>
 
         <template #content>
@@ -24,17 +24,7 @@
                   class="daice-datepicker w-full"
                 />
 
-                <!-- <IconField class="daice-search w-full">
-                  <InputIcon class="pi pi-search" />
-                  <InputText
-                    v-model="searchValue"
-                    placeholder="Search"
-                    class="w-full"
-                    @keyup.enter="fetchRpt"
-                  />
-                </IconField> -->
-
-                 <Select
+                <!-- <Select
                     ref="storeNameRef"
                     v-model="store_id"
                     :options="storeList"
@@ -45,8 +35,21 @@
                     @clear="store_id = null"
                     class="daice-select w-full"
                     @keydown.enter.prevent="focusNextSel('statusRef')"
-                  />
-             
+                  /> -->
+
+                <MultiSelect
+                  ref="storeNameRef"
+                  v-model="store_id"
+                  :options="storeList"
+                  optionLabel="label"
+                  optionValue="value"
+                  filter
+                  display="chip"
+                  showClear
+                  placeholder="Select Dealers"
+                  @clear="store_id = []"
+                  class="daice-select w-full"
+                />
               </div>
             </div>
           </div>
@@ -200,10 +203,10 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import Message from "primevue/message";
 
-import Select from "primevue/select";
 import Divider from "primevue/divider";
 import DatePicker from "primevue/datepicker";
 import Dialog from "primevue/dialog";
+import MultiSelect from "primevue/multiselect";
 
 import Button from "primevue/button";
 import { exportCsv } from "@/utils/exportCsv";
@@ -276,19 +279,10 @@ const onRowClick = (event) => {
   fetchSalesPerDay();
 };
 
-// watch(dateRange, (newVal) => {
-//   dateRange.value = newVal;
-//   // console.log("Date range changed:", newVal);
-
-//   fetchSalesData();
-// });
-
 watch([dateRange, store_id], () => {
   fetchSalesData();
-  console.log("Date range or store_id changed:", store_id.value);
-
+  // console.log("Date range or store_id changed:", store_id.value);
 });
-
 
 onMounted(() => {
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -298,4 +292,3 @@ onMounted(() => {
   fetchStores();
 });
 </script>
-
