@@ -2,7 +2,7 @@
   <div class="daice-chart-card mb-4">
     <div class="daice-chart-header">
       <div class="daice-chart-icon">
-        <i class="pi pi-users"></i>
+        <i class="pi pi-sitemap"></i>
       </div>
 
       <div>

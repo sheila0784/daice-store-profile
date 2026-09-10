@@ -223,6 +223,29 @@ export function useDashboardCards(dateRange) {
     }
   };
 
+   const fetchVolumeByDealer = async ({ start_date, end_date }) => {
+    loading.value = true;
+
+    try {
+      const { data, error } = await supabase.rpc("get_volume_by_dealer", {
+        p_start_date: start_date,
+        p_end_date: end_date,
+      });
+
+      if (error) throw error;
+
+      // console.log("Volume by dealer:", data);
+
+      return data ?? [];
+    } catch (error) {
+      console.error("Unable to fetch volume by dealer:", error);
+      return [];
+    } finally {
+      loading.value = false;
+    }
+  };
+
+
   return {
     rows,
     rowsPerPageOptions,
@@ -231,6 +254,7 @@ export function useDashboardCards(dateRange) {
     fetchRegCustPerDealer,
     fetchTransactionsByDealer,
     fetchActiveCustPerDealer,
+    fetchVolumeByDealer,
     salesData,
     fetchCounts,
     dealerCount,
