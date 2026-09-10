@@ -44,17 +44,16 @@
       </div>
 
       <div class="daice-table-wrapper">
+        <ChartActiveCustomersByDealer :date-range="dateRange" />
+      </div>
+
+      <div class="daice-table-wrapper">
         <ChartTransactionsByDealer :date-range="dateRange" />
       </div>
 
       <div class="daice-table-wrapper">
-        <ChartActiveCustomersByDealer :date-range="dateRange" />
-      </div>
-
-       <div class="daice-table-wrapper">
         <ChartVolumeByDealer :date-range="dateRange" />
       </div>
-
     </div>
   </div>
 </template>
@@ -79,15 +78,8 @@ const dateDisplay = ref("");
 
 const today = new Date();
 
-
-const {
-  fetchDashboardCards,
-  fetchCounts,
-  dealerCount,
-  customerCount,
-  riderCount,
-} = useDashboardCards(dateRange);
-
+const { fetchDashboardCards, fetchCounts, dealerCount, customerCount, riderCount } =
+  useDashboardCards(dateRange);
 
 const handleDealerClick = () => {
   router.push("/storeslist");
