@@ -22,6 +22,10 @@
         <ChartVolume :date-range="dateRange" />
       </div>
 
+      <div class="daice-table-wrapper">
+        <ChartTransactions :date-range="dateRange" />
+      </div>
+
       
     </div>
   </div>
@@ -36,6 +40,7 @@ import { useDashboardCards } from "@/composables/useDashboardCards";
 
 import ChartVolume from "@/components/ChartVolume.vue";
 import ChartCustomers from "@/components/ChartCustomers.vue";
+import ChartTransactions from "@/components/ChartTransactions.vue";
 
 const dateRange = ref(null);
 const dateDisplay = ref("");

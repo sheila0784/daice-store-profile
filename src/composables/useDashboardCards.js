@@ -224,6 +224,30 @@ export function useDashboardCards(dateRange) {
     }
   };
 
+  const fetchTransactions = async ({ start_date, end_date }) => {
+    loading.value = true;
+
+    // console.log("Transaction status:", status);
+
+    try {
+      const { data, error } = await supabase.rpc("get_transactions", {
+        p_start_date: start_date,
+        p_end_date: end_date,
+      });
+
+      if (error) throw error;
+
+      // console.log("Transaction count:", data);
+
+      return data ?? [];
+    } catch (error) {
+      console.error("Unable to fetch transactions", error);
+      return [];
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const fetchActiveCustPerDealer = async ({ start_date, end_date }) => {
     loading.value = true;
 
@@ -321,6 +345,7 @@ export function useDashboardCards(dateRange) {
     fetchRegCustPerDealer,
 
     fetchTransactionsByDealer,
+    fetchTransactions,
     fetchActiveCustPerDealer,
     fetchCustomerCount,
     fetchVolumeByDealer,

@@ -2,13 +2,13 @@
   <div class="daice-chart-card mb-4">
     <div class="daice-chart-header">
       <div class="daice-chart-icon">
-        <i class="pi pi-box"></i>
+        <i class="pi pi-truck"></i>
       </div>
 
       <div>
-        <h3 class="daice-chart-title">Order Volume by Month</h3>
+        <h3 class="daice-chart-title">Delivered Orders by Month</h3>
         <p class="daice-chart-subtitle">
-          Monthly volume data through the Da ICE Customer app from
+          Number of delivered orders placed through the Da ICE Customer app each month from
           {{ formatDateLabel(props.dateRange) }}.
         </p>
       </div>
@@ -45,13 +45,13 @@ const props = defineProps({
   },
 });
 
-const { fetchVolume } = useDashboardCards();
+const { fetchTransactions } = useDashboardCards();
 
 const chartData = ref({
   labels: [],
   datasets: [
     {
-      label: "Volume (Kg)",
+      label: "Transactions",
       data: [],
       backgroundColor: "rgba(56, 189, 248, 0.16)",
         borderColor: "#0EA5E9",
@@ -122,7 +122,7 @@ const chartOptions = ref({
         label(context) {
           const count = context.parsed.y;
 
-          return ` ${context.parsed.y.toLocaleString()} ${count === 1 ? "Kg" : "Kgs"}`;
+          return ` ${context.parsed.y.toLocaleString()} ${count === 1 ? "Order" : "Orders"}`;
         },
       },
     },
@@ -152,7 +152,7 @@ const chartOptions = ref({
 
       title: {
         display: true,
-        text: "Volume (Kg)",
+        text: "Order Count",
         color: "#0369A1",
         font: {
           size: 12,
@@ -204,7 +204,7 @@ function formatApiDate(date) {
 }
 
 async function loadChart(startDate, endDate) {
-  const records = await fetchVolume({
+  const records = await fetchTransactions({
     start_date: formatApiDate(startDate),
     end_date: formatApiDate(endDate),
   });
@@ -213,8 +213,8 @@ async function loadChart(startDate, endDate) {
     labels: records.map((row) => row.month_name ?? "Unknown month"),
     datasets: [
       {
-        label: "Volume",
-        data: records.map((row) => Number(row.order_volume) || 0),
+        label: "Transactions",
+        data: records.map((row) => Number(row.transaction_count) || 0),
         backgroundColor: "rgba(56, 189, 248, 0.16)",
         borderColor: "#0EA5E9",
         borderWidth: 3,
