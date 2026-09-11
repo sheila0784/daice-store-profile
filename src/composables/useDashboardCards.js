@@ -176,6 +176,29 @@ export function useDashboardCards(dateRange) {
     }
   };
 
+  const fetchRegCust = async ({ start_date, end_date }) => {
+    loading.value = true;
+
+    try {
+      const { data, error } = await supabase.rpc("get_registered_customers_by_month", {
+        p_start_date: start_date,
+        p_end_date: end_date,
+      });
+
+      if (error) throw error;
+
+      // console.log("Registered customers by dealer:", data);
+
+      return data ?? [];
+    } catch (error) {
+      console.error("Unable to fetch registered customers:", error);
+      return [];
+    } finally {
+      loading.value = false;
+    }
+  };
+
+
   const fetchTransactionsByDealer = async ({ start_date, end_date, status }) => {
     loading.value = true;
 
@@ -223,6 +246,28 @@ export function useDashboardCards(dateRange) {
     }
   };
 
+  const fetchCustomerCount = async ({ start_date, end_date }) => {
+    loading.value = true;
+
+    try {
+      const { data, error } = await supabase.rpc("get_customer_count_by_month", {
+        p_start_date: start_date,
+        p_end_date: end_date,
+      });
+
+      if (error) throw error;
+
+      // console.log("Active customers by dealer:", data);
+
+      return data ?? [];
+    } catch (error) {
+      console.error("Unable to fetch customer count:", error);
+      return [];
+    } finally {
+      loading.value = false;
+    }
+  };
+
    const fetchVolumeByDealer = async ({ start_date, end_date }) => {
     loading.value = true;
 
@@ -245,6 +290,28 @@ export function useDashboardCards(dateRange) {
     }
   };
 
+   const fetchVolume = async ({ start_date, end_date }) => {
+    loading.value = true;
+
+    try {
+      const { data, error } = await supabase.rpc("get_volume", {
+        p_start_date: start_date,
+        p_end_date: end_date,
+      });
+
+      if (error) throw error;
+
+      // console.log("Volume by dealer:", data);
+
+      return data ?? [];
+    } catch (error) {
+      console.error("Unable to fetch volume:", error);
+      return [];
+    } finally {
+      loading.value = false;
+    }
+  };
+
 
   return {
     rows,
@@ -252,9 +319,12 @@ export function useDashboardCards(dateRange) {
     loading,
     fetchDashboardCards,
     fetchRegCustPerDealer,
+
     fetchTransactionsByDealer,
     fetchActiveCustPerDealer,
+    fetchCustomerCount,
     fetchVolumeByDealer,
+    fetchVolume,
     salesData,
     fetchCounts,
     dealerCount,

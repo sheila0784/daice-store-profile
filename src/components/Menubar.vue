@@ -85,6 +85,11 @@ const items = [
         icon: "pi pi-chart-bar",
         command: () => router.push("/rptdealersalesanddelivery"),
       },
+      {
+        label: "Monthly Overview",
+        icon: "pi pi-chart-line",
+        command: () => router.push("/monthlyoverview"),
+      },
     ],
   },
 

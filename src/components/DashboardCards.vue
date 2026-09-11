@@ -40,7 +40,7 @@
       </div>
 
       <div class="daice-table-wrapper">
-        <ChartRegisteredCustomers :date-range="dateRange" />
+        <ChartRegisteredCustomersByDealer :date-range="dateRange" />
       </div>
 
       <div class="daice-table-wrapper">
@@ -54,6 +54,9 @@
       <div class="daice-table-wrapper">
         <ChartVolumeByDealer :date-range="dateRange" />
       </div>
+
+    
+
     </div>
   </div>
 </template>
@@ -66,7 +69,7 @@ import { formatDateLabel } from "@/utils/date";
 import { useDashboardCards } from "@/composables/useDashboardCards";
 import { useRouter } from "vue-router";
 
-import ChartRegisteredCustomers from "@/components/ChartRegisteredCustomers.vue";
+import ChartRegisteredCustomersByDealer from "@/components/ChartRegisteredCustomersByDealer.vue";
 import ChartTransactionsByDealer from "@/components/ChartTransactionsByDealer.vue";
 import ChartActiveCustomersByDealer from "@/components/ChartActiveCustomersByDealer.vue";
 import ChartVolumeByDealer from "@/components/ChartVolumeByDealer.vue";

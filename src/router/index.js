@@ -17,6 +17,8 @@ import DashboardView from "@/views/DashboardView.vue";
 import ProductsList from "@/components/ProductsList.vue";
 import ProductUpdate from "@/components/ProductUpdate.vue";
 
+import MonthlyOverview from "@/components/MonthlyOverview.vue";
+
 
 const routes = [
   {
@@ -103,6 +105,12 @@ const routes = [
     name: "ProductUpdate",
     component: ProductUpdate,
   },
+
+  {
+    path: "/MonthlyOverview",
+    component: MonthlyOverview,
+  },
+  
 
 ];
 
