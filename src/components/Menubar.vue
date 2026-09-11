@@ -77,14 +77,18 @@ const items = [
     items: [
       {
         label: "Orders and Status",
-        icon: "pi pi-chart-line",
+        icon: "pi pi-list-check",
         command: () => router.push("/rptOrdersStatus"),
       },
       {
         label: "Dealer Sales and Delivery",
-        icon: "pi pi-chart-bar",
+        icon: "pi pi-shopping-cart",
         command: () => router.push("/rptdealersalesanddelivery"),
       },
+       {
+        separator: true,
+      },
+
       {
         label: "Monthly Overview",
         icon: "pi pi-chart-line",
