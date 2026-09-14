@@ -52,7 +52,7 @@ export function useRpt(dateRange) {
 
       if (sv) {
         query = query.or(
-          `dealer.ilike.%${sv}%,recipient.ilike.%${sv}%,product_quantity-.ilike.%${sv}%`,
+          `dealer.ilike.%${sv}%,recipient.ilike.%${sv}%,product_quantity.ilike.%${sv}%`
         );
       }
 
