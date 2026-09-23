@@ -18,7 +18,7 @@ import ProductsList from "@/components/ProductsList.vue";
 import ProductUpdate from "@/components/ProductUpdate.vue";
 
 import MonthlyOverview from "@/components/MonthlyOverview.vue";
-
+import ExportCustomerOrders from "@/components/ExportCustomerOrders.vue";
 
 const routes = [
   {
@@ -109,6 +109,11 @@ const routes = [
   {
     path: "/MonthlyOverview",
     component: MonthlyOverview,
+  },
+  {
+    path: "/ExportCustomerOrders",
+    name: "ExportCustomerOrders",
+    component: ExportCustomerOrders,
   },
   
 

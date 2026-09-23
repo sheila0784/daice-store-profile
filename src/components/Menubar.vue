@@ -97,6 +97,21 @@ const items = [
     ],
   },
 
+ {
+    label: "Tools",
+    icon: "pi pi-hammer",
+    items: [
+      {
+        label: "Export Customer Orders",
+        icon: "pi pi-file-export",
+        command: () => router.push("/exportcustomerorders"),
+      },
+     
+    ],
+  },
+
+
+
   {
     label: "Settings",
     icon: "pi pi-cog",
