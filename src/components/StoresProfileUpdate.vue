@@ -185,6 +185,7 @@
                 showClear
                 @clear="store_id = null"
                 class="daice-select w-full"
+                filter
                 @keydown.enter.prevent="focusNextSel('statusRef')"
               />
               <label for="store_id">Store</label>

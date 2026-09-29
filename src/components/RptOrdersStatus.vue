@@ -80,8 +80,8 @@
               </template>
             </Column>
 
-            <!-- <Column field="id" header="Order Id" sortable v-bind="columnDefaults"></Column>
-            <Column field="trip_id" header="Trip Id" sortable v-bind="columnDefaults"></Column> -->
+            <Column field="id" header="Order Id" sortable v-bind="columnDefaults"></Column>
+            <Column field="trip_id" header="Trip Id" sortable v-bind="columnDefaults"></Column>
 
             <Column field="dealer" header="Dealer" sortable v-bind="columnDefaults"></Column>
             <Column
