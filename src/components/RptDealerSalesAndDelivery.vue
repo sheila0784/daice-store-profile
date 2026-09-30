@@ -6,7 +6,7 @@
     <div class="dashboard-inner p-3 md:p-5">
       <Card class="dashboard-shell">
         <template #title>
-          <div class="dashboard-title">Daily Dealer Sales and Delivery Summary</div>
+          <div class="dashboard-title">Dealer Sales and Delivery Summary</div>
         </template>
 
         <template #content>
