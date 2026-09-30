@@ -24,19 +24,6 @@
                   class="daice-datepicker w-full"
                 />
 
-                <!-- <Select
-                    ref="storeNameRef"
-                    v-model="store_id"
-                    :options="storeList"
-                    optionLabel="label"
-                    optionValue="value"
-                    showClear
-                    placeholder="Select Dealer"
-                    @clear="store_id = null"
-                    class="daice-select w-full"
-                    @keydown.enter.prevent="focusNextSel('statusRef')"
-                  /> -->
-
                 <MultiSelect
                   ref="storeNameRef"
                   v-model="store_id"
@@ -55,6 +42,56 @@
           </div>
 
           <Divider class="ice-divider" />
+
+          <DataTable
+            :value="salesSummary"
+            class="daice-table"
+            :rows="rows"
+            :rowsPerPageOptions="rowsPerPageOptions"
+            paginator
+            stripedRows
+            selectionMode="single"
+            rowGroupMode="rowspan"
+            groupRowsBy="dealer"
+            sortMode="single"
+            sortField="dealer"
+            :sortOrder="1"
+          >
+            <!-- <template #groupheader="{ data }">
+              <span class="font-bold">{{ data.dealer }}</span>
+            </template> -->
+
+            <Column field="dealer" header="Dealer" v-bind="columnDefaults" />
+
+            <Column field="code" header="Products" v-bind="columnDefaults" />
+
+            <Column field="quantity" header="Quantity" v-bind="columnDefaults" />
+
+            <Column field="volume" header="Volume" v-bind="columnDefaults" />
+
+            <Column
+              field="total_amount"
+              header="Total Sales"
+              v-bind="columnDefaults"
+              bodyClass="text-right text-sm"
+            >
+              <template #body="{ data }">
+                {{ formatNumber(data.total_amount) }}
+              </template>
+            </Column>
+          </DataTable>
+
+          <div>
+            <Button
+              variant="text"
+              severity="secondary"
+              label="Download CSV File"
+              icon="pi pi-download"
+              :loading="loading"
+              class="daice-link-btn text-xs mb-4"
+              @click="handleExportSummary"
+            />
+          </div>
 
           <DataTable
             :value="salesData"
@@ -248,6 +285,8 @@ const {
   salesPerDay,
   fetchSalesPerDay,
   store_id,
+  salesSummary,
+  fetchSalesSummary,
 } = useRpt(dateRange);
 
 const handleExport = () => {
@@ -261,6 +300,22 @@ const handleExport = () => {
       { label: "Total Sales", key: "total_amount" },
     ],
     data: salesData.value.map((item) => ({
+      ...item,
+    })),
+  });
+};
+
+const handleExportSummary = () => {
+  exportCsv({
+    filename: `salessummary_${new Date().toISOString().slice(0, 10)}.csv`,
+    headers: [
+      { label: "Dealer", key: "dealer" },
+      { label: "Products", key: "code" },
+      { label: "Quantity", key: "quantity" },
+      { label: "Volume", key: "volume" },
+      { label: "Total Sales", key: "total_amount" },
+    ],
+    data: salesSummary.value.map((item) => ({
       ...item,
     })),
   });
@@ -281,6 +336,7 @@ const onRowClick = (event) => {
 
 watch([dateRange, store_id], () => {
   fetchSalesData();
+  fetchSalesSummary();
   // console.log("Date range or store_id changed:", store_id.value);
 });
 
@@ -288,7 +344,8 @@ onMounted(() => {
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   dateRange.value = [firstDayOfMonth, today];
 
-  fetchSalesData();
   fetchStores();
+  fetchSalesSummary();
+  fetchSalesData();
 });
 </script>

@@ -13,6 +13,8 @@ export function useRpt(dateRange) {
   const searchValue = ref("");
   const filterStatus = ref([]);
   const salesData = ref([]);
+  const salesSummary = ref([]);
+
   const selRowDate = ref(null);
   const selRowDealer = ref(null);
   const store_id = ref([]);
@@ -113,6 +115,50 @@ export function useRpt(dateRange) {
   } catch (error) {
     console.error("Failed to fetch dealer sales:", error);
     salesData.value = [];
+  } finally {
+    loading.value = false;
+  }
+};
+
+const fetchSalesSummary = async () => {
+  loading.value = true;
+
+  try {
+    let start = null;
+    let end = null;
+
+    if (dateRange.value?.[0] && dateRange.value?.[1]) {
+      const startDate = new Date(dateRange.value[0]);
+      const endDate = new Date(dateRange.value[1]);
+
+      startDate.setHours(0, 0, 0, 0);
+
+      // Include the entire final day using an exclusive end.
+      endDate.setHours(0, 0, 0, 0);
+      endDate.setDate(endDate.getDate() + 1);
+
+      start = startDate.toISOString();
+      end = endDate.toISOString();
+    }
+
+    const { data, error } = await supabase.rpc(
+      "get_dealer_salessummary",
+      {
+        start_date: start,
+        end_date: end,
+        p_store_ids: store_id.value?.length
+          ? store_id.value.map(String)
+          : null,
+      },
+    );
+
+    if (error) throw error;
+console.log("sales summary of dealers", data);
+
+    salesSummary.value = data ?? [];
+  } catch (error) {
+    console.error("Failed to fetch dealer sales summary:", error);
+    salesSummary.value = [];
   } finally {
     loading.value = false;
   }
@@ -246,6 +292,10 @@ export function useRpt(dateRange) {
 
     salesData,
     fetchSalesData,
+
+    salesSummary,
+    fetchSalesSummary,
+
     selRowDate,
     selRowDealer,
     showDiaSalesPerDay,
