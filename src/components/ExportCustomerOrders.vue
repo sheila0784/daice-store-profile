@@ -6,7 +6,12 @@
     <div class="dashboard-inner p-3 md:p-5">
       <Card class="dashboard-shell">
         <template #title>
-          <div class="dashboard-title">Export Customer Orders</div>
+          <div class="report-section-heading">
+            <h1 class="report-section-title">Export Dealer Customer Orders</h1>
+            <p class="report-section-description">
+              Select a date range and dealers to download their customer orders recorded in the app.
+            </p>
+          </div>
         </template>
 
         <template #content>
@@ -218,7 +223,7 @@ onMounted(() => {
   fetchStores();
 
   if (dateRange.value && store_id.value.length > 0) {
-  fetchCustomerOrders();}
-
+    fetchCustomerOrders();
+  }
 });
 </script>

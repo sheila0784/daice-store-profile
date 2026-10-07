@@ -44,12 +44,6 @@
           <Divider class="ice-divider" />
 
           <div v-if="salesSummary.length">
-            <div class="report-section-heading">
-              <h2 class="report-section-title">Dealer Sales by Product</h2>
-              <p class="report-section-description">
-                Product quantities, volume, and total sales for each dealer within the selected date range.
-              </p>
-            </div>
             <DataTable
               :value="salesSummary"
               class="daice-table"
@@ -99,13 +93,6 @@
                 @click="handleExportSummary"
               />
             </div>
-          </div>
-
-          <div class="report-section-heading">
-            <h2 class="report-section-title">Daily Dealer Sales Summary</h2>
-            <p class="report-section-description">
-              Customers served, products sold, and total sales for each dealer by day.
-            </p>
           </div>
 
           <DataTable
@@ -198,12 +185,6 @@
         </template>
 
         <div class="daice-table-wrapper">
-          <div class="report-section-heading report-section-heading--compact">
-            <h2 class="report-section-title">Customer Order Details</h2>
-            <p class="report-section-description">
-              Customers, order times, products, and amounts for the selected dealer and sales date.
-            </p>
-          </div>
           <DataTable
             :value="salesPerDay"
             class="daice-table w-full text-xs"
@@ -371,4 +352,3 @@ onMounted(() => {
   fetchSalesData();
 });
 </script>
-

@@ -1112,3 +1112,31 @@ textarea.daice-input:focus {
     font-size: 0.7rem;
   }
 }
+
+/* FOR DATATABLE WITH TITLE AND SUBTITLE */
+.report-section-heading {
+  margin: 0 0 0.875rem;
+  padding: 0.25rem 0 0.25rem 0.875rem;
+  border-left: 3px solid #0ea5e9;
+}
+
+.report-section-title {
+  margin: 0;
+  color: #075985;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.025em;
+}
+
+.report-section-description {
+  margin: 0.25rem 0 0;
+  color: #475569;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.report-section-heading--compact .report-section-title {
+  font-size: 0.9375rem;
+}

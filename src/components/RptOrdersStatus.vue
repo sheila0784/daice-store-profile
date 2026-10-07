@@ -47,18 +47,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- <div class="w-full md:w-auto md:ml-auto">
-              <Button
-                v-if="showCreateNew"
-                type="button"
-                label="Create New"
-                icon="pi pi-plus"
-                :loading="loading"
-                class="daice-action-btn text-xs"
-                @click="handleUpdate"
-              />
-            </div> -->
           </div>
 
           <Divider class="ice-divider" />
@@ -73,6 +61,14 @@
             selectionMode="single"
             dataKey="id"
             class="daice-table w-full text-xs"
+            @row-click="
+              (event) => {
+                selectedOrder = event.data;
+                console.log('Selected order:', event.data);
+                console.log('Order items:', event.data.items);
+                showDialog = true;
+              }
+            "
           >
             <Column header="#" style="width: 60px" v-bind="columnDefaults">
               <template #body="slotProps">
@@ -80,8 +76,8 @@
               </template>
             </Column>
 
-            <Column field="id" header="Order Id" sortable v-bind="columnDefaults"></Column>
-            <Column field="trip_id" header="Trip Id" sortable v-bind="columnDefaults"></Column>
+            <!-- <Column field="id" header="Order Id" sortable v-bind="columnDefaults"></Column>
+            <Column field="trip_id" header="Trip Id" sortable v-bind="columnDefaults"></Column> -->
 
             <Column field="dealer" header="Dealer" sortable v-bind="columnDefaults"></Column>
             <Column
@@ -129,22 +125,14 @@
             </Column>
 
             <Column field="recipient" header="Recipient" sortable v-bind="columnDefaults"></Column>
-            <!-- <Column field="contact" header="Contact No." v-bind="columnDefaults"></Column> -->
-            <!-- <Column field="address" header="Address" v-bind="columnDefaults"></Column> -->
-
-            <!-- <Column field="code" header="Product" v-bind="columnDefaults"></Column> -->
-            <!-- <Column field="quantity" header="Quantity" v-bind="columnDefaults"></Column> -->
-            <!-- <Column field="unit_price" header="Unit Price" v-bind="columnDefaults"></Column> -->
-            <!-- <Column field="discount" header="Discount" v-bind="columnDefaults"></Column>
-            <Column field="final_price" header="Net Price" v-bind="columnDefaults"></Column> -->
 
             <Column
               field="product_quantity"
               header="Product & Qty"
               v-bind="columnDefaults"
             ></Column>
-            <Column field="total_gross" header="Total Gross" v-bind="columnDefaults"></Column>
-            <Column field="total_disc" header="Total Discount" v-bind="columnDefaults"></Column>
+            <!-- <Column field="total_gross" header="Total Gross" v-bind="columnDefaults"></Column>
+            <Column field="total_disc" header="Total Discount" v-bind="columnDefaults"></Column> -->
 
             <Column field="total_amount" header="Net Amount" v-bind="columnDefaults"></Column>
 
@@ -152,16 +140,6 @@
             <Column style="width: 140px" v-bind="columnDefaults">
               <template #body="slotProps">
                 <div class="flex gap-2">
-                  <!-- <Button
-                    v-if="showActionBtnEdit"
-                    icon="pi pi-pencil"
-                    severity="info"
-                    size="small"
-                    variant="text"
-                    v-tooltip.bottom="'Edit Record'"
-                    @click.stop="handleUpdate(slotProps.data)"
-                  /> -->
-
                   <Button
                     v-if="showActionBtnDelete"
                     icon="pi pi-trash"
@@ -196,6 +174,135 @@
           </div>
         </template>
       </Card>
+
+      <Dialog
+        v-model:visible="showDialog"
+        header="Order Details"
+        :modal="true"
+        :closable="true"
+        :dismissableMask="true"
+        :style="{ width: '25rem', maxWidth: '92vw' }"
+      >
+        <template #header>
+          <div class="dialog-header-info">
+            <p>
+              <span class="text-sm">{{ selectedOrder.recipient.toUpperCase() }}</span>
+            </p>
+          </div>
+        </template>
+
+        <Divider class="ice-divider" />
+
+        <div v-if="selectedOrder">
+          <p class="m-1">
+            <span class="text-xs text-gray-500">Contact No.:</span>
+            <span class="text-xs ml-2">{{ selectedOrder.contact }}</span>
+          </p>
+          <p class="m-1">
+            <span class="text-xs text-gray-500">Address:</span>
+            <span class="text-xs ml-2">{{ selectedOrder.address }}</span>
+          </p>
+
+          <p />
+
+          <p class="m-1">
+            <span class="text-xs text-gray-500">Order Date:</span>
+            <span class="text-xs ml-2">{{ selectedOrder.order_date }}</span>
+          </p>
+
+          <p class="m-1">
+            <span class="text-xs text-gray-500">Order Time:</span>
+            <span class="text-xs ml-2">{{ selectedOrder.order_time }}</span>
+          </p>
+
+          <p class="m-1">
+            <span class="text-xs text-gray-500">Dealer:</span>
+            <span class="text-xs ml-2">{{ selectedOrder.dealer }}</span>
+          </p>
+          <p class="m-1">
+            <span class="text-xs text-gray-500">Order Status:</span>
+
+            <span
+              :class="[
+                'px-2 py-1 border-round text-xs font-semibold',
+                selectedOrder.status?.toLowerCase() === 'order placed'
+                  ? 'bg-yellow-100 text-blue-700'
+                  : 'text-color',
+                selectedOrder.status?.toLowerCase() === 'confirmed'
+                  ? 'bg-orange-100 text-blue-700'
+                  : 'text-color',
+                selectedOrder.status?.toLowerCase() === 'preparing'
+                  ? 'bg-purple-100 text-blue-700'
+                  : 'text-color',
+                selectedOrder.status?.toLowerCase() === 'cancelled'
+                  ? 'bg-red-100 text-red-700'
+                  : 'text-color',
+                selectedOrder.status?.toLowerCase() === 'delivered'
+                  ? 'bg-green-100 text-green-700'
+                  : 'text-color',
+                selectedOrder.status?.toLowerCase() === 'out for delivery'
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-color',
+              ]"
+            >
+              {{ selectedOrder.status }}
+            </span>
+          </p>
+
+          <p />
+
+          <p class="m-1">
+            <span class="text-xs text-gray-500">Product and Qty:</span>
+            <span class="text-xs ml-2 font-semibold">{{ selectedOrder.product_quantity }}</span>
+          </p>
+          <p v-if="selectedOrder.total_gross !== selectedOrder.total_amount" class="m-1">
+            <span class="text-xs text-gray-500">Total Gross:</span>
+            <span class="text-xs ml-2">{{ formatNumber(selectedOrder.total_gross) }}</span>
+          </p>
+          <p v-if="selectedOrder.total_disc !== 0" class="m-1">
+            <span class="text-xs text-gray-500">Total Discount:</span>
+            <span class="text-xs ml-2">{{ formatNumber(selectedOrder.total_disc) }}</span>
+          </p>
+
+          <p class="m-1">
+            <span class="text-xs text-gray-500">Total Amount:</span>
+            <span class="text-sm ml-2 font-semibold text-blue-600">{{
+              formatNumber(selectedOrder.total_amount)
+            }}</span>
+          </p>
+          <p />
+
+       
+            <p class="m-1">
+              <span class="text-xs text-gray-500">Id:</span>
+              <span class="text-xs ml-2">{{ selectedOrder.id }}</span>
+              <Button
+                icon="pi pi-copy"
+                severity="secondary"
+                variant="text"
+                size="small"
+                v-tooltip.top="'Copy Order ID'"
+                @click="copyToClipboard(selectedOrder.id)"
+              />
+            </p>
+
+            <p v-if="selectedOrder.trip_id" class="m-1">
+              <span class="text-xs text-gray-500">Trip Id:</span>
+              <span class="text-xs ml-2">{{ selectedOrder.trip_id }}</span>
+              <Button
+                icon="pi pi-copy"
+                severity="secondary"
+                variant="text"
+                size="small"
+                v-tooltip.top="'Copy Trip ID'"
+                @click="copyToClipboard(selectedOrder.trip_id)"
+              />
+            </p>
+
+            <p />
+         
+        </div>
+      </Dialog>
     </div>
   </div>
 </template>
@@ -205,11 +312,6 @@ import MenuBar from "../components/Menubar.vue";
 
 import { onMounted, ref, watch } from "vue";
 import { useRpt } from "../composables/useRpt.js";
-// import { useRouter } from "vue-router";
-
-// import { useStoreStore } from "@/stores/storeStore";
-// import { useStoresUpdate } from "../composables/useStoresUpdate.js";
-
 import Card from "primevue/card";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
@@ -229,6 +331,12 @@ import Button from "primevue/button";
 import { exportCsv } from "@/utils/exportCsv";
 
 import { usePermissions } from "@/composables/usePermissions.js";
+
+import Dialog from "primevue/dialog";
+
+const showDialog = ref(false);
+const selectedOrder = ref(null);
+
 const { showActionBtnDelete } = usePermissions();
 
 const dateRange = ref(null);
@@ -242,19 +350,34 @@ const columnDefaults = {
 const toast = useToast();
 const confirm = useConfirm();
 
-// const router = useRouter();
-// const storeStore = useStoreStore();
+// const formatNumber = (value) => {
+//   if (value == null) return "0";
 
-// const { deleteStore } = useStoresUpdate();
-
-// const handleUpdate = (order) => {
-//   // // 👇 store selected here
-//   // storeStore.selectedStore = store;
-
-//   // // 👇 then navigate
-//   // router.push({ name: "StoresUpdate" });
-//   console.log("Edit order:", order);
+//   return new Intl.NumberFormat("en-US", {
+//     minimumFractionDigits: 2,
+//     maximumFractionDigits: 2,
+//   }).format(value);
 // };
+
+const formatNumber = (value) => {
+  if (value == null || Number(value) === 0) return "-";
+
+  return new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+};
+
+const copyToClipboard = async (value) => {
+  await navigator.clipboard.writeText(String(value));
+
+  toast.add({
+    severity: "success",
+    summary: "Copied",
+    detail: "ID copied to clipboard",
+    life: 1500,
+  });
+};
 
 const handleDelete = (order) => {
   console.log("Delete order:", order);
@@ -344,7 +467,7 @@ const handleExport = () => {
 
       { label: "Total Gross", key: "total_gross" },
       { label: "Total Discount", key: "total_disc" },
-       { label: "Net Amount", key: "total_amount" },
+      { label: "Net Amount", key: "total_amount" },
     ],
     data: items.value.map((item) => ({
       ...item,
